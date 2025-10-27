@@ -209,6 +209,12 @@
             'all_player_lines.csv': { colIndex: -1, direction: 'asc' }
         };
 
+        // Indices for filterable columns, to be found after reordering
+        let filterColumnIndices = {
+            position: -1,
+            statType: -1
+        };
+
         document.addEventListener('DOMContentLoaded', () => {
             initTabs();
             // Manually load chart for home page
@@ -270,6 +276,67 @@
         }
 
         /**
+         * Standardizes column order for player prop tables.
+         * @param {string[][]} data - The parsed CSV data (header + rows).
+         * @returns {string[][]} - The re-ordered data.
+         */
+        function reorderPlayerTableData(data) {
+            const header = data[0];
+            const rows = data.slice(1);
+            const lowerHeader = header.map(h => h.toLowerCase());
+
+            // Define target columns and their aliases
+            const columnDefinitions = {
+                player: ['player', 'playerstat name'],
+                ourProjection: ['our projection'],
+                projectedHitRate: ['projected stat hit rate'],
+                sportsbookProp: ['sportsbook prop'],
+                propHitRate: ['prop hit rate', 'sportsbook hit rate']
+            };
+
+            // Find the index for each target column
+            const foundIndices = {};
+            for (const key in columnDefinitions) {
+                foundIndices[key] = -1;
+                for (const alias of columnDefinitions[key]) {
+                    const index = lowerHeader.indexOf(alias);
+                    if (index !== -1) {
+                        foundIndices[key] = index;
+                        break;
+                    }
+                }
+            }
+            
+            // Get indices of the target columns in the desired order
+            const targetIndices = [
+                foundIndices.player,
+                foundIndices.ourProjection,
+                foundIndices.projectedHitRate,
+                foundIndices.sportsbookProp,
+                foundIndices.propHitRate
+            ].filter(index => index !== -1); // Filter out any not found
+
+            // Get indices of all *other* columns
+            const otherIndices = [];
+            for (let i = 0; i < header.length; i++) {
+                if (!targetIndices.includes(i)) {
+                    otherIndices.push(i);
+                }
+            }
+
+            // Combine indices for the final order
+            const newIndexOrder = [...targetIndices, ...otherIndices];
+
+            // Create the new re-ordered data array
+            const reorderedData = [
+                newIndexOrder.map(i => header[i]), // New header
+                ...rows.map(row => newIndexOrder.map(i => row[i])) // New rows
+            ];
+            
+            return reorderedData;
+        }
+
+        /**
          * Fetches and displays a CSV file as an HTML table.
          * @param {string} filePath - The path to the CSV file.
          * @param {string} containerId - The ID of the div to insert the table into.
@@ -291,7 +358,7 @@
                 const csvText = await response.text();
                 
                 // Parse the CSV data
-                const data = parseCSV(csvText);
+                let data = parseCSV(csvText);
 
                 // MODIFIED: Check if data is empty or only has a header
                 if (data.length <= 1) { 
@@ -322,20 +389,15 @@
                 if (filePath === 'GameLines.csv') {
                     gameLinesData = data;
                 } else if (filePath === 'BestBets.csv') {
-                    bestBetsData = data;
+                    // NEW: Re-order columns to standardized format
+                    const reorderedData = reorderPlayerTableData(data);
+                    bestBetsData = reorderedData;
+                    data = reorderedData; // Use reordered data for rendering
                 } else if (filePath === 'all_player_lines.csv') {
-                    // NEW: Re-order columns to match Best Bets
-                    // Original: 0:Pos, 1:Player, 2:SBProp, 3:SBHit, 4:OurProj, 5:ProjHit, 6:StatType
-                    // New Order: 1:Player, 4:OurProj, 5:ProjHit, 2:SBProp, 3:SBHit, 0:Pos, 6:StatType
-                    const newOrder = [1, 4, 5, 2, 3, 0, 6];
-                    const reorderedData = data.map(row => {
-                        // Handle potential short rows (though CSV parser should be consistent)
-                        if (row.length === 7) {
-                            return newOrder.map(index => row[index]);
-                        }
-                        return row; // Return as-is if not expected length
-                    });
+                    // NEW: Re-order columns to standardized format
+                    const reorderedData = reorderPlayerTableData(data);
                     allPlayerLinesData = reorderedData;
+                    data = reorderedData; // Use reordered data for rendering
                 }
 
                 // Render the data as a table
@@ -346,7 +408,7 @@
 
                 // Run the success callback if provided
                 if (onSuccessCallback) {
-                    onSuccessCallback(allPlayerLinesData); // Pass the re-ordered data
+                    onSuccessCallback(data); // Pass the re-ordered data
                 }
 
             } catch (error) {
@@ -436,10 +498,10 @@
             if (!canvas) return; // Exit if canvas not found
             const ctx = canvas.getContext('2d');
 
-            const gameLineKeywords = ['Moneyline Hit Rate', 'Spread Hit Rate'];
+            const gameLineKeywords = ['moneyline hit rate', 'spread hit rate']; // Lowercase for comparison
             
-            const playerPropData = data.filter(row => row.length >= 2 && !gameLineKeywords.includes(row[0]));
-            const gameLineData = data.filter(row => row.length >= 2 && gameLineKeywords.includes(row[0]));
+            const playerPropData = data.filter(row => row.length >= 2 && !gameLineKeywords.includes(row[0].toLowerCase()));
+            const gameLineData = data.filter(row => row.length >= 2 && gameLineKeywords.includes(row[0].toLowerCase()));
 
             // Combine all data for the chart
             const allData = [...playerPropData, ...gameLineData];
@@ -634,15 +696,15 @@
             let filteredData = [];
             let gridCols = 'lg:grid-cols-7'; // Default for player props
 
-            const gameLineKeywords = ['Moneyline Hit Rate', 'Spread Hit Rate'];
+            const gameLineKeywords = ['moneyline hit rate', 'spread hit rate']; // Lowercase for comparison
 
             if (containerId === 'game-lines-hit-rates-container') {
                 titleText = 'Season-Long Game Hit Rates';
-                filteredData = data.filter(row => row.length >= 2 && gameLineKeywords.includes(row[0]));
+                filteredData = data.filter(row => row.length >= 2 && gameLineKeywords.includes(row[0].toLowerCase()));
                 gridCols = 'lg:grid-cols-2'; // Only 2 items
             } else {
                 titleText = 'Previous Week Over Hit Rates';
-                filteredData = data.filter(row => row.length >= 2 && !gameLineKeywords.includes(row[0]));
+                filteredData = data.filter(row => row.length >= 2 && !gameLineKeywords.includes(row[0].toLowerCase()));
                 // gridCols remains 'lg:grid-cols-7'
             }
 
@@ -759,23 +821,26 @@
 
         /**
          * Populates filter dropdowns and adds event listeners.
-         * @param {string[][]} data - The parsed CSV data for player lines.
+         * @param {string[][]} data - The parsed CSV data for player lines (already reordered).
          */
         function processPlayerLines(data) {
             positionFilterOptions.clear();
             statTypeFilterOptions.clear();
 
+            // Find the indices for Position and Stat Type in the new reordered header
+            const header = data[0].map(h => h.toLowerCase());
+            filterColumnIndices.position = header.indexOf('position');
+            filterColumnIndices.statType = header.indexOf('stat type');
+
             // Loop data rows (skip header)
             for (let i = 1; i < data.length; i++) {
                 const row = data[i];
-                // Updated check for new row length (still 7)
-                if (row && row.length > 6) {
-                    // UPDATED column indices based on re-ordering
-                    const position = row[5]; // Was row[0]
-                    const statType = row[6]; // Was row[6]
-                    
-                    statTypeFilterOptions.add(statType);
-                    positionFilterOptions.add(position);
+                
+                if (filterColumnIndices.position !== -1) {
+                    positionFilterOptions.add(row[filterColumnIndices.position]);
+                }
+                if (filterColumnIndices.statType !== -1) {
+                    statTypeFilterOptions.add(row[filterColumnIndices.statType]);
                 }
             }
 
@@ -823,15 +888,15 @@
             let filteredData = allPlayerLinesData.slice(1);
 
             // Apply position filter
-            if (posFilter !== 'All') {
+            if (posFilter !== 'All' && filterColumnIndices.position !== -1) {
                 // UPDATED column index
-                filteredData = filteredData.filter(row => row && row.length > 6 && row[5] === posFilter); // Was 0
+                filteredData = filteredData.filter(row => row[filterColumnIndices.position] === posFilter);
             }
 
             // Apply stat type filter
-            if (statFilter !== 'All') {
-                // UPDATED column index (no change)
-                filteredData = filteredData.filter(row => row && row.length > 6 && row[6] === statFilter); // Was 6
+            if (statFilter !== 'All' && filterColumnIndices.statType !== -1) {
+                // UPDATED column index
+                filteredData = filteredData.filter(row => row[filterColumnIndices.statType] === statFilter);
             }
 
             // MODIFIED: Apply sorting *after* filtering
