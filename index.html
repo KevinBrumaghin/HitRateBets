@@ -102,10 +102,18 @@
 
                     <!-- New Chart Section -->
                     <div>
-                        <h2 class="text-2xl font-bold text-orange-400 mb-4">Prediction Accuracy</h2>
-                        <p id="loading-accuracy-chart" class="text-gray-400 text-lg animate-pulse">Loading accuracy data...</p>
-                        <div id="accuracy-chart-container" class="relative" style="height: 400px;">
-                            <canvas id="accuracyChart"></canvas>
+                        <!-- Player Props Chart -->
+                        <h2 class="text-2xl font-bold text-orange-400 mb-4">Last Week's Player Prop Accuracy</h2>
+                        <p id="loading-player-props-chart" class="text-gray-400 text-lg animate-pulse">Loading player prop accuracy data...</p>
+                        <div id="player-props-chart-container" class="relative mb-8" style="height: 400px;">
+                            <canvas id="playerPropsAccuracyChart"></canvas>
+                        </div>
+
+                        <!-- Game Lines Chart -->
+                        <h2 class="text-2xl font-bold text-orange-400 mb-4">Season-Long Game Line Accuracy</h2>
+                        <p id="loading-game-lines-chart" class="text-gray-400 text-lg animate-pulse">Loading game line accuracy data...</p>
+                        <div id="game-lines-chart-container" class="relative" style="height: 300px;">
+                            <canvas id="gameLinesAccuracyChart"></canvas>
                         </div>
                     </div>
                 </div>
@@ -217,8 +225,8 @@
 
         document.addEventListener('DOMContentLoaded', () => {
             initTabs();
-            // Manually load chart for home page
-            loadHitRatesForChart('overallhitrates.csv', 'accuracy-chart-container', 'loading-accuracy-chart');
+            // Manually load charts for home page
+            loadDataForHomeCharts('overallhitrates.csv', 'loading-player-props-chart', 'loading-game-lines-chart');
         });
 
         function initTabs() {
@@ -459,14 +467,14 @@
         }
 
         /**
-         * Fetches hit rates CSV and renders it as a Chart.js chart.
+         * Fetches hit rates CSV and renders it into two separate charts on the home page.
          * @param {string} filePath - The path to the CSV file.
-         * @param {string} containerId - The ID of the div containing the canvas.
-         * @param {string} loadingId - The ID of the loading message element.
+         * @param {string} playerLoadingId - The ID of the player chart loading message.
+         * @param {string} gameLoadingId - The ID of the game line chart loading message.
          */
-        async function loadHitRatesForChart(filePath, containerId, loadingId) {
-            const container = document.getElementById(containerId);
-            const loadingEl = document.getElementById(loadingId);
+        async function loadDataForHomeCharts(filePath, playerLoadingId, gameLoadingId) {
+            const playerLoadingEl = document.getElementById(playerLoadingId);
+            const gameLoadingEl = document.getElementById(gameLoadingId);
 
             try {
                 const response = await fetch(filePath);
@@ -479,52 +487,54 @@
                 if (data.length === 0) {
                     throw new Error('Hit rates CSV file is empty or invalid.');
                 }
+                
+                const gameLineKeywords = ['moneyline hit rate', 'spread hit rate']; // Lowercase for comparison
+            
+                const playerPropData = data.filter(row => row.length >= 2 && !gameLineKeywords.includes(row[0].toLowerCase()));
+                const gameLineData = data.filter(row => row.length >= 2 && gameLineKeywords.includes(row[0].toLowerCase()));
 
-                renderAccuracyChart(container, data);
-                loadingEl.style.display = 'none';
+                // Render both charts
+                renderAccuracyChart(playerPropData, 'playerPropsAccuracyChart', 'Player Prop Hit Rate %');
+                renderAccuracyChart(gameLineData, 'gameLinesAccuracyChart', 'Game Line Hit Rate %');
+                
+                playerLoadingEl.style.display = 'none';
+                gameLoadingEl.style.display = 'none';
 
-            } catch (error)
-            {
-                console.error('Error loading Hit Rates for Chart:', error);
-                loadingEl.textContent = `Error: ${error.message}`;
-                loadingEl.classList.remove('animate-pulse');
-                loadingEl.classList.add('text-red-400', 'font-semibold');
+            } catch (error) {
+                console.error('Error loading Hit Rates for Charts:', error);
+                playerLoadingEl.textContent = `Error: ${error.message}`;
+                gameLoadingEl.textContent = `Error: ${error.message}`;
+                playerLoadingEl.classList.remove('animate-pulse');
+                gameLoadingEl.classList.remove('animate-pulse');
+                playerLoadingEl.classList.add('text-red-400', 'font-semibold');
+                gameLoadingEl.classList.add('text-red-400', 'font-semibold');
             }
         }
 
         /**
          * Renders the accuracy data into a Chart.js bar chart.
-         * @param {HTMLElement} container - The container element.
-         * @param {string[][]} data - The parsed CSV data.
+         * @param {string[][]} chartData - The pre-filtered parsed CSV data for this chart.
+         * @param {string} canvasId - The ID of the canvas element.
+         * @param {string} chartLabel - The label for the dataset.
          */
-        function renderAccuracyChart(container, data) {
-            const canvas = document.getElementById('accuracyChart');
-            if (!canvas) return; // Exit if canvas not found
+        function renderAccuracyChart(chartData, canvasId, chartLabel) {
+            const canvas = document.getElementById(canvasId);
+            if (!canvas) {
+                console.error(`Canvas with ID ${canvasId} not found.`);
+                return; 
+            }
             const ctx = canvas.getContext('2d');
 
-            const gameLineKeywords = ['moneyline hit rate', 'spread hit rate']; // Lowercase for comparison
-            
-            const playerPropData = data.filter(row => row.length >= 2 && !gameLineKeywords.includes(row[0].toLowerCase()));
-            const gameLineData = data.filter(row => row.length >= 2 && gameLineKeywords.includes(row[0].toLowerCase()));
-
-            // Combine all data for the chart
-            const allData = [...playerPropData, ...gameLineData];
-
-            const labels = allData.map(row => row[0]);
-            const values = allData.map(row => parseFloat(row[1].replace('%', '')));
+            const labels = chartData.map(row => row[0]);
+            const values = chartData.map(row => parseFloat(row[1].replace('%', '')));
             
             const playerPropColor = 'rgba(246, 173, 85, 0.7)'; // Lighter orange
             const gameLineColor = 'rgba(235, 137, 23, 0.7)'; // Bolder orange
-
-            const backgroundColors = [
-                ...playerPropData.map(() => playerPropColor),
-                ...gameLineData.map(() => gameLineColor)
-            ];
-
-            const borderColors = [
-                ...playerPropData.map(() => 'rgba(246, 173, 85, 1)'),
-                ...gameLineData.map(() => 'rgba(235, 137, 23, 1)')
-            ];
+            
+            // Determine color based on canvas ID
+            const isPlayerChart = canvasId === 'playerPropsAccuracyChart';
+            const backgroundColor = isPlayerChart ? playerPropColor : gameLineColor;
+            const borderColor = isPlayerChart ? 'rgba(246, 173, 85, 1)' : 'rgba(235, 137, 23, 1)';
 
             // Set global font styles for Chart.js
             Chart.defaults.color = '#e5e7eb'; // text-gray-200
@@ -535,10 +545,10 @@
                 data: {
                     labels: labels,
                     datasets: [{
-                        label: 'Hit Rate %',
+                        label: chartLabel,
                         data: values,
-                        backgroundColor: backgroundColors,
-                        borderColor: borderColors,
+                        backgroundColor: backgroundColor,
+                        borderColor: borderColor,
                         borderWidth: 1
                     }]
                 },
@@ -566,7 +576,7 @@
                     },
                     plugins: {
                         legend: {
-                            display: false // Hide legend as colors are self-explanatory
+                            display: false // Hide legend
                         },
                         tooltip: {
                             backgroundColor: 'rgba(17, 24, 39, 0.9)', // bg-gray-900
