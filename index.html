@@ -7,49 +7,70 @@
     <!-- Load Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        /* Use Inter font */
+        /* Import Russo One for headers and Roboto for body */
+        @import url('https://fonts.googleapis.com/css2?family=Russo+One&family=Roboto:wght@400;500;700&display=swap');
+        
+        /* Apply fonts */
         body {
-            font-family: 'Inter', sans-serif;
+            font-family: 'Roboto', sans-serif;
         }
-        /* Add a fallback font stack */
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        
+        h1, h2, th {
+            font-family: 'Russo One', sans-serif;
+            /* Tailwind's font-bold might be overridden by the font, so add weight */
+            font-weight: 700;
+        }
     </style>
 </head>
-<body class="bg-gray-100 text-gray-900">
+<body class="bg-gray-900 text-gray-200">
 
     <div class="container mx-auto p-4 md:p-8">
         <header class="mb-8">
-            <h1 class="text-3xl md:text-4xl font-bold text-center text-indigo-700">Hit Rate Bets</h1>
+            <!-- Site header: bolded and themed -->
+            <h1 class="text-3xl md:text-5xl font-bold text-center text-orange-500 uppercase tracking-wider">
+                Hit Rate Bets
+            </h1>
         </header>
 
         <main>
             <!-- Section for Game Lines -->
-            <section class="mb-12 bg-white rounded-lg shadow-md overflow-hidden">
-                <h2 class="text-2xl font-semibold text-gray-800 p-6 bg-gray-50 border-b border-gray-200">
+            <section class="mb-12 bg-gray-800 rounded-lg shadow-xl overflow-hidden border border-gray-700">
+                <!-- Section header: bolded and themed -->
+                <h2 class="text-2xl font-bold text-orange-400 p-6 bg-gray-700 border-b border-gray-600">
                     Game Lines
                 </h2>
                 <div class="p-6 overflow-x-auto">
-                    <p id="loading-game-lines" class="text-gray-500">Loading GameLines.csv data...</p>
+                    <p id="loading-game-lines" class="text-gray-400">Loading GameLines.csv data...</p>
                     <!-- Table will be inserted here by JavaScript -->
                     <div id="game-lines-container"></div>
                 </div>
             </section>
 
             <!-- Section for Best Bets -->
-            <section class="mb-12 bg-white rounded-lg shadow-md overflow-hidden">
-                <h2 class="text-2xl font-semibold text-gray-800 p-6 bg-gray-50 border-b border-gray-200">
+            <section class="mb-12 bg-gray-800 rounded-lg shadow-xl overflow-hidden border border-gray-700">
+                <!-- Section header: bolded and themed -->
+                <h2 class="text-2xl font-bold text-orange-400 p-6 bg-gray-700 border-b border-gray-600">
                     Best Bets
                 </h2>
                 <div class="p-6 overflow-x-auto">
-                    <p id="loading-best-bets" class="text-gray-500">Loading BestBets.csv data...</p>
+                    <p id="loading-best-bets" class="text-gray-400">Loading BestBets.csv data...</p>
                     <!-- Table will be inserted here by JavaScript -->
                     <div id="best-bets-container"></div>
                 </div>
             </section>
         </main>
 
-        <footer class="text-center text-gray-500 text-sm mt-8">
-            <p>Simple CSV Data Viewer</p>
+        <footer class="text-center text-gray-500 text-sm mt-12 space-y-4">
+            <!-- Disclaimer Section -->
+            <div class="max-w-2xl mx-auto text-xs text-gray-400 space-y-2">
+                <p><strong>Disclaimer:</strong> This site is for entertainment purposes only. All data is provided for informational use and does not constitute financial advice.</p>
+                <p>We are not responsible for any financial losses or mismanagement resulting from the use of information on this website.</p>
+            </div>
+            <!-- Gambling Hotline -->
+            <div class="text-gray-300">
+                <p>If you or someone you know has a gambling problem, help is available.</p>
+                <p class="font-bold text-lg text-orange-400 tracking-wider">Call or text 1-800-GAMBLER</p>
+            </div>
         </footer>
     </div>
 
@@ -93,7 +114,7 @@
             } catch (error) {
                 console.error('Error loading CSV:', error);
                 loadingEl.textContent = `Error: ${error.message}`;
-                loadingEl.classList.add('text-red-600', 'font-semibold');
+                loadingEl.classList.add('text-red-400', 'font-semibold');
             }
         }
 
@@ -119,20 +140,23 @@
          */
         function renderTable(container, data) {
             const table = document.createElement('table');
-            table.className = 'min-w-full divide-y divide-gray-200 border border-gray-200';
+            // Updated table theme
+            table.className = 'min-w-full divide-y divide-gray-700 border border-gray-700';
 
             // Create table header
             if (data.length > 0) {
                 const a = 1;
                 const headerRow = data[0];
                 const thead = document.createElement('thead');
-                thead.className = 'bg-gray-100';
+                // Updated thead theme
+                thead.className = 'bg-gray-700';
                 
                 const tr = document.createElement('tr');
                 headerRow.forEach(headerText => {
                     const th = document.createElement('th');
                     th.scope = 'col';
-                    th.className = 'px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider';
+                    // Updated th theme: bolded and colored
+                    th.className = 'px-6 py-3 text-left text-xs font-bold text-orange-400 uppercase tracking-wider';
                     th.textContent = headerText;
                     tr.appendChild(th);
                 });
@@ -143,16 +167,19 @@
             // Create table body
             if (data.length > 1) {
                 const tbody = document.createElement('tbody');
-                tbody.className = 'bg-white divide-y divide-gray-200';
+                // Updated tbody theme
+                tbody.className = 'bg-gray-800 divide-y divide-gray-700';
 
                 const bodyRows = data.slice(1);
                 bodyRows.forEach(rowData => {
                     const tr = document.createElement('tr');
-                    tr.className = 'hover:bg-gray-50';
+                    // Updated tr theme
+                    tr.className = 'hover:bg-gray-700';
                     
                     rowData.forEach(cellData => {
                         const td = document.createElement('td');
-                        td.className = 'px-6 py-4 whitespace-nowrap text-sm text-gray-700';
+                        // Updated td theme
+                        td.className = 'px-6 py-4 whitespace-nowrap text-sm text-gray-300';
                         td.textContent = cellData;
                         tr.appendChild(td);
                     });
@@ -169,3 +196,4 @@
     </script>
 </body>
 </html>
+
