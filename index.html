@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game Data Viewer</title>
+    <!-- Load Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Use Inter font */
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        /* Add a fallback font stack */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+    </style>
+</head>
+<body class="bg-gray-100 text-gray-900">
+
+    <div class="container mx-auto p-4 md:p-8">
+        <header class="mb-8">
+            <h1 class="text-3xl md:text-4xl font-bold text-center text-indigo-700">Sports Game Data</h1>
+        </header>
+
+        <main>
+            <!-- Section for Game Lines -->
+            <section class="mb-12 bg-white rounded-lg shadow-md overflow-hidden">
+                <h2 class="text-2xl font-semibold text-gray-800 p-6 bg-gray-50 border-b border-gray-200">
+                    Game Lines
+                </h2>
+                <div class="p-6 overflow-x-auto">
+                    <p id="loading-game-lines" class="text-gray-500">Loading GameLines.csv data...</p>
+                    <!-- Table will be inserted here by JavaScript -->
+                    <div id="game-lines-container"></div>
+                </div>
+            </section>
+
+            <!-- Section for Best Bets -->
+            <section class="mb-12 bg-white rounded-lg shadow-md overflow-hidden">
+                <h2 class="text-2xl font-semibold text-gray-800 p-6 bg-gray-50 border-b border-gray-200">
+                    Best Bets
+                </h2>
+                <div class="p-6 overflow-x-auto">
+                    <p id="loading-best-bets" class="text-gray-500">Loading BestBets.csv data...</p>
+                    <!-- Table will be inserted here by JavaScript -->
+                    <div id="best-bets-container"></div>
+                </div>
+            </section>
+        </main>
+
+        <footer class="text-center text-gray-500 text-sm mt-8">
+            <p>Simple CSV Data Viewer</p>
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Load both CSV files when the page is ready
+            loadCSV('GameLines.csv', 'game-lines-container', 'loading-game-lines');
+            loadCSV('BestBets.csv', 'best-bets-container', 'loading-best-bets');
+        });
+
+        /**
+         * Fetches and displays a CSV file as an HTML table.
+         * @param {string} filePath - The path to the CSV file (e.g., 'GameLines.csv').
+         * @param {string} containerId - The ID of the div to insert the table into.
+         * @param {string} loadingId - The ID of the loading message element.
+         */
+        async function loadCSV(filePath, containerId, loadingId) {
+            const container = document.getElementById(containerId);
+            const loadingEl = document.getElementById(loadingId);
+
+            try {
+                const response = await fetch(filePath);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status} - Could not find ${filePath}. Make sure it's in the same directory as index.html.`);
+                }
+                const csvText = await response.text();
+                
+                // Parse the CSV data
+                const data = parseCSV(csvText);
+
+                if (data.length === 0) {
+                    throw new Error('CSV file is empty or invalid.');
+                }
+
+                // Render the data as a table
+                renderTable(container, data);
+                
+                // Hide loading message
+                loadingEl.style.display = 'none';
+
+            } catch (error) {
+                console.error('Error loading CSV:', error);
+                loadingEl.textContent = `Error: ${error.message}`;
+                loadingEl.classList.add('text-red-600', 'font-semibold');
+            }
+        }
+
+        /**
+         * A simple CSV parser.
+         * @param {string} text - The raw CSV text.
+         * @returns {string[][]} - An array of arrays representing rows and cells.
+         */
+        function parseCSV(text) {
+            // Trim whitespace and filter out empty lines
+            const lines = text.trim().split('\n').filter(line => line.trim() !== '');
+            return lines.map(line => {
+                // This is a basic parser. It won't handle commas inside quotes.
+                // For more complex CSVs, a library would be better.
+                return line.split(',').map(cell => cell.trim());
+            });
+        }
+
+        /**
+         * Renders data into an HTML table with Tailwind classes.
+         * @param {HTMLElement} container - The element to append the table to.
+         * @param {string[][]} data - The parsed CSV data.
+         */
+        function renderTable(container, data) {
+            const table = document.createElement('table');
+            table.className = 'min-w-full divide-y divide-gray-200 border border-gray-200';
+
+            // Create table header
+            if (data.length > 0) {
+                const a = 1;
+                const headerRow = data[0];
+                const thead = document.createElement('thead');
+                thead.className = 'bg-gray-100';
+                
+                const tr = document.createElement('tr');
+                headerRow.forEach(headerText => {
+                    const th = document.createElement('th');
+                    th.scope = 'col';
+                    th.className = 'px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider';
+                    th.textContent = headerText;
+                    tr.appendChild(th);
+                });
+                thead.appendChild(tr);
+                table.appendChild(thead);
+            }
+
+            // Create table body
+            if (data.length > 1) {
+                const tbody = document.createElement('tbody');
+                tbody.className = 'bg-white divide-y divide-gray-200';
+
+                const bodyRows = data.slice(1);
+                bodyRows.forEach(rowData => {
+                    const tr = document.createElement('tr');
+                    tr.className = 'hover:bg-gray-50';
+                    
+                    rowData.forEach(cellData => {
+                        const td = document.createElement('td');
+                        td.className = 'px-6 py-4 whitespace-nowrap text-sm text-gray-700';
+                        td.textContent = cellData;
+                        tr.appendChild(td);
+                    });
+                    tbody.appendChild(tr);
+                });
+                table.appendChild(tbody);
+            }
+
+            // Clear container and add the new table
+            container.innerHTML = '';
+            container.appendChild(table);
+        }
+
+    </script>
+</body>
+</html>
