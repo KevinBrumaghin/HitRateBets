@@ -291,7 +291,7 @@
                 ourProjection: ['our projection'],
                 projectedHitRate: ['projected stat hit rate'],
                 sportsbookProp: ['sportsbook prop'],
-                propHitRate: ['prop hit rate', 'sportsbook hit rate']
+                propHitRate: ['prop hit rate', 'sportsbook hit rate', 'sportsbook prop hit rate'] // MODIFIED: Added 'sportsbook prop hit rate'
             };
 
             // NEW: Define 'Stat Type' alias
@@ -346,6 +346,7 @@
             }
             newIndexOrder.push(...otherIndices);
 
+Unchanged code skipped.
             // Create the new re-ordered data array
             const reorderedData = [
                 newIndexOrder.map(i => header[i]), // New header
