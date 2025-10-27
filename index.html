@@ -324,7 +324,18 @@
                 } else if (filePath === 'BestBets.csv') {
                     bestBetsData = data;
                 } else if (filePath === 'all_player_lines.csv') {
-                    allPlayerLinesData = data;
+                    // NEW: Re-order columns to match Best Bets
+                    // Original: 0:Pos, 1:Player, 2:SBProp, 3:SBHit, 4:OurProj, 5:ProjHit, 6:StatType
+                    // New Order: 1:Player, 4:OurProj, 5:ProjHit, 2:SBProp, 3:SBHit, 0:Pos, 6:StatType
+                    const newOrder = [1, 4, 5, 2, 3, 0, 6];
+                    const reorderedData = data.map(row => {
+                        // Handle potential short rows (though CSV parser should be consistent)
+                        if (row.length === 7) {
+                            return newOrder.map(index => row[index]);
+                        }
+                        return row; // Return as-is if not expected length
+                    });
+                    allPlayerLinesData = reorderedData;
                 }
 
                 // Render the data as a table
@@ -335,7 +346,7 @@
 
                 // Run the success callback if provided
                 if (onSuccessCallback) {
-                    onSuccessCallback(data);
+                    onSuccessCallback(allPlayerLinesData); // Pass the re-ordered data
                 }
 
             } catch (error) {
@@ -757,11 +768,11 @@
             // Loop data rows (skip header)
             for (let i = 1; i < data.length; i++) {
                 const row = data[i];
-                // Updated check for new row length
+                // Updated check for new row length (still 7)
                 if (row && row.length > 6) {
-                    // Updated column indices
-                    const position = row[0];
-                    const statType = row[6];
+                    // UPDATED column indices based on re-ordering
+                    const position = row[5]; // Was row[0]
+                    const statType = row[6]; // Was row[6]
                     
                     statTypeFilterOptions.add(statType);
                     positionFilterOptions.add(position);
@@ -813,12 +824,14 @@
 
             // Apply position filter
             if (posFilter !== 'All') {
-                filteredData = filteredData.filter(row => row && row.length > 6 && row[0] === posFilter);
+                // UPDATED column index
+                filteredData = filteredData.filter(row => row && row.length > 6 && row[5] === posFilter); // Was 0
             }
 
             // Apply stat type filter
             if (statFilter !== 'All') {
-                filteredData = filteredData.filter(row => row && row.length > 6 && row[6] === statFilter);
+                // UPDATED column index (no change)
+                filteredData = filteredData.filter(row => row && row.length > 6 && row[6] === statFilter); // Was 6
             }
 
             // MODIFIED: Apply sorting *after* filtering
