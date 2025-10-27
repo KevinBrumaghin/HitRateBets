@@ -30,6 +30,17 @@
         [role="tabpanel"]:not(.hidden) {
             animation: fadeIn 0.4s ease-out;
         }
+
+        /* Style for select dropdowns */
+        select {
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%23f6ad55' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+            background-position: right 0.5rem center;
+            background-repeat: no-repeat;
+            background-size: 1.5em 1.5em;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+        }
     </style>
 </head>
 <body class="bg-gray-900 text-gray-200">
@@ -61,6 +72,12 @@
                             Best Bets
                         </button>
                     </li>
+                    <!-- New "All Player Lines" Tab -->
+                    <li role="presentation">
+                        <button class="inline-block p-4 border-b-2 rounded-t-lg transition-colors duration-300 ease-in-out" id="all-player-lines-tab" data-target="all-player-lines-panel" type="button" role="tab" data-loaded="false">
+                            All Player Lines
+                        </button>
+                    </li>
                 </ul>
             </div>
 
@@ -86,7 +103,6 @@
                 <div class="hidden p-6 rounded-lg bg-gray-800 border border-gray-700" id="game-lines-panel" role="tabpanel" aria-labelledby="game-lines-tab">
                     <div class="overflow-x-auto">
                         <p id="loading-game-lines" class="text-gray-400 text-lg animate-pulse">Loading GameLines.csv data...</p>
-                        <!-- Table will be inserted here by JavaScript -->
                         <div id="game-lines-container"></div>
                     </div>
                 </div>
@@ -95,8 +111,35 @@
                 <div class="hidden p-6 rounded-lg bg-gray-800 border border-gray-700" id="best-bets-panel" role="tabpanel" aria-labelledby="best-bets-tab">
                     <div class="overflow-x-auto">
                         <p id="loading-best-bets" class="text-gray-400 text-lg animate-pulse">Loading BestBets.csv data...</p>
-                        <!-- Table will be inserted here by JavaScript -->
                         <div id="best-bets-container"></div>
+                    </div>
+                </div>
+
+                <!-- All Player Lines Panel -->
+                <div class="hidden p-6 rounded-lg bg-gray-800 border border-gray-700" id="all-player-lines-panel" role="tabpanel" aria-labelledby="all-player-lines-tab">
+                    
+                    <!-- Filters -->
+                    <div class="flex flex-col sm:flex-row gap-4 mb-6">
+                        <!-- Position Filter -->
+                        <div>
+                            <label for="position-filter" class="block text-sm font-medium text-orange-400 mb-1">Position (Inferred)</label>
+                            <select id="position-filter" class="bg-gray-700 border border-gray-600 text-gray-200 text-sm rounded-lg focus:ring-orange-500 focus:border-orange-500 block w-full p-2.5 pr-8">
+                                <option value="All">All Positions</option>
+                            </select>
+                        </div>
+                        <!-- Stat Type Filter -->
+                        <div>
+                            <label for="stat-type-filter" class="block text-sm font-medium text-orange-400 mb-1">Stat Type</label>
+                            <select id="stat-type-filter" class="bg-gray-700 border border-gray-600 text-gray-200 text-sm rounded-lg focus:ring-orange-500 focus:border-orange-500 block w-full p-2.5 pr-8">
+                                <option value="All">All Stats</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Table Container -->
+                    <div class="overflow-x-auto">
+                        <p id="loading-all-player-lines" class="text-gray-400 text-lg animate-pulse">Loading all_player_lines.csv data...</p>
+                        <div id="all-player-lines-container"></div>
                     </div>
                 </div>
             </div>
@@ -117,6 +160,13 @@
     </div>
 
     <script>
+        // Global storage for CSV data
+        let gameLinesData = [];
+        let bestBetsData = [];
+        let allPlayerLinesData = [];
+        let positionFilterOptions = new Set();
+        let statTypeFilterOptions = new Set();
+
         document.addEventListener('DOMContentLoaded', () => {
             initTabs();
         });
@@ -159,26 +209,27 @@
                     const isLoaded = button.dataset.loaded === 'true';
                     
                     if (!isLoaded) {
+                        button.dataset.loaded = 'true'; // Set loaded true immediately
                         if (targetPanelId === 'game-lines-panel') {
                             loadCSV('GameLines.csv', 'game-lines-container', 'loading-game-lines');
-                            button.dataset.loaded = 'true';
                         } else if (targetPanelId === 'best-bets-panel') {
                             loadCSV('BestBets.csv', 'best-bets-container', 'loading-best-bets');
-                            button.dataset.loaded = 'true';
+                        } else if (targetPanelId === 'all-player-lines-panel') {
+                            loadCSV('all_player_lines.csv', 'all-player-lines-container', 'loading-all-player-lines', processPlayerLines);
                         }
                     }
                 });
             });
         }
 
-
         /**
          * Fetches and displays a CSV file as an HTML table.
-         * @param {string} filePath - The path to the CSV file (e.g., 'GameLines.csv').
+         * @param {string} filePath - The path to the CSV file.
          * @param {string} containerId - The ID of the div to insert the table into.
          * @param {string} loadingId - The ID of the loading message element.
+         * @param {function} onSuccessCallback - Optional callback to run on success.
          */
-        async function loadCSV(filePath, containerId, loadingId) {
+        async function loadCSV(filePath, containerId, loadingId, onSuccessCallback = null) {
             const container = document.getElementById(containerId);
             const loadingEl = document.getElementById(loadingId);
 
@@ -199,11 +250,29 @@
                     throw new Error('CSV file is empty or invalid.');
                 }
 
+                // Store data globally and adjust headers if needed
+                if (filePath === 'GameLines.csv') {
+                    gameLinesData = data;
+                } else if (filePath === 'BestBets.csv') {
+                    bestBetsData = data;
+                } else if (filePath === 'all_player_lines.csv') {
+                    // Rename the "QB" header to "Player" as it's more accurate
+                    if (data[0] && data[0][0].toUpperCase() === 'QB') {
+                        data[0][0] = 'Player';
+                    }
+                    allPlayerLinesData = data;
+                }
+
                 // Render the data as a table
                 renderTable(container, data);
                 
                 // Hide loading message
                 loadingEl.style.display = 'none';
+
+                // Run the success callback if provided
+                if (onSuccessCallback) {
+                    onSuccessCallback(data);
+                }
 
             } catch (error) {
                 console.error('Error loading CSV:', error);
@@ -223,7 +292,6 @@
             const lines = text.trim().split('\n').filter(line => line.trim() !== '');
             return lines.map(line => {
                 // This is a basic parser. It won't handle commas inside quotes.
-                // For more complex CSVs, a library would be better.
                 return line.split(',').map(cell => cell.trim());
             });
         }
@@ -235,21 +303,18 @@
          */
         function renderTable(container, data) {
             const table = document.createElement('table');
-            // Updated table theme
             table.className = 'min-w-full divide-y divide-gray-700 border border-gray-700';
 
             // Create table header
             if (data.length > 0) {
                 const headerRow = data[0];
                 const thead = document.createElement('thead');
-                // Updated thead theme
                 thead.className = 'bg-gray-700';
                 
                 const tr = document.createElement('tr');
                 headerRow.forEach(headerText => {
                     const th = document.createElement('th');
                     th.scope = 'col';
-                    // Updated th theme: bolded and colored
                     th.className = 'px-6 py-3 text-left text-xs font-bold text-orange-400 uppercase tracking-wider';
                     th.textContent = headerText;
                     tr.appendChild(th);
@@ -261,18 +326,15 @@
             // Create table body
             if (data.length > 1) {
                 const tbody = document.createElement('tbody');
-                // Updated tbody theme
                 tbody.className = 'bg-gray-800 divide-y divide-gray-700';
 
                 const bodyRows = data.slice(1);
                 bodyRows.forEach(rowData => {
                     const tr = document.createElement('tr');
-                    // Updated tr theme
                     tr.className = 'hover:bg-gray-700';
                     
                     rowData.forEach(cellData => {
                         const td = document.createElement('td');
-                        // Updated td theme
                         td.className = 'px-6 py-4 whitespace-nowrap text-sm text-gray-300';
                         td.textContent = cellData;
                         tr.appendChild(td);
@@ -285,6 +347,97 @@
             // Clear container and add the new table
             container.innerHTML = '';
             container.appendChild(table);
+        }
+
+        // --- All Player Lines Specific Functions ---
+
+        /**
+         * Infers position from stat type.
+         * @param {string} statType - The stat type from the CSV.
+         * @returns {string} - The inferred position.
+         */
+        function inferPosition(statType) {
+            statType = (statType || '').toLowerCase();
+            if (statType.includes('passing')) return 'QB';
+            if (statType.includes('rushing')) return 'RB';
+            if (statType.includes('receiving')) return 'WR/TE';
+            if (statType.includes('receptions')) return 'WR/TE/RB';
+            return 'Other';
+        }
+
+        /**
+         * Populates filter dropdowns and adds event listeners.
+         * @param {string[][]} data - The parsed CSV data for player lines.
+         */
+        function processPlayerLines(data) {
+            positionFilterOptions.clear();
+            statTypeFilterOptions.clear();
+
+            // Loop data rows (skip header)
+            for (let i = 1; i < data.length; i++) {
+                const row = data[i];
+                if (row && row.length > 5) {
+                    const statType = row[5];
+                    const position = inferPosition(statType);
+                    
+                    statTypeFilterOptions.add(statType);
+                    positionFilterOptions.add(position);
+                }
+            }
+
+            // Populate select elements
+            populateSelect('position-filter', positionFilterOptions, 'All Positions');
+            populateSelect('stat-type-filter', statTypeFilterOptions, 'All Stats');
+
+            // Add event listeners
+            document.getElementById('position-filter').addEventListener('change', filterAndRenderPlayerLines);
+            document.getElementById('stat-type-filter').addEventListener('change', filterAndRenderPlayerLines);
+        }
+
+        /**
+         * Helper to fill a <select> element with options.
+         * @param {string} selectId - The ID of the <select> element.
+         * @param {Set<string>} optionsSet - A Set of strings for the options.
+         * @param {string} allText - The text for the "All" option.
+         */
+        function populateSelect(selectId, optionsSet, allText) {
+            const select = document.getElementById(selectId);
+            // Clear existing options (except the "All" option)
+            select.innerHTML = `<option value="All">${allText}</option>`;
+            
+            // Sort options alphabetically
+            const sortedOptions = [...optionsSet].sort();
+
+            sortedOptions.forEach(option => {
+                const optEl = document.createElement('option');
+                optEl.value = option;
+                optEl.textContent = option;
+                select.appendChild(optEl);
+            });
+        }
+
+        /**
+         * Filters the allPlayerLinesData and re-renders the table.
+         */
+        function filterAndRenderPlayerLines() {
+            const posFilter = document.getElementById('position-filter').value;
+            const statFilter = document.getElementById('stat-type-filter').value;
+
+            const headerRow = allPlayerLinesData.slice(0, 1);
+            let filteredData = allPlayerLinesData.slice(1);
+
+            // Apply position filter
+            if (posFilter !== 'All') {
+                filteredData = filteredData.filter(row => row && row.length > 5 && inferPosition(row[5]) === posFilter);
+            }
+
+            // Apply stat type filter
+            if (statFilter !== 'All') {
+                filteredData = filteredData.filter(row => row && row.length > 5 && row[5] === statFilter);
+            }
+
+            // Re-render the table
+            renderTable(document.getElementById('all-player-lines-container'), [...headerRow, ...filteredData]);
         }
 
     </script>
