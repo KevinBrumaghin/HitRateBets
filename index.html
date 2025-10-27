@@ -15,7 +15,7 @@
             font-family: 'Roboto', sans-serif;
         }
         
-        h1, h2, th {
+        h1, h2, h3, th {
             font-family: 'Russo One', sans-serif;
             /* Tailwind's font-bold might be overridden by the font, so add weight */
             font-weight: 700;
@@ -109,6 +109,14 @@
 
                 <!-- Best Bets Panel -->
                 <div class="hidden p-6 rounded-lg bg-gray-800 border border-gray-700" id="best-bets-panel" role="tabpanel" aria-labelledby="best-bets-tab">
+                    <!-- Hit Rates Container -->
+                    <div id="best-bets-hit-rates-container" class="mb-6">
+                        <p id="loading-best-bets-hit-rates" class="text-gray-400 text-lg animate-pulse">Loading Overall Hit Rates...</p>
+                    </div>
+                    
+                    <!-- Recommendation Note -->
+                    <p class="text-sm text-yellow-300 italic mb-4"><strong>Recommendation:</strong> From our research, the best picks to make are usually to take the over on our projections!</p>
+
                     <div class="overflow-x-auto">
                         <p id="loading-best-bets" class="text-gray-400 text-lg animate-pulse">Loading BestBets.csv data...</p>
                         <div id="best-bets-container"></div>
@@ -118,6 +126,14 @@
                 <!-- All Player Lines Panel -->
                 <div class="hidden p-6 rounded-lg bg-gray-800 border border-gray-700" id="all-player-lines-panel" role="tabpanel" aria-labelledby="all-player-lines-tab">
                     
+                    <!-- Hit Rates Container -->
+                    <div id="all-player-lines-hit-rates-container" class="mb-6">
+                        <p id="loading-all-player-lines-hit-rates" class="text-gray-400 text-lg animate-pulse">Loading Overall Hit Rates...</p>
+                    </div>
+
+                    <!-- Recommendation Note -->
+                    <p class="text-sm text-yellow-300 italic mb-4"><strong>Recommendation:</strong> From our research, the best picks to make are usually to take the over on our projections!</p>
+
                     <!-- Filters -->
                     <div class="flex flex-col sm:flex-row gap-4 mb-6">
                         <!-- Position Filter -->
@@ -215,8 +231,10 @@
                             loadCSV('GameLines.csv', 'game-lines-container', 'loading-game-lines');
                         } else if (targetPanelId === 'best-bets-panel') {
                             loadCSV('BestBets.csv', 'best-bets-container', 'loading-best-bets');
+                            loadHitRatesCSV('overallhitrates.csv', 'best-bets-hit-rates-container', 'loading-best-bets-hit-rates');
                         } else if (targetPanelId === 'all-player-lines-panel') {
                             loadCSV('all_player_lines.csv', 'all-player-lines-container', 'loading-all-player-lines', processPlayerLines);
+                            loadHitRatesCSV('overallhitrates.csv', 'all-player-lines-hit-rates-container', 'loading-all-player-lines-hit-rates');
                         }
                     }
                 });
@@ -276,6 +294,40 @@
                 console.error('Error loading CSV:', error);
                 loadingEl.textContent = `Error: ${error.message}`;
                 loadingEl.classList.remove('animate-pulse'); // Stop pulsing on error
+                loadingEl.classList.add('text-red-400', 'font-semibold');
+            }
+        }
+
+        /**
+         * Fetches and displays hit rates CSV as a styled grid.
+         * @param {string} filePath - The path to the CSV file.
+         * @param {string} containerId - The ID of the div to insert the grid into.
+         * @param {string} loadingId - The ID of the loading message element.
+         */
+        async function loadHitRatesCSV(filePath, containerId, loadingId) {
+            const container = document.getElementById(containerId);
+            const loadingEl = document.getElementById(loadingId);
+
+            try {
+                // No artificial delay needed, loads alongside main data
+                const response = await fetch(filePath);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status} - Could not find ${filePath}.`);
+                }
+                const csvText = await response.text();
+                const data = parseCSV(csvText);
+
+                if (data.length === 0) {
+                    throw new Error('Hit rates CSV file is empty or invalid.');
+                }
+
+                renderHitRates(container, data);
+                loadingEl.style.display = 'none';
+
+            } catch (error) {
+                console.error('Error loading Hit Rates CSV:', error);
+                loadingEl.textContent = `Error: ${error.message}`;
+                loadingEl.classList.remove('animate-pulse');
                 loadingEl.classList.add('text-red-400', 'font-semibold');
             }
         }
@@ -345,6 +397,50 @@
             // Clear container and add the new table
             container.innerHTML = '';
             container.appendChild(table);
+        }
+
+        /**
+         * Renders hit rate data into a styled grid.
+         * @param {HTMLElement} container - The element to append the grid to.
+         * @param {string[][]} data - The parsed CSV data.
+         */
+        function renderHitRates(container, data) {
+            // Clear container
+            container.innerHTML = '';
+
+            // Add a title
+            const title = document.createElement('h3');
+            title.className = 'text-lg font-bold text-orange-400 mb-3';
+            title.textContent = 'Previous Week Over Hit Rates';
+            container.appendChild(title);
+
+            const grid = document.createElement('div');
+            // Responsive grid
+            grid.className = 'grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-7 gap-3';
+
+            data.forEach(rowData => {
+                if (rowData.length >= 2) {
+                    const statType = rowData[0];
+                    const hitRate = rowData[1];
+                    
+                    const card = document.createElement('div');
+                    card.className = 'bg-gray-700 p-3 rounded-lg shadow-md text-center border border-gray-600';
+                    
+                    const statEl = document.createElement('div');
+                    statEl.className = 'text-xs font-medium text-gray-300 uppercase truncate';
+                    statEl.textContent = statType;
+                    
+                    const rateEl = document.createElement('div');
+                    rateEl.className = 'text-xl font-bold text-orange-400 mt-1';
+                    rateEl.textContent = hitRate;
+                    
+                    card.appendChild(statEl);
+                    card.appendChild(rateEl);
+                    grid.appendChild(card);
+                }
+            });
+
+            container.appendChild(grid);
         }
 
         // --- All Player Lines Specific Functions ---
@@ -431,5 +527,4 @@
     </script>
 </body>
 </html>
-
 
