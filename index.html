@@ -101,6 +101,10 @@
 
                 <!-- Game Lines Panel -->
                 <div class="hidden p-6 rounded-lg bg-gray-800 border border-gray-700" id="game-lines-panel" role="tabpanel" aria-labelledby="game-lines-tab">
+                    <!-- Hit Rates Container -->
+                    <div id="game-lines-hit-rates-container" class="mb-6">
+                        <p id="loading-game-lines-hit-rates" class="text-gray-400 text-lg animate-pulse">Loading Overall Hit Rates...</p>
+                    </div>
                     <div class="overflow-x-auto">
                         <p id="loading-game-lines" class="text-gray-400 text-lg animate-pulse">Loading GameLines.csv data...</p>
                         <div id="game-lines-container"></div>
@@ -229,6 +233,7 @@
                         button.dataset.loaded = 'true'; // Set loaded true immediately
                         if (targetPanelId === 'game-lines-panel') {
                             loadCSV('GameLines.csv', 'game-lines-container', 'loading-game-lines');
+                            loadHitRatesCSV('overallhitrates.csv', 'game-lines-hit-rates-container', 'loading-game-lines-hit-rates');
                         } else if (targetPanelId === 'best-bets-panel') {
                             loadCSV('BestBets.csv', 'best-bets-container', 'loading-best-bets');
                             loadHitRatesCSV('overallhitrates.csv', 'best-bets-hit-rates-container', 'loading-best-bets-hit-rates');
@@ -408,36 +413,60 @@
             // Clear container
             container.innerHTML = '';
 
+            const containerId = container.id;
+            let titleText = '';
+            let filteredData = [];
+            let gridCols = 'lg:grid-cols-7'; // Default for player props
+
+            const gameLineKeywords = ['Moneyline Hit Rate', 'Spread Hit Rate'];
+
+            if (containerId === 'game-lines-hit-rates-container') {
+                titleText = 'Season-Long Game Hit Rates';
+                filteredData = data.filter(row => row.length >= 2 && gameLineKeywords.includes(row[0]));
+                gridCols = 'lg:grid-cols-2'; // Only 2 items
+            } else {
+                titleText = 'Previous Week Over Hit Rates';
+                filteredData = data.filter(row => row.length >= 2 && !gameLineKeywords.includes(row[0]));
+                // gridCols remains 'lg:grid-cols-7'
+            }
+
             // Add a title
             const title = document.createElement('h3');
             title.className = 'text-lg font-bold text-orange-400 mb-3';
-            title.textContent = 'Previous Week Over Hit Rates';
+            title.textContent = titleText;
             container.appendChild(title);
 
-            const grid = document.createElement('div');
-            // Responsive grid
-            grid.className = 'grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-7 gap-3';
+            if (filteredData.length === 0) {
+                const noData = document.createElement('p');
+                noData.className = 'text-gray-400';
+                noData.textContent = 'No hit rate data available for this section.';
+                container.appendChild(noData);
+                return;
+            }
 
-            data.forEach(rowData => {
-                if (rowData.length >= 2) {
-                    const statType = rowData[0];
-                    const hitRate = rowData[1];
-                    
-                    const card = document.createElement('div');
-                    card.className = 'bg-gray-700 p-3 rounded-lg shadow-md text-center border border-gray-600';
-                    
-                    const statEl = document.createElement('div');
-                    statEl.className = 'text-xs font-medium text-gray-300 uppercase truncate';
-                    statEl.textContent = statType;
-                    
-                    const rateEl = document.createElement('div');
-                    rateEl.className = 'text-xl font-bold text-orange-400 mt-1';
-                    rateEl.textContent = hitRate;
-                    
-                    card.appendChild(statEl);
-                    card.appendChild(rateEl);
-                    grid.appendChild(card);
-                }
+            const grid = document.createElement('div');
+            // Responsive grid - now dynamic
+            grid.className = `grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 ${gridCols} gap-3`;
+
+            filteredData.forEach(rowData => {
+                // We already filtered for rowData.length >= 2
+                const statType = rowData[0];
+                const hitRate = rowData[1];
+                
+                const card = document.createElement('div');
+                card.className = 'bg-gray-700 p-3 rounded-lg shadow-md text-center border border-gray-600';
+                
+                const statEl = document.createElement('div');
+                statEl.className = 'text-xs font-medium text-gray-300 uppercase truncate';
+                statEl.textContent = statType;
+                
+                const rateEl = document.createElement('div');
+                rateEl.className = 'text-xl font-bold text-orange-400 mt-1';
+                rateEl.textContent = hitRate;
+                
+                card.appendChild(statEl);
+                card.appendChild(rateEl);
+                grid.appendChild(card);
             });
 
             container.appendChild(grid);
@@ -482,7 +511,7 @@
          * Helper to fill a <select> element with options.
          * @param {string} selectId - The ID of the <select> element.
          * @param {Set<string>} optionsSet - A Set of strings for the options.
-         * @param {string} allText - The text for the "All" option.
+         *_ **@param {string} allText - The text for the "All" option.
          */
         function populateSelect(selectId, optionsSet, allText) {
             const select = document.getElementById(selectId);
