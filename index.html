@@ -294,6 +294,9 @@
                 propHitRate: ['prop hit rate', 'sportsbook hit rate']
             };
 
+            // NEW: Define 'Stat Type' alias
+            const statTypeAliases = ['stat type'];
+
             // Find the index for each target column
             const foundIndices = {};
             for (const key in columnDefinitions) {
@@ -307,7 +310,7 @@
                 }
             }
             
-            // Get indices of the target columns in the desired order
+            // Get indices of the 5 target columns in the desired order
             const targetIndices = [
                 foundIndices.player,
                 foundIndices.ourProjection,
@@ -316,16 +319,32 @@
                 foundIndices.propHitRate
             ].filter(index => index !== -1); // Filter out any not found
 
+            // NEW: Find the 'Stat Type' index
+            let statTypeIndex = -1;
+            for (const alias of statTypeAliases) {
+                const index = lowerHeader.indexOf(alias);
+                if (index !== -1) {
+                    statTypeIndex = index;
+                    break;
+                }
+            }
+
             // Get indices of all *other* columns
             const otherIndices = [];
             for (let i = 0; i < header.length; i++) {
-                if (!targetIndices.includes(i)) {
+                // Check if it's NOT one of the 5 key columns AND NOT the stat type column
+                if (!targetIndices.includes(i) && i !== statTypeIndex) {
                     otherIndices.push(i);
                 }
             }
 
             // Combine indices for the final order
-            const newIndexOrder = [...targetIndices, ...otherIndices];
+            // 5 key columns first, then stat type (if found), then others
+            const newIndexOrder = [...targetIndices];
+            if (statTypeIndex !== -1) {
+                newIndexOrder.push(statTypeIndex);
+            }
+            newIndexOrder.push(...otherIndices);
 
             // Create the new re-ordered data array
             const reorderedData = [
