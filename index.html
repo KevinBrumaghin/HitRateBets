@@ -20,6 +20,16 @@
             /* Tailwind's font-bold might be overridden by the font, so add weight */
             font-weight: 700;
         }
+
+        /* Tab panel fade-in animation */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        [role="tabpanel"]:not(.hidden) {
+            animation: fadeIn 0.4s ease-out;
+        }
     </style>
 </head>
 <body class="bg-gray-900 text-gray-200">
@@ -33,31 +43,63 @@
         </header>
 
         <main>
-            <!-- Section for Game Lines -->
-            <section class="mb-12 bg-gray-800 rounded-lg shadow-xl overflow-hidden border border-gray-700">
-                <!-- Section header: bolded and themed -->
-                <h2 class="text-2xl font-bold text-orange-400 p-6 bg-gray-700 border-b border-gray-600">
-                    Game Lines
-                </h2>
-                <div class="p-6 overflow-x-auto">
-                    <p id="loading-game-lines" class="text-gray-400">Loading GameLines.csv data...</p>
-                    <!-- Table will be inserted here by JavaScript -->
-                    <div id="game-lines-container"></div>
-                </div>
-            </section>
+            <!-- Tab Navigation -->
+            <div class="mb-6 border-b border-gray-700">
+                <ul class="flex flex-wrap -mb-px text-lg font-medium text-center" id="myTab" role="tablist">
+                    <li role="presentation">
+                        <button class="inline-block p-4 border-b-2 rounded-t-lg transition-colors duration-300 ease-in-out" id="home-tab" data-target="home-panel" type="button" role="tab" data-loaded="true">
+                            Home
+                        </button>
+                    </li>
+                    <li role="presentation">
+                        <button class="inline-block p-4 border-b-2 rounded-t-lg transition-colors duration-300 ease-in-out" id="game-lines-tab" data-target="game-lines-panel" type="button" role="tab" data-loaded="false">
+                            Game Lines
+                        </button>
+                    </li>
+                    <li role="presentation">
+                        <button class="inline-block p-4 border-b-2 rounded-t-lg transition-colors duration-300 ease-in-out" id="best-bets-tab" data-target="best-bets-panel" type="button" role="tab" data-loaded="false">
+                            Best Bets
+                        </button>
+                    </li>
+                </ul>
+            </div>
 
-            <!-- Section for Best Bets -->
-            <section class="mb-12 bg-gray-800 rounded-lg shadow-xl overflow-hidden border border-gray-700">
-                <!-- Section header: bolded and themed -->
-                <h2 class="text-2xl font-bold text-orange-400 p-6 bg-gray-700 border-b border-gray-600">
-                    Best Bets
-                </h2>
-                <div class="p-6 overflow-x-auto">
-                    <p id="loading-best-bets" class="text-gray-400">Loading BestBets.csv data...</p>
-                    <!-- Table will be inserted here by JavaScript -->
-                    <div id="best-bets-container"></div>
+            <!-- Tab Content -->
+            <div id="myTabContent">
+                <!-- Home Panel -->
+                <div class="hidden p-6 rounded-lg bg-gray-800 border border-gray-700" id="home-panel" role="tabpanel" aria-labelledby="home-tab">
+                    <h2 class="text-2xl font-bold text-orange-400 mb-4">Welcome to Hit Rate Bets!</h2>
+                    <div class="space-y-4 text-gray-300">
+                        <p>
+                            You've found the home of data-driven sports predictions. We dive deep into real-life stats, team performance, and head-to-head matchups to provide predictions that are as realistic as possible.
+                        </p>
+                        <p>
+                            No fluff, no hot takes—just pure, analytical insights. Our goal is to analyze the data so you can make more informed decisions.
+                        </p>
+                        <p>
+                            Click on the <strong class="text-orange-400">Game Lines</strong> tab to see all upcoming matchups, or jump straight to our <strong class="text-orange-400">Best Bets</strong> to see our top picks based on hit rate and statistical value.
+                        </p>
+                    </div>
                 </div>
-            </section>
+
+                <!-- Game Lines Panel -->
+                <div class="hidden p-6 rounded-lg bg-gray-800 border border-gray-700" id="game-lines-panel" role="tabpanel" aria-labelledby="game-lines-tab">
+                    <div class="overflow-x-auto">
+                        <p id="loading-game-lines" class="text-gray-400 text-lg animate-pulse">Loading GameLines.csv data...</p>
+                        <!-- Table will be inserted here by JavaScript -->
+                        <div id="game-lines-container"></div>
+                    </div>
+                </div>
+
+                <!-- Best Bets Panel -->
+                <div class="hidden p-6 rounded-lg bg-gray-800 border border-gray-700" id="best-bets-panel" role="tabpanel" aria-labelledby="best-bets-tab">
+                    <div class="overflow-x-auto">
+                        <p id="loading-best-bets" class="text-gray-400 text-lg animate-pulse">Loading BestBets.csv data...</p>
+                        <!-- Table will be inserted here by JavaScript -->
+                        <div id="best-bets-container"></div>
+                    </div>
+                </div>
+            </div>
         </main>
 
         <footer class="text-center text-gray-500 text-sm mt-12 space-y-4">
@@ -76,10 +118,59 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            // Load both CSV files when the page is ready
-            loadCSV('GameLines.csv', 'game-lines-container', 'loading-game-lines');
-            loadCSV('BestBets.csv', 'best-bets-container', 'loading-best-bets');
+            initTabs();
         });
+
+        function initTabs() {
+            const tabButtons = document.querySelectorAll('[role="tab"]');
+            const tabPanels = document.querySelectorAll('[role="tabpanel"]');
+            
+            const activeClasses = ['text-orange-500', 'border-orange-500'];
+            const inactiveClasses = ['border-transparent', 'text-gray-400', 'hover:text-orange-400', 'hover:border-orange-400'];
+
+            // Set default active tab (Home)
+            const defaultTab = document.getElementById('home-tab');
+            const defaultPanel = document.getElementById('home-panel');
+            
+            defaultTab.classList.add(...activeClasses);
+            defaultTab.classList.remove(...inactiveClasses);
+            defaultPanel.classList.remove('hidden');
+
+            tabButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    // Deactivate all
+                    tabButtons.forEach(btn => {
+                        btn.classList.remove(...activeClasses);
+                        btn.classList.add(...inactiveClasses);
+                    });
+                    tabPanels.forEach(panel => {
+                        panel.classList.add('hidden');
+                    });
+
+                    // Activate clicked
+                    button.classList.add(...activeClasses);
+                    button.classList.remove(...inactiveClasses);
+
+                    const targetPanelId = button.dataset.target;
+                    const targetPanel = document.getElementById(targetPanelId);
+                    targetPanel.classList.remove('hidden');
+
+                    // Lazy load data only if it hasn't been loaded
+                    const isLoaded = button.dataset.loaded === 'true';
+                    
+                    if (!isLoaded) {
+                        if (targetPanelId === 'game-lines-panel') {
+                            loadCSV('GameLines.csv', 'game-lines-container', 'loading-game-lines');
+                            button.dataset.loaded = 'true';
+                        } else if (targetPanelId === 'best-bets-panel') {
+                            loadCSV('BestBets.csv', 'best-bets-container', 'loading-best-bets');
+                            button.dataset.loaded = 'true';
+                        }
+                    }
+                });
+            });
+        }
+
 
         /**
          * Fetches and displays a CSV file as an HTML table.
@@ -92,6 +183,9 @@
             const loadingEl = document.getElementById(loadingId);
 
             try {
+                // Artificial delay to show loading animation
+                await new Promise(resolve => setTimeout(resolve, 500));
+
                 const response = await fetch(filePath);
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status} - Could not find ${filePath}. Make sure it's in the same directory as index.html.`);
@@ -114,6 +208,7 @@
             } catch (error) {
                 console.error('Error loading CSV:', error);
                 loadingEl.textContent = `Error: ${error.message}`;
+                loadingEl.classList.remove('animate-pulse'); // Stop pulsing on error
                 loadingEl.classList.add('text-red-400', 'font-semibold');
             }
         }
@@ -145,7 +240,6 @@
 
             // Create table header
             if (data.length > 0) {
-                const a = 1;
                 const headerRow = data[0];
                 const thead = document.createElement('thead');
                 // Updated thead theme
