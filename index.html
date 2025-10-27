@@ -6,8 +6,6 @@
     <title>Game Data Viewer</title>
     <!-- Load Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Load html2canvas for saving as image -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <style>
         /* Import Russo One for headers and Roboto for body */
         @import url('https://fonts.googleapis.com/css2?family=Russo+One&family=Roboto:wght@400;500;700&display=swap');
@@ -22,22 +20,6 @@
             /* Tailwind's font-bold might be overridden by the font, so add weight */
             font-weight: 700;
         }
-
-        /* Styles for active/inactive tabs */
-        .tab-btn {
-            @apply px-4 py-2 font-semibold rounded-t-lg transition-colors;
-        }
-        .tab-active {
-            @apply bg-gray-700 text-orange-400;
-        }
-        .tab-inactive {
-            @apply bg-gray-800 text-gray-400 hover:bg-gray-700;
-        }
-
-        /* Hide pages by default */
-        .page-content {
-            display: none;
-        }
     </style>
 </head>
 <body class="bg-gray-900 text-gray-200">
@@ -46,18 +28,11 @@
         <header class="mb-8">
             <!-- Site header: bolded and themed -->
             <h1 class="text-3xl md:text-5xl font-bold text-center text-orange-500 uppercase tracking-wider">
-                Sports Game Data
+                Hit Rate Bets
             </h1>
         </header>
 
-        <!-- Page Navigation Tabs -->
-        <nav class="flex mb-4 border-b border-gray-700">
-            <button id="tab-data" class="tab-btn tab-active" onclick="showPage('data')">Game Data</button>
-            <button id="tab-builder" class="tab-btn tab-inactive" onclick="showPage('builder')">Parlay Builder</button>
-        </nav>
-
-        <!-- Page 1: Game Data -->
-        <main id="page-data" class="page-content" style="display: block;">
+        <main>
             <!-- Section for Game Lines -->
             <section class="mb-12 bg-gray-800 rounded-lg shadow-xl overflow-hidden border border-gray-700">
                 <!-- Section header: bolded and themed -->
@@ -85,52 +60,6 @@
             </section>
         </main>
 
-        <!-- Page 2: Parlay Builder -->
-        <main id="page-builder" class="page-content">
-            <div class="flex flex-col md:flex-row gap-8">
-                
-                <!-- Left Column: Available Games -->
-                <div class="w-full md:w-2/3">
-                    <h2 class="text-2xl font-bold text-orange-400 mb-4">Available Games</h2>
-                    <div id="available-games-list" class="space-y-4">
-                        <p class="text-gray-400">Loading games...</p>
-                        <!-- Game cards will be inserted here by JavaScript -->
-                    </div>
-                </div>
-
-                <!-- Right Column: Parlay Slip -->
-                <div class="w-full md:w-1/3">
-                    <h2 class="text-2xl font-bold text-orange-400 mb-4">Parlay Slip</h2>
-                    
-                    <!-- This is the card that will be saved as an image -->
-                    <div id="parlay-slip-card" class="bg-white text-gray-900 p-6 rounded-lg shadow-lg">
-                        <h3 class="text-xl font-bold text-center mb-4 text-indigo-700" style="font-family: 'Russo One', sans-serif;">My Parlay Slip</h3>
-                        <div id="parlay-slip-items" class="space-y-3">
-                            <p class="text-gray-500 text-center">Your slip is empty. Click a bet to add it!</p>
-                        </div>
-                        <div class="border-t border-gray-300 mt-4 pt-4">
-                            <div class="flex justify-between items-center">
-                                <span class="text-lg font-bold text-gray-800">Total Odds</span>
-                                <span id="total-odds" class="text-lg font-bold text-indigo-600">--</span>
-                            </div>
-                            <p class="text-xs text-gray-500 mt-2">(Odds calculation is for entertainment only)</p>
-                        </div>
-                    </div>
-                    
-                    <!-- Buttons are outside the saved card -->
-                    <div class="mt-4 flex flex-col gap-3">
-                        <button onclick="saveParlayAsImage()" class="w-full bg-orange-500 text-white font-bold py-3 px-4 rounded-lg hover:bg-orange-600 transition-colors">
-                            Save as Image
-                        </button>
-                        <button onclick="clearParlay()" class="w-full bg-gray-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-gray-700 transition-colors">
-                            Clear Slip
-                        </button>
-                    </div>
-                </div>
-
-            </div>
-        </main>
-
         <footer class="text-center text-gray-500 text-sm mt-12 space-y-4">
             <!-- Disclaimer Section -->
             <div class="max-w-2xl mx-auto text-xs text-gray-400 space-y-2">
@@ -146,80 +75,41 @@
     </div>
 
     <script>
-        // Global state for the parlay builder
-        let allGameData = [];
-        let parlaySlip = [];
-
-        // --- Page Navigation ---
-        function showPage(pageId) {
-            // Hide all pages
-            document.getElementById('page-data').style.display = 'none';
-            document.getElementById('page-builder').style.display = 'none';
-
-            // Deactivate all tabs
-            document.getElementById('tab-data').classList.replace('tab-active', 'tab-inactive');
-            document.getElementById('tab-builder').classList.replace('tab-active', 'tab-inactive');
-
-            // Show the selected page and activate its tab
-            document.getElementById(`page-${pageId}`).style.display = 'block';
-            document.getElementById(`tab-${pageId}`).classList.replace('tab-inactive', 'tab-active');
-        }
-
-        // --- CSV Loading and Initial Setup ---
         document.addEventListener('DOMContentLoaded', () => {
             // Load both CSV files when the page is ready
-            loadCSV('GameLines.csv', 'game-lines-container', 'loading-game-lines', true);
-            loadCSV('BestBets.csv', 'best-bets-container', 'loading-best-bets', false);
+            loadCSV('GameLines.csv', 'game-lines-container', 'loading-game-lines');
+            loadCSV('BestBets.csv', 'best-bets-container', 'loading-best-bets');
         });
 
-        async function loadCSV(filePath, containerId, loadingId, populateParlayBuilder) {
+        /**
+         * Fetches and displays a CSV file as an HTML table.
+         * @param {string} filePath - The path to the CSV file (e.g., 'GameLines.csv').
+         * @param {string} containerId - The ID of the div to insert the table into.
+         * @param {string} loadingId - The ID of the loading message element.
+         */
+        async function loadCSV(filePath, containerId, loadingId) {
             const container = document.getElementById(containerId);
             const loadingEl = document.getElementById(loadingId);
 
             try {
                 const response = await fetch(filePath);
                 if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status} - Could not find ${filePath}.`);
+                    throw new Error(`HTTP error! status: ${response.status} - Could not find ${filePath}. Make sure it's in the same directory as index.html.`);
                 }
                 const csvText = await response.text();
+                
+                // Parse the CSV data
                 const data = parseCSV(csvText);
 
                 if (data.length === 0) {
                     throw new Error('CSV file is empty or invalid.');
                 }
 
-                // Render the table as before
+                // Render the data as a table
                 renderTable(container, data);
+                
+                // Hide loading message
                 loadingEl.style.display = 'none';
-
-                // --- New Feature: Populate Parlay Builder ---
-                // We only need to do this once, using the GameLines data
-                if (populateParlayBuilder && data.length > 1) {
-                    // Store header and body rows separately
-                    const header = data[0];
-                    const bodyRows = data.slice(1);
-
-                    // Find column indices
-                    const indices = {
-                        visitor: header.indexOf('Visitor'),
-                        home: header.indexOf('Home'),
-                        winner: header.indexOf('Proj Winner'),
-                        spread: header.indexOf('Proj Spread'),
-                        overUnder: header.indexOf('Proj O/U')
-                    };
-
-                    // Map data to a more usable object format
-                    allGameData = bodyRows.map(row => ({
-                        id: `${row[indices.visitor]}-${row[indices.home]}`, // Simple unique ID
-                        visitor: row[indices.visitor],
-                        home: row[indices.home],
-                        projWinner: row[indices.winner],
-                        projSpread: row[indices.spread],
-                        projOverUnder: row[indices.overUnder]
-                    }));
-                    
-                    renderAvailableGames();
-                }
 
             } catch (error) {
                 console.error('Error loading CSV:', error);
@@ -228,24 +118,44 @@
             }
         }
 
+        /**
+         * A simple CSV parser.
+         * @param {string} text - The raw CSV text.
+         * @returns {string[][]} - An array of arrays representing rows and cells.
+         */
         function parseCSV(text) {
+            // Trim whitespace and filter out empty lines
             const lines = text.trim().split('\n').filter(line => line.trim() !== '');
-            return lines.map(line => line.split(',').map(cell => cell.trim()));
+            return lines.map(line => {
+                // This is a basic parser. It won't handle commas inside quotes.
+                // For more complex CSVs, a library would be better.
+                return line.split(',').map(cell => cell.trim());
+            });
         }
 
+        /**
+         * Renders data into an HTML table with Tailwind classes.
+         * @param {HTMLElement} container - The element to append the table to.
+         * @param {string[][]} data - The parsed CSV data.
+         */
         function renderTable(container, data) {
             const table = document.createElement('table');
+            // Updated table theme
             table.className = 'min-w-full divide-y divide-gray-700 border border-gray-700';
 
+            // Create table header
             if (data.length > 0) {
+                const a = 1;
                 const headerRow = data[0];
                 const thead = document.createElement('thead');
+                // Updated thead theme
                 thead.className = 'bg-gray-700';
                 
                 const tr = document.createElement('tr');
                 headerRow.forEach(headerText => {
                     const th = document.createElement('th');
                     th.scope = 'col';
+                    // Updated th theme: bolded and colored
                     th.className = 'px-6 py-3 text-left text-xs font-bold text-orange-400 uppercase tracking-wider';
                     th.textContent = headerText;
                     tr.appendChild(th);
@@ -254,15 +164,21 @@
                 table.appendChild(thead);
             }
 
+            // Create table body
             if (data.length > 1) {
                 const tbody = document.createElement('tbody');
+                // Updated tbody theme
                 tbody.className = 'bg-gray-800 divide-y divide-gray-700';
+
                 const bodyRows = data.slice(1);
                 bodyRows.forEach(rowData => {
                     const tr = document.createElement('tr');
+                    // Updated tr theme
                     tr.className = 'hover:bg-gray-700';
+                    
                     rowData.forEach(cellData => {
                         const td = document.createElement('td');
+                        // Updated td theme
                         td.className = 'px-6 py-4 whitespace-nowrap text-sm text-gray-300';
                         td.textContent = cellData;
                         tr.appendChild(td);
@@ -271,182 +187,12 @@
                 });
                 table.appendChild(tbody);
             }
+
+            // Clear container and add the new table
             container.innerHTML = '';
             container.appendChild(table);
-        }
-
-
-        // --- Parlay Builder Functions ---
-
-        /**
-         * Renders the list of available games for the parlay builder
-         */
-        function renderAvailableGames() {
-            const listContainer = document.getElementById('available-games-list');
-            listContainer.innerHTML = ''; // Clear loading message
-
-            allGameData.forEach(game => {
-                const gameCard = document.createElement('div');
-                gameCard.className = 'bg-gray-800 p-4 rounded-lg shadow-lg border border-gray-700';
-                
-                gameCard.innerHTML = `
-                    <h4 class="text-lg font-bold text-orange-400 mb-3">${game.visitor} @ ${game.home}</h4>
-                    <div class="grid grid-cols-3 gap-2">
-                        <button id="btn-${game.id}-winner" class="bet-btn" onclick="addBetToParlay('${game.id}', 'Moneyline', '${game.projWinner}', '${game.projWinner} ML')">
-                            <span class="text-xs">Winner</span>
-                            <span class="font-bold">${game.projWinner}</span>
-                        </button>
-                        <button id="btn-${game.id}-spread" class="bet-btn" onclick="addBetToParlay('${game.id}', 'Spread', '${game.projSpread}', '${game.projWinner} ${game.projSpread}')">
-                            <span class="text-xs">Spread</span>
-                            <span class="font-bold">${game.projWinner} ${game.projSpread}</span>
-                        </button>
-                        <button id="btn-${game.id}-ou" class="bet-btn" onclick="addBetToParlay('${game.id}', 'Over/Under', '${game.projOverUnder}', 'O/U ${game.projOverUnder}')">
-                            <span class="text-xs">Over/Under</span>
-                            <span class="font-bold">${game.projOverUnder}</span>
-                        </button>
-                    </div>
-                `;
-                
-                // Add styling for bet buttons
-                gameCard.querySelectorAll('.bet-btn').forEach(btn => {
-                    btn.className = 'flex flex-col items-center justify-center p-3 bg-gray-700 rounded-md hover:bg-orange-500 hover:text-white transition-all text-xs text-gray-300';
-                });
-
-                listContainer.appendChild(gameCard);
-            });
-            updateBetButtonStyles();
-        }
-
-        /**
-         * Adds a selected bet to the parlay slip
-         */
-        function addBetToParlay(gameId, betType, betValue, betDisplay) {
-            // Check if a bet for this game already exists
-            const existingBetIndex = parlaySlip.findIndex(bet => bet.gameId === gameId);
-
-            if (existingBetIndex > -1) {
-                // If user clicks the *same* bet, remove it (deselect)
-                if (parlaySlip[existingBetIndex].betType === betType) {
-                    parlaySlip.splice(existingBetIndex, 1);
-                } else {
-                    // If user clicks a *different* bet for the same game, replace it
-                    parlaySlip[existingBetIndex] = { gameId, betType, betValue, betDisplay };
-                }
-            } else {
-                // No bet for this game, add it
-                parlaySlip.push({ gameId, betType, betValue, betDisplay });
-            }
-
-            renderParlaySlip();
-            updateBetButtonStyles();
-        }
-
-        /**
-         * Renders the items in the parlay slip card
-         */
-        function renderParlaySlip() {
-            const itemsContainer = document.getElementById('parlay-slip-items');
-            itemsContainer.innerHTML = ''; // Clear existing items
-
-            if (parlaySlip.length === 0) {
-                itemsContainer.innerHTML = '<p class="text-gray-500 text-center">Your slip is empty. Click a bet to add it!</p>';
-                document.getElementById('total-odds').textContent = '--';
-                return;
-            }
-
-            parlaySlip.forEach((bet, index) => {
-                const item = document.createElement('div');
-                item.className = 'flex justify-between items-center bg-gray-100 p-3 rounded';
-                
-                // Find game info
-                const game = allGameData.find(g => g.id === bet.gameId);
-
-                item.innerHTML = `
-                    <div>
-                        <span class="font-bold text-sm text-gray-800">${bet.betDisplay}</span>
-                        <span class="block text-xs text-gray-600">${game.visitor} @ ${game.home}</span>
-                    </div>
-                    <button onclick="removeBetFromParlay(${index})" class="text-red-500 font-bold px-2 rounded-full hover:bg-red-100">&times;</button>
-                `;
-                itemsContainer.appendChild(item);
-            });
-
-            // Mock odds calculation (e.g., +100 for each leg)
-            const mockOdds = parlaySlip.length * 100;
-            document.getElementById('total-odds').textContent = `+${mockOdds}`;
-        }
-
-        /**
-         * Removes a bet from the parlay slip by its index
-         */
-        function removeBetFromParlay(index) {
-            parlaySlip.splice(index, 1);
-            renderParlaySlip();
-            updateBetButtonStyles();
-        }
-
-        /**
-         * Clears all bets from the parlay slip
-         */
-        function clearParlay() {
-            parlaySlip = [];
-            renderParlaySlip();
-            updateBetButtonStyles();
-        }
-
-        /**
-         * Updates button styles to show which bets are selected
-         */
-        function updateBetButtonStyles() {
-            // Reset all buttons
-            document.querySelectorAll('.bet-btn').forEach(btn => {
-                btn.classList.remove('bg-orange-600', 'text-white');
-                btn.classList.add('bg-gray-700', 'text-gray-300');
-            });
-
-            // Highlight selected buttons
-            parlaySlip.forEach(bet => {
-                let btnId;
-                if (bet.betType === 'Moneyline') btnId = `btn-${bet.gameId}-winner`;
-                else if (bet.betType === 'Spread') btnId = `btn-${bet.gameId}-spread`;
-                else if (bet.betType === 'Over/Under') btnId = `btn-${bet.gameId}-ou`;
-                
-                const btn = document.getElementById(btnId);
-                if (btn) {
-                    btn.classList.add('bg-orange-600', 'text-white');
-                    btn.classList.remove('bg-gray-700', 'text-gray-300');
-                }
-            });
-        }
-
-        /**
-         * Saves the parlay slip card as a PNG image
-         */
-        function saveParlayAsImage() {
-            const slipCard = document.getElementById('parlay-slip-card');
-            
-            // Use html2canvas to render the element
-            html2canvas(slipCard, {
-                backgroundColor: '#ffffff', // Force a white background for the image
-                scale: 2 // Render at 2x resolution for better quality
-            }).then(canvas => {
-                // Create a temporary link element
-                const link = document.createElement('a');
-                link.href = canvas.toDataURL('image/png');
-                link.download = 'my-parlay-slip.png';
-                
-                // Programmatically click the link to trigger the download
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
-            }).catch(err => {
-                console.error('Error saving image:', err);
-                // In a real app, you'd show a user-friendly message here
-            });
         }
 
     </script>
 </body>
 </html>
-
-
