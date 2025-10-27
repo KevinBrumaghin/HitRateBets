@@ -1,14 +1,7 @@
-Week,Day,Visitor,Home,Win %,Proj Winner,Proj Spread,Proj O/U
-8,Thu,Minnesota,LA Chargers,52.45%,LA Chargers,-1,41.4
-8,Sun,Buffalo,Carolina,85.39%,Buffalo,-8,40.05
-8,Sun,Chicago,Baltimore,53.16%,Chicago,-1,46
-8,Sun,Cleveland,New England,82.04%,New England,-7,38.7
-8,Sun,Miami,Atlanta,56.14%,Atlanta,-1.5,41.4
-8,Sun,NY Giants,Philadelphia,72.51%,Philadelphia,-5,46.35
-8,Sun,NY Jets,Cincinnati,74.79%,Cincinnati,-5.5,52.2
-8,Sun,San Francisco,Houston,69.65%,Houston,-4.5,35.55
-8,Sun,Tampa Bay,New Orleans,58.36%,Tampa Bay,-2,36.45
-8,Sun,Dallas,Denver,77.46%,Denver,-6,46.8
-8,Sun,Tennessee,Indianapolis,99.00%,Indianapolis,-12.5,39.15
-8,Sun,Green Bay,Pittsburgh,67.98%,Green Bay,-4,45
-8,Mon,Washington,Kansas City,99.00%,Kansas City,-12.5,42.75
+My Best Picks This Week,,,0.85,,,,
+Player,Stat Name,My Projection,MyStat Hit Rate,Sportsbook Prop,Prop Hit Rate,Team,Game Day
+Isiah Pacheco (KC),RB Rush Yds Prop,21.5,100.00%,4950.00%,28.57%,Kansas City,Mon
+Travis Kelce (KC),TE Rec Yards Prop,32,85.71%,4050.00%,85.71%,Kansas City,Mon
+Zach Ertz (WAS),TE Rec Yards Prop,17,85.71%,3250.00%,57.14%,Washington,Mon
+Travis Kelce (KC),TE Receptions Prop,2.5,85.71%,350.00%,71.43%,Kansas City,Mon
+Zach Ertz (WAS),TE Receptions Prop,1.5,85.71%,350.00%,28.57%,Washington,Mon
