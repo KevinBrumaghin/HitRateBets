@@ -272,7 +272,7 @@
                     onSuccessCallback(data);
                 }
 
-            } catch (error)
+            } catch (error) {
                 console.error('Error loading CSV:', error);
                 loadingEl.textContent = `Error: ${error.message}`;
                 loadingEl.classList.remove('animate-pulse'); // Stop pulsing on error
@@ -431,4 +431,5 @@
     </script>
 </body>
 </html>
+
 
