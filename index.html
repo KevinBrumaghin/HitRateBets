@@ -191,6 +191,13 @@
         let positionFilterOptions = new Set();
         let statTypeFilterOptions = new Set();
 
+        // Global state for sorting
+        let sortState = {
+            'GameLines.csv': { colIndex: -1, direction: 'asc' },
+            'BestBets.csv': { colIndex: -1, direction: 'asc' },
+            'all_player_lines.csv': { colIndex: -1, direction: 'asc' }
+        };
+
         document.addEventListener('DOMContentLoaded', () => {
             initTabs();
         });
@@ -304,12 +311,11 @@
                 } else if (filePath === 'BestBets.csv') {
                     bestBetsData = data;
                 } else if (filePath === 'all_player_lines.csv') {
-                    // Removed logic that renamed header
                     allPlayerLinesData = data;
                 }
 
                 // Render the data as a table
-                renderTable(container, data);
+                renderTable(container, data, filePath); // MODIFIED: Pass filePath
                 
                 // Hide loading message
                 loadingEl.style.display = 'none';
@@ -334,6 +340,7 @@
          * @param {string} loadingId - The ID of the loading message element.
          */
         async function loadHitRatesCSV(filePath, containerId, loadingId) {
+            // ... (existing code, no changes) ...
             const container = document.getElementById(containerId);
             const loadingEl = document.getElementById(loadingId);
 
@@ -367,6 +374,7 @@
          * @returns {string[][]} - An array of arrays representing rows and cells.
          */
         function parseCSV(text) {
+            // ... (existing code, no changes) ...
             // Trim whitespace and filter out empty lines
             const lines = text.trim().split('\n').filter(line => line.trim() !== '');
             return lines.map(line => {
@@ -379,24 +387,43 @@
          * Renders data into an HTML table with Tailwind classes.
          * @param {HTMLElement} container - The element to append the table to.
          * @param {string[][]} data - The parsed CSV data.
+         * @param {string} [filePath] - Optional filePath to enable sorting.
          */
-        function renderTable(container, data) {
+        function renderTable(container, data, filePath = null) {
             const table = document.createElement('table');
             table.className = 'min-w-full divide-y divide-gray-700 border border-gray-700';
+
+            // Get sort state if filePath is provided and valid
+            const state = (filePath && sortState[filePath]) ? sortState[filePath] : null;
 
             // Create table header
             if (data.length > 0) {
                 const headerRow = data[0];
                 const thead = document.createElement('thead');
-                // MODIFIED: Added sticky positioning and z-index for scrolling
                 thead.className = 'bg-gray-700 sticky top-0 z-10';
                 
                 const tr = document.createElement('tr');
-                headerRow.forEach(headerText => {
+                headerRow.forEach((headerText, index) => {
                     const th = document.createElement('th');
                     th.scope = 'col';
-                    th.className = 'px-6 py-3 text-left text-xs font-bold text-orange-400 uppercase tracking-wider';
-                    th.textContent = headerText;
+                    
+                    if (state) {
+                        // This table is sortable
+                        th.className = 'px-6 py-3 text-left text-xs font-bold text-orange-400 uppercase tracking-wider cursor-pointer hover:text-orange-300';
+                        th.dataset.colIndex = index;
+                        
+                        let indicator = '';
+                        if (state.colIndex === index) {
+                            indicator = state.direction === 'asc' ? ' &uarr;' : ' &darr;'; // Up/Down arrow
+                        }
+                        th.innerHTML = headerText + indicator;
+                        
+                        th.addEventListener('click', () => handleSort(filePath, container.id, index));
+                    } else {
+                        // This table (like hit rates) is not sortable
+                        th.className = 'px-6 py-3 text-left text-xs font-bold text-orange-400 uppercase tracking-wider';
+                        th.textContent = headerText;
+                    }
                     tr.appendChild(th);
                 });
                 thead.appendChild(tr);
@@ -435,6 +462,7 @@
          * @param {string[][]} data - The parsed CSV data.
          */
         function renderHitRates(container, data) {
+            // ... (existing code, no changes) ...
             // Clear container
             container.innerHTML = '';
 
@@ -497,9 +525,74 @@
             container.appendChild(grid);
         }
 
-        // --- All Player Lines Specific Functions ---
 
-        // Removed the inferPosition function as it's no longer needed
+        // --- Sorting Functions ---
+
+        /**
+         * Tries to parse a value as a number (handling percentages), otherwise returns it as a lowercase string.
+         * @param {string} val - The string value from the table cell.
+         * @returns {string|number} - The parsed value.
+         */
+        function parseValueForSort(val) {
+            if (val === null || val === undefined) return 0;
+            const num = parseFloat(String(val).replace('%', ''));
+            return isNaN(num) ? String(val).toLowerCase() : num;
+        }
+
+        /**
+         * Comparison function for sorting table data.
+         * @param {string[]} a - The first row array.
+         * @param {string[]} b - The second row array.
+         * @param {number} colIndex - The column index to sort by.
+         * @param {string} direction - 'asc' or 'desc'.
+         * @returns {number} - Sort order.
+         */
+        function sortComparer(a, b, colIndex, direction) {
+            const parsedA = parseValueForSort(a[colIndex]);
+            const parsedB = parseValueForSort(b[colIndex]);
+            
+            let comparison = 0;
+            if (parsedA > parsedB) comparison = 1;
+            else if (parsedA < parsedB) comparison = -1;
+            
+            return direction === 'asc' ? comparison : -comparison;
+        }
+
+        /**
+         * Handles the click event on a table header to sort the data.
+         * @param {string} filePath - The key for the data array and sort state.
+         * @param {string} containerId - The ID of the table container to re-render.
+         * @param {number} colIndex - The column index that was clicked.
+         */
+        function handleSort(filePath, containerId, colIndex) {
+            let data;
+            if (filePath === 'GameLines.csv') data = gameLinesData;
+            else if (filePath === 'BestBets.csv') data = bestBetsData;
+            else if (filePath === 'all_player_lines.csv') data = allPlayerLinesData;
+            else return; // Should not happen
+
+            const state = sortState[filePath];
+            const newDirection = (state.colIndex === colIndex && state.direction === 'asc') ? 'desc' : 'asc';
+            
+            // Update the global sort state
+            sortState[filePath] = { colIndex, direction: newDirection };
+
+            if (filePath === 'all_player_lines.csv') {
+                // For "All Player Lines", we must re-apply filters AND sort
+                filterAndRenderPlayerLines();
+            } else {
+                // For other tables, just sort and re-render
+                const header = data.slice(0, 1);
+                let body = data.slice(1);
+                
+                body.sort((a, b) => sortComparer(a, b, colIndex, newDirection));
+                
+                renderTable(document.getElementById(containerId), [...header, ...body], filePath);
+            }
+        }
+
+
+        // --- All Player Lines Specific Functions ---
 
         /**
          * Populates filter dropdowns and adds event listeners.
@@ -539,6 +632,7 @@
          *_ **@param {string} allText - The text for the "All" option.
          */
         function populateSelect(selectId, optionsSet, allText) {
+            // ... (existing code, no changes) ...
             const select = document.getElementById(selectId);
             // Clear existing options (except the "All" option)
             select.innerHTML = `<option value="All">${allText}</option>`;
@@ -560,22 +654,29 @@
         function filterAndRenderPlayerLines() {
             const posFilter = document.getElementById('position-filter').value;
             const statFilter = document.getElementById('stat-type-filter').value;
+            const filePath = 'all_player_lines.csv'; // Define filePath for this table
 
             const headerRow = allPlayerLinesData.slice(0, 1);
             let filteredData = allPlayerLinesData.slice(1);
 
-            // Apply position filter (Updated to check row[0])
+            // Apply position filter
             if (posFilter !== 'All') {
                 filteredData = filteredData.filter(row => row && row.length > 6 && row[0] === posFilter);
             }
 
-            // Apply stat type filter (Updated to check row[6])
+            // Apply stat type filter
             if (statFilter !== 'All') {
                 filteredData = filteredData.filter(row => row && row.length > 6 && row[6] === statFilter);
             }
 
-            // Re-render the table
-            renderTable(document.getElementById('all-player-lines-container'), [...headerRow, ...filteredData]);
+            // MODIFIED: Apply sorting *after* filtering
+            const state = sortState[filePath];
+            if (state.colIndex !== -1) {
+                filteredData.sort((a, b) => sortComparer(a, b, state.colIndex, state.direction));
+            }
+
+            // Re-render the table, passing the filePath
+            renderTable(document.getElementById('all-player-lines-container'), [...headerRow, ...filteredData], filePath);
         }
 
     </script>
