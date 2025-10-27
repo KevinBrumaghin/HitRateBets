@@ -6,6 +6,8 @@
     <title>Hit Rate Bets</title>
     <!-- Load Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Load Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         /* Import Russo One for headers and Roboto for body */
         @import url('https://fonts.googleapis.com/css2?family=Russo+One&family=Roboto:wght@400;500;700&display=swap');
@@ -86,7 +88,7 @@
                 <!-- Home Panel -->
                 <div class="hidden p-6 rounded-lg bg-gray-800 border border-gray-700" id="home-panel" role="tabpanel" aria-labelledby="home-tab">
                     <h2 class="text-2xl font-bold text-orange-400 mb-4">Welcome to Hit Rate Bets!</h2>
-                    <div class="space-y-4 text-gray-300">
+                    <div class="space-y-4 text-gray-300 mb-8">
                         <p>
                             You've found the home of data-driven sports predictions. We dive deep into real-life stats, team performance, and head-to-head matchups to provide predictions that are as realistic as possible.
                         </p>
@@ -94,8 +96,17 @@
                             No fluff, no hot takes—just pure, analytical insights. Our goal is to analyze the data so you can make more informed decisions.
                         </p>
                         <p>
-                            Click on the <strong class="text-orange-400">Game Lines</strong> tab to see all upcoming matchups, or jump straight to our <strong class="text-orange-400">Best Bets</strong> to see our top picks based on hit rate and statistical value.
+                            Click on the <strong class="text-orange-400">Game Lines</strong> tab to see all upcoming matchups, check out the <strong class="text-orange-400">All Player Lines</strong> tab to filter every prop, or jump straight to our <strong class="text-orange-400">Best Bets</strong> to see our top picks!
                         </p>
+                    </div>
+
+                    <!-- New Chart Section -->
+                    <div>
+                        <h2 class="text-2xl font-bold text-orange-400 mb-4">Prediction Accuracy</h2>
+                        <p id="loading-accuracy-chart" class="text-gray-400 text-lg animate-pulse">Loading accuracy data...</p>
+                        <div id="accuracy-chart-container" class="relative" style="height: 400px;">
+                            <canvas id="accuracyChart"></canvas>
+                        </div>
                     </div>
                 </div>
 
@@ -200,6 +211,8 @@
 
         document.addEventListener('DOMContentLoaded', () => {
             initTabs();
+            // Manually load chart for home page
+            loadHitRatesForChart('overallhitrates.csv', 'accuracy-chart-container', 'loading-accuracy-chart');
         });
 
         function initTabs() {
@@ -366,6 +379,145 @@
                 loadingEl.classList.remove('animate-pulse');
                 loadingEl.classList.add('text-red-400', 'font-semibold');
             }
+        }
+
+        /**
+         * Fetches hit rates CSV and renders it as a Chart.js chart.
+         * @param {string} filePath - The path to the CSV file.
+         * @param {string} containerId - The ID of the div containing the canvas.
+         * @param {string} loadingId - The ID of the loading message element.
+         */
+        async function loadHitRatesForChart(filePath, containerId, loadingId) {
+            const container = document.getElementById(containerId);
+            const loadingEl = document.getElementById(loadingId);
+
+            try {
+                const response = await fetch(filePath);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status} - Could not find ${filePath}.`);
+                }
+                const csvText = await response.text();
+                const data = parseCSV(csvText);
+
+                if (data.length === 0) {
+                    throw new Error('Hit rates CSV file is empty or invalid.');
+                }
+
+                renderAccuracyChart(container, data);
+                loadingEl.style.display = 'none';
+
+            } catch (error)
+            {
+                console.error('Error loading Hit Rates for Chart:', error);
+                loadingEl.textContent = `Error: ${error.message}`;
+                loadingEl.classList.remove('animate-pulse');
+                loadingEl.classList.add('text-red-400', 'font-semibold');
+            }
+        }
+
+        /**
+         * Renders the accuracy data into a Chart.js bar chart.
+         * @param {HTMLElement} container - The container element.
+         * @param {string[][]} data - The parsed CSV data.
+         */
+        function renderAccuracyChart(container, data) {
+            const canvas = document.getElementById('accuracyChart');
+            if (!canvas) return; // Exit if canvas not found
+            const ctx = canvas.getContext('2d');
+
+            const gameLineKeywords = ['Moneyline Hit Rate', 'Spread Hit Rate'];
+            
+            const playerPropData = data.filter(row => row.length >= 2 && !gameLineKeywords.includes(row[0]));
+            const gameLineData = data.filter(row => row.length >= 2 && gameLineKeywords.includes(row[0]));
+
+            // Combine all data for the chart
+            const allData = [...playerPropData, ...gameLineData];
+
+            const labels = allData.map(row => row[0]);
+            const values = allData.map(row => parseFloat(row[1].replace('%', '')));
+            
+            const playerPropColor = 'rgba(246, 173, 85, 0.7)'; // Lighter orange
+            const gameLineColor = 'rgba(235, 137, 23, 0.7)'; // Bolder orange
+
+            const backgroundColors = [
+                ...playerPropData.map(() => playerPropColor),
+                ...gameLineData.map(() => gameLineColor)
+            ];
+
+            const borderColors = [
+                ...playerPropData.map(() => 'rgba(246, 173, 85, 1)'),
+                ...gameLineData.map(() => 'rgba(235, 137, 23, 1)')
+            ];
+
+            // Set global font styles for Chart.js
+            Chart.defaults.color = '#e5e7eb'; // text-gray-200
+            Chart.defaults.font.family = "'Roboto', sans-serif";
+
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Hit Rate %',
+                        data: values,
+                        backgroundColor: backgroundColors,
+                        borderColor: borderColors,
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 100,
+                            ticks: {
+                                callback: function(value) {
+                                    return value + '%';
+                                }
+                            },
+                            grid: {
+                                color: 'rgba(107, 114, 128, 0.3)' // gray-500 with opacity
+                            }
+                        },
+                        x: {
+                            grid: {
+                                display: false
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false // Hide legend as colors are self-explanatory
+                        },
+                        tooltip: {
+                            backgroundColor: 'rgba(17, 24, 39, 0.9)', // bg-gray-900
+                            titleFont: {
+                                family: "'Russo One', sans-serif",
+                                size: 16
+                            },
+                            bodyFont: {
+                                size: 14
+                            },
+                            borderColor: 'rgba(246, 173, 85, 1)',
+                            borderWidth: 1,
+                            callbacks: {
+                                label: function(context) {
+                                    let label = context.dataset.label || '';
+                                    if (label) {
+                                        label += ': ';
+                                    }
+                                    if (context.parsed.y !== null) {
+                                        label += context.parsed.y + '%';
+                                    }
+                                    return label;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
         }
 
         /**
