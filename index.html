@@ -121,6 +121,9 @@
                     <!-- Recommendation Note -->
                     <p class="text-sm text-yellow-300 italic mb-4"><strong>Recommendation:</strong> From our research, the best picks to make are usually to take the over on our projections!</p>
 
+                    <!-- Title for the table -->
+                    <h3 class="text-lg font-bold text-orange-400 mb-3">Best Bets</h3>
+
                     <div class="overflow-x-auto">
                         <p id="loading-best-bets" class="text-gray-400 text-lg animate-pulse">Loading BestBets.csv data...</p>
                         <div id="best-bets-container"></div>
@@ -364,7 +367,8 @@
             if (data.length > 0) {
                 const headerRow = data[0];
                 const thead = document.createElement('thead');
-                thead.className = 'bg-gray-700';
+                // MODIFIED: Added sticky positioning and z-index for scrolling
+                thead.className = 'bg-gray-700 sticky top-0 z-10';
                 
                 const tr = document.createElement('tr');
                 headerRow.forEach(headerText => {
