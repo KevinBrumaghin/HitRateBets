@@ -122,7 +122,8 @@
                     <div class="flex flex-col sm:flex-row gap-4 mb-6">
                         <!-- Position Filter -->
                         <div>
-                            <label for="position-filter" class="block text-sm font-medium text-orange-400 mb-1">Position (Inferred)</label>
+                            <!-- Updated Label: Removed "(Inferred)" -->
+                            <label for="position-filter" class="block text-sm font-medium text-orange-400 mb-1">Position</label>
                             <select id="position-filter" class="bg-gray-700 border border-gray-600 text-gray-200 text-sm rounded-lg focus:ring-orange-500 focus:border-orange-500 block w-full p-2.5 pr-8">
                                 <option value="All">All Positions</option>
                             </select>
@@ -227,7 +228,7 @@
          * @param {string} filePath - The path to the CSV file.
          * @param {string} containerId - The ID of the div to insert the table into.
          * @param {string} loadingId - The ID of the loading message element.
-         * @param {function} onSuccessCallback - Optional callback to run on success.
+         ** @param {function} onSuccessCallback - Optional callback to run on success.
          */
         async function loadCSV(filePath, containerId, loadingId, onSuccessCallback = null) {
             const container = document.getElementById(containerId);
@@ -250,16 +251,13 @@
                     throw new Error('CSV file is empty or invalid.');
                 }
 
-                // Store data globally and adjust headers if needed
+                // Store data globally
                 if (filePath === 'GameLines.csv') {
                     gameLinesData = data;
                 } else if (filePath === 'BestBets.csv') {
                     bestBetsData = data;
                 } else if (filePath === 'all_player_lines.csv') {
-                    // Rename the "QB" header to "Player" as it's more accurate
-                    if (data[0] && data[0][0].toUpperCase() === 'QB') {
-                        data[0][0] = 'Player';
-                    }
+                    // Removed logic that renamed header
                     allPlayerLinesData = data;
                 }
 
@@ -274,7 +272,7 @@
                     onSuccessCallback(data);
                 }
 
-            } catch (error) {
+            } catch (error)
                 console.error('Error loading CSV:', error);
                 loadingEl.textContent = `Error: ${error.message}`;
                 loadingEl.classList.remove('animate-pulse'); // Stop pulsing on error
@@ -351,19 +349,7 @@
 
         // --- All Player Lines Specific Functions ---
 
-        /**
-         * Infers position from stat type.
-         * @param {string} statType - The stat type from the CSV.
-         * @returns {string} - The inferred position.
-         */
-        function inferPosition(statType) {
-            statType = (statType || '').toLowerCase();
-            if (statType.includes('passing')) return 'QB';
-            if (statType.includes('rushing')) return 'RB';
-            if (statType.includes('receiving')) return 'WR/TE';
-            if (statType.includes('receptions')) return 'WR/TE/RB';
-            return 'Other';
-        }
+        // Removed the inferPosition function as it's no longer needed
 
         /**
          * Populates filter dropdowns and adds event listeners.
@@ -376,9 +362,11 @@
             // Loop data rows (skip header)
             for (let i = 1; i < data.length; i++) {
                 const row = data[i];
-                if (row && row.length > 5) {
-                    const statType = row[5];
-                    const position = inferPosition(statType);
+                // Updated check for new row length
+                if (row && row.length > 6) {
+                    // Updated column indices
+                    const position = row[0];
+                    const statType = row[6];
                     
                     statTypeFilterOptions.add(statType);
                     positionFilterOptions.add(position);
@@ -426,14 +414,14 @@
             const headerRow = allPlayerLinesData.slice(0, 1);
             let filteredData = allPlayerLinesData.slice(1);
 
-            // Apply position filter
+            // Apply position filter (Updated to check row[0])
             if (posFilter !== 'All') {
-                filteredData = filteredData.filter(row => row && row.length > 5 && inferPosition(row[5]) === posFilter);
+                filteredData = filteredData.filter(row => row && row.length > 6 && row[0] === posFilter);
             }
 
-            // Apply stat type filter
+            // Apply stat type filter (Updated to check row[6])
             if (statFilter !== 'All') {
-                filteredData = filteredData.filter(row => row && row.length > 5 && row[5] === statFilter);
+                filteredData = filteredData.filter(row => row && row.length > 6 && row[6] === statFilter);
             }
 
             // Re-render the table
