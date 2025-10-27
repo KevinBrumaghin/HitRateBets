@@ -291,11 +291,9 @@
                 ourProjection: ['our projection'],
                 projectedHitRate: ['projected stat hit rate'],
                 sportsbookProp: ['sportsbook prop'],
-                propHitRate: ['prop hit rate', 'sportsbook hit rate', 'sportsbook prop hit rate'] // MODIFIED: Added 'sportsbook prop hit rate'
+                propHitRate: ['prop hit rate', 'sportsbook hit rate', 'sportsbook prop hit rate'],
+                statType: ['stat type'] // ADDED: Add statType here
             };
-
-            // NEW: Define 'Stat Type' alias
-            const statTypeAliases = ['stat type'];
 
             // Find the index for each target column
             const foundIndices = {};
@@ -310,43 +308,29 @@
                 }
             }
             
-            // Get indices of the 5 target columns in the desired order
-            const targetIndices = [
+            // Get indices of the 6 target columns in the desired order
+            const targetIndicesInOrder = [
                 foundIndices.player,
                 foundIndices.ourProjection,
                 foundIndices.projectedHitRate,
                 foundIndices.sportsbookProp,
-                foundIndices.propHitRate
+                foundIndices.propHitRate, // This is the 5th key column
+                foundIndices.statType     // This is the 6th, which we want after the 5th
             ].filter(index => index !== -1); // Filter out any not found
-
-            // NEW: Find the 'Stat Type' index
-            let statTypeIndex = -1;
-            for (const alias of statTypeAliases) {
-                const index = lowerHeader.indexOf(alias);
-                if (index !== -1) {
-                    statTypeIndex = index;
-                    break;
-                }
-            }
 
             // Get indices of all *other* columns
             const otherIndices = [];
             for (let i = 0; i < header.length; i++) {
-                // Check if it's NOT one of the 5 key columns AND NOT the stat type column
-                if (!targetIndices.includes(i) && i !== statTypeIndex) {
+                // Check if it's NOT one of the 6 target columns
+                if (!targetIndicesInOrder.includes(i)) {
                     otherIndices.push(i);
                 }
             }
 
             // Combine indices for the final order
-            // 5 key columns first, then stat type (if found), then others
-            const newIndexOrder = [...targetIndices];
-            if (statTypeIndex !== -1) {
-                newIndexOrder.push(statTypeIndex);
-            }
-            newIndexOrder.push(...otherIndices);
+            // 6 target columns first (in their defined order), then others
+            const newIndexOrder = [...targetIndicesInOrder, ...otherIndices];
 
-Unchanged code skipped.
             // Create the new re-ordered data array
             const reorderedData = [
                 newIndexOrder.map(i => header[i]), // New header
