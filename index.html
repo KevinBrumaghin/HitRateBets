@@ -273,8 +273,29 @@
                 // Parse the CSV data
                 const data = parseCSV(csvText);
 
-                if (data.length === 0) {
-                    throw new Error('CSV file is empty or invalid.');
+                // MODIFIED: Check if data is empty or only has a header
+                if (data.length <= 1) { 
+                    // File is empty or has only a header
+                    let emptyMessage = "Data is being prepped! Check back soon.";
+                    const updateMessage = "New data is updated every Tuesday.";
+
+                    if (filePath === 'GameLines.csv') {
+                        emptyMessage = "Game line predictions are being calculated! " + updateMessage;
+                    } else if (filePath === 'BestBets.csv') {
+                        emptyMessage = "Finding the best bets for the week... " + updateMessage;
+                    } else if (filePath === 'all_player_lines.csv') {
+                        emptyMessage = "All player props are getting prepped! " + updateMessage;
+                    }
+
+                    // Display the friendly message
+                    loadingEl.textContent = emptyMessage;
+                    loadingEl.classList.remove('animate-pulse', 'text-gray-400'); // Stop pulsing, remove default color
+                    loadingEl.classList.add('text-yellow-300', 'italic', 'text-lg', 'text-center', 'py-8'); // Style it as a notice
+                    
+                    // Clear the table container
+                    container.innerHTML = ''; 
+                    
+                    return; // Stop further execution for this function
                 }
 
                 // Store data globally
