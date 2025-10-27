@@ -1,4 +1,4 @@
-Position,Player,Sportsbook Prop,Sportsbook Hit Rate,Our Projection,Projected Stat Hit Rate,Stat Type
+Position,Player,Sportsbook Prop,Sportsbook Prop Hit Rate,Our Projection,Projected Stat Hit Rate,Stat Type
 QB,Patrick Mahomes II (KC),268.5,42.90%,252,71.40%,Passing Yards
 QB,Marcus Mariota (WAS),195.5,25.00%,167.5,25.00%,Passing Yards
 RB,Isiah Pacheco (KC),49.5,28.60%,21.5,100.00%,Rushing Yards
@@ -21,3 +21,4 @@ TE,Travis Kelce (KC),40.5,85.70%,32,85.70%,Receiving Yards
 TE,Zach Ertz (WAS),32.5,57.10%,17,85.70%,Receiving Yards
 TE,Travis Kelce (KC),3.5,71.40%,2.5,85.70%,Receptions
 TE,Zach Ertz (WAS),3.5,28.60%,1.5,85.70%,Receptions
+
