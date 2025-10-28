@@ -623,6 +623,45 @@
         }
 
         /**
+         * Helper to get HTML for a sortable header cell.
+         * @param {string} headerText - The text for the header.
+         * @param {number} index - The column index.
+         * @param {object} state - The current sort state for the table.
+         * @returns {string} - The inner HTML for the <th>.
+         */
+        function getSortableHeaderHtml(headerText, index, state) {
+            let indicator = '';
+            if (state && state.colIndex === index) {
+                indicator = state.direction === 'asc' ? ' &uarr;' : ' &darr;'; // Up/Down arrow
+            }
+            return headerText + indicator;
+        }
+
+        /**
+         * Helper function to create a standard, single-row header.
+         * Used by renderTable for Game Lines and as a fallback.
+         */
+        function createStandardHeader(headerRow, state, filePath, containerId) {
+            const tr = document.createElement('tr');
+            headerRow.forEach((headerText, index) => {
+                const th = document.createElement('th');
+                th.scope = 'col';
+                
+                if (state) { // This table is sortable
+                    th.className = 'px-6 py-3 text-left text-xs font-bold text-orange-400 uppercase tracking-wider cursor-pointer hover:text-orange-300';
+                    th.dataset.colIndex = index;
+                    th.innerHTML = getSortableHeaderHtml(headerText, index, state);
+                    th.addEventListener('click', () => handleSort(filePath, containerId, index));
+                } else { // Not sortable
+                    th.className = 'px-6 py-3 text-left text-xs font-bold text-orange-400 uppercase tracking-wider';
+                    th.textContent = headerText;
+                }
+                tr.appendChild(th);
+            });
+            return tr;
+        }
+
+        /**
          * Renders data into an HTML table with Tailwind classes.
          * @param {HTMLElement} container - The element to append the table to.
          * @param {string[][]} data - The parsed CSV data.
@@ -640,32 +679,118 @@
                 const headerRow = data[0];
                 const thead = document.createElement('thead');
                 thead.className = 'bg-gray-700 sticky top-0 z-10';
-                
-                const tr = document.createElement('tr');
-                headerRow.forEach((headerText, index) => {
-                    const th = document.createElement('th');
-                    th.scope = 'col';
-                    
-                    if (state) {
-                        // This table is sortable
-                        th.className = 'px-6 py-3 text-left text-xs font-bold text-orange-400 uppercase tracking-wider cursor-pointer hover:text-orange-300';
-                        th.dataset.colIndex = index;
+
+                // NEW: Check if this is a player table that needs grouped headers
+                const isPlayerTable = (filePath === 'BestBets.csv' || filePath === 'all_player_lines.csv');
+
+                if (isPlayerTable && headerRow.length >= 6) { // Check for enough columns
+                    // --- Create Grouped Header ---
+                    // Assumes order: 0:Player, 1:OurProj, 2:OurHit, 3:SpProp, 4:SpHit, 5:StatType, 6+:Others
+                    try {
+                        const tr1 = document.createElement('tr'); // Row 1 for grouping
+                        const tr2 = document.createElement('tr'); // Row 2 for specific headers
                         
-                        let indicator = '';
-                        if (state.colIndex === index) {
-                            indicator = state.direction === 'asc' ? ' &uarr;' : ' &darr;'; // Up/Down arrow
-                        }
-                        th.innerHTML = headerText + indicator;
+                        const otherHeaders = headerRow.slice(6);
+
+                        // 1. Player (spans 2 rows)
+                        const thPlayer = document.createElement('th');
+                        thPlayer.scope = 'col';
+                        thPlayer.rowSpan = 2;
+                        thPlayer.className = 'px-6 py-3 text-left text-xs font-bold text-orange-400 uppercase tracking-wider cursor-pointer hover:text-orange-300 border-b border-gray-600 align-bottom';
+                        thPlayer.dataset.colIndex = 0;
+                        thPlayer.innerHTML = getSortableHeaderHtml(headerRow[0], 0, state);
+                        thPlayer.addEventListener('click', () => handleSort(filePath, container.id, 0));
+                        tr1.appendChild(thPlayer);
+
+                        // 2. Our Projections (group, spans 2 cols)
+                        const thOurGroup = document.createElement('th');
+                        thOurGroup.scope = 'colgroup';
+                        thOurGroup.colSpan = 2;
+                        thOurGroup.className = 'px-6 py-3 text-center text-xs font-bold text-orange-400 uppercase tracking-wider border-b border-gray-600';
+                        thOurGroup.textContent = 'Our Projection';
+                        tr1.appendChild(thOurGroup);
+
+                        // 3. Sportsbook Lines (group, spans 2 cols)
+                        const thSpGroup = document.createElement('th');
+                        thSpGroup.scope = 'colgroup';
+                        thSpGroup.colSpan = 2;
+                        thSpGroup.className = 'px-6 py-3 text-center text-xs font-bold text-orange-400 uppercase tracking-wider border-b border-gray-600';
+                        thSpGroup.textContent = 'Sportsbook Line';
+                        tr1.appendChild(thSpGroup);
                         
-                        th.addEventListener('click', () => handleSort(filePath, container.id, index));
-                    } else {
-                        // This table (like hit rates) is not sortable
-                        th.className = 'px-6 py-3 text-left text-xs font-bold text-orange-400 uppercase tracking-wider';
-                        th.textContent = headerText;
+                        // 4. Stat Type (spans 2 rows)
+                        const thStatType = document.createElement('th');
+                        thStatType.scope = 'col';
+                        thStatType.rowSpan = 2;
+                        thStatType.className = 'px-6 py-3 text-left text-xs font-bold text-orange-400 uppercase tracking-wider cursor-pointer hover:text-orange-300 border-b border-gray-600 align-bottom';
+                        thStatType.dataset.colIndex = 5;
+                        thStatType.innerHTML = getSortableHeaderHtml(headerRow[5], 5, state);
+                        thStatType.addEventListener('click', () => handleSort(filePath, container.id, 5));
+                        tr1.appendChild(thStatType);
+
+                        // 5. Other Headers (span 2 rows)
+                        otherHeaders.forEach((headerText, i) => {
+                            const colIndex = 6 + i;
+                            const thOther = document.createElement('th');
+                            thOther.scope = 'col';
+                            thOther.rowSpan = 2;
+                            thOther.className = 'px-6 py-3 text-left text-xs font-bold text-orange-400 uppercase tracking-wider cursor-pointer hover:text-orange-300 border-b border-gray-600 align-bottom';
+                            thOther.dataset.colIndex = colIndex;
+                            thOther.innerHTML = getSortableHeaderHtml(headerText, colIndex, state);
+                            thOther.addEventListener('click', () => handleSort(filePath, container.id, colIndex));
+                            tr1.appendChild(thOther);
+                        });
+                        
+                        // --- Now create Row 2 ---
+                        // Our Projection (colIndex 1)
+                        const thOurProj = document.createElement('th');
+                        thOurProj.scope = 'col';
+                        thOurProj.className = 'px-6 py-3 text-left text-xs font-bold text-orange-400 uppercase tracking-wider cursor-pointer hover:text-orange-300';
+                        thOurProj.dataset.colIndex = 1;
+                        thOurProj.innerHTML = getSortableHeaderHtml(headerRow[1], 1, state);
+                        thOurProj.addEventListener('click', () => handleSort(filePath, container.id, 1));
+                        tr2.appendChild(thOurProj);
+
+                        // Projected Hit Rate (colIndex 2)
+                        const thOurHit = document.createElement('th');
+                        thOurHit.scope = 'col';
+                        thOurHit.className = 'px-6 py-3 text-left text-xs font-bold text-orange-400 uppercase tracking-wider cursor-pointer hover:text-orange-300';
+                        thOurHit.dataset.colIndex = 2;
+                        thOurHit.innerHTML = getSortableHeaderHtml(headerRow[2], 2, state);
+                        thOurHit.addEventListener('click', () => handleSort(filePath, container.id, 2));
+                        tr2.appendChild(thOurHit);
+
+                        // Sportsbook Prop (colIndex 3)
+                        const thSpProp = document.createElement('th');
+                        thSpProp.scope = 'col';
+                        thSpProp.className = 'px-6 py-3 text-left text-xs font-bold text-orange-400 uppercase tracking-wider cursor-pointer hover:text-orange-300';
+                        thSpProp.dataset.colIndex = 3;
+                        thSpProp.innerHTML = getSortableHeaderHtml(headerRow[3], 3, state);
+                        thSpProp.addEventListener('click', () => handleSort(filePath, container.id, 3));
+                        tr2.appendChild(thSpProp);
+                        
+                        // Prop Hit Rate (colIndex 4)
+                        const thSpHit = document.createElement('th');
+                        thSpHit.scope = 'col';
+                        thSpHit.className = 'px-6 py-3 text-left text-xs font-bold text-orange-400 uppercase tracking-wider cursor-pointer hover:text-orange-300';
+                        thSpHit.dataset.colIndex = 4;
+                        thSpHit.innerHTML = getSortableHeaderHtml(headerRow[4], 4, state);
+                        thSpHit.addEventListener('click', () => handleSort(filePath, container.id, 4));
+                        tr2.appendChild(thSpHit);
+
+                        thead.appendChild(tr1);
+                        thead.appendChild(tr2);
+
+                    } catch (e) {
+                        console.error("Error creating grouped header, falling back to standard header.", e);
+                        // Fallback in case of error (e.g., fewer columns than expected)
+                        thead.appendChild(createStandardHeader(headerRow, state, filePath, container.id));
                     }
-                    tr.appendChild(th);
-                });
-                thead.appendChild(tr);
+                } else {
+                    // --- Create Standard Header (for Game Lines or fallback) ---
+                    thead.appendChild(createStandardHeader(headerRow, state, filePath, container.id));
+                }
+
                 table.appendChild(thead);
             }
 
@@ -679,9 +804,28 @@
                     const tr = document.createElement('tr');
                     tr.className = 'hover:bg-gray-700';
                     
-                    rowData.forEach(cellData => {
+                    // NEW: Check if this is a player table
+                    const isPlayerTable = (filePath === 'BestBets.csv' || filePath === 'all_player_lines.csv');
+                    
+                    rowData.forEach((cellData, index) => {
                         const td = document.createElement('td');
                         td.className = 'px-6 py-4 whitespace-nowrap text-sm text-gray-300';
+                        
+                        // NEW: Apply grouping styles
+                        if (isPlayerTable) {
+                            if (index === 3 || index === 4) { // Sportsbook group
+                                td.classList.add('bg-gray-700'); // Slightly different bg
+                            }
+                            
+                            // Add borders for visual separation
+                            // (index === 0) is Player
+                            if (index === 1) td.classList.add('border-l', 'border-gray-600'); // Our Proj
+                            if (index === 2) td.classList.add('border-r', 'border-gray-600'); // Our Hit Rate
+                            if (index === 3) td.classList.add('border-l', 'border-gray-600'); // SP Prop
+                            if (index === 4) td.classList.add('border-r', 'border-gray-600'); // SP Hit Rate
+                            // (index === 5) is Stat Type
+                        }
+                        
                         td.textContent = cellData;
                         tr.appendChild(td);
                     });
@@ -850,10 +994,10 @@
             for (let i = 1; i < data.length; i++) {
                 const row = data[i];
                 
-                if (filterColumnIndices.position !== -1) {
+                if (filterColumnIndices.position !== -1 && row[filterColumnIndices.position]) {
                     positionFilterOptions.add(row[filterColumnIndices.position]);
                 }
-                if (filterColumnIndices.statType !== -1) {
+                if (filterColumnIndices.statType !== -1 && row[filterColumnIndices.statType]) {
                     statTypeFilterOptions.add(row[filterColumnIndices.statType]);
                 }
             }
