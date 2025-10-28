@@ -300,7 +300,7 @@
                 projectedHitRate: ['projected stat hit rate'],
                 sportsbookProp: ['sportsbook prop'],
                 propHitRate: ['prop hit rate', 'sportsbook hit rate', 'sportsbook prop hit rate'],
-                statType: ['stat type'] // ADDED: Add statType here
+                statType: ['stat type']
             };
 
             // Find the index for each target column
@@ -322,21 +322,19 @@
                 foundIndices.ourProjection,
                 foundIndices.projectedHitRate,
                 foundIndices.sportsbookProp,
-                foundIndices.propHitRate, // This is the 5th key column
-                foundIndices.statType     // This is the 6th, which we want after the 5th
+                foundIndices.propHitRate,
+                foundIndices.statType
             ].filter(index => index !== -1); // Filter out any not found
 
             // Get indices of all *other* columns
             const otherIndices = [];
             for (let i = 0; i < header.length; i++) {
-                // Check if it's NOT one of the 6 target columns
                 if (!targetIndicesInOrder.includes(i)) {
                     otherIndices.push(i);
                 }
             }
 
             // Combine indices for the final order
-            // 6 target columns first (in their defined order), then others
             const newIndexOrder = [...targetIndicesInOrder, ...otherIndices];
 
             // Create the new re-ordered data array
@@ -438,7 +436,6 @@
          * @param {string} loadingId - The ID of the loading message element.
          */
         async function loadHitRatesCSV(filePath, containerId, loadingId) {
-            // ... (existing code, no changes) ...
             const container = document.getElementById(containerId);
             const loadingEl = document.getElementById(loadingId);
 
@@ -613,7 +610,6 @@
          * @returns {string[][]} - An array of arrays representing rows and cells.
          */
         function parseCSV(text) {
-            // ... (existing code, no changes) ...
             // Trim whitespace and filter out empty lines
             const lines = text.trim().split('\n').filter(line => line.trim() !== '');
             return lines.map(line => {
@@ -813,6 +809,10 @@
                         
                         // NEW: Apply grouping styles
                         if (isPlayerTable) {
+                            // NEW: Add blue highlight for "Our Projection" group
+                            if (index === 1 || index === 2) { 
+                                td.classList.add('bg-blue-950'); // Dark blue tint
+                            }
                             if (index === 3 || index === 4) { // Sportsbook group
                                 td.classList.add('bg-gray-700'); // Slightly different bg
                             }
@@ -830,6 +830,8 @@
                         tr.appendChild(td);
                     });
                     tbody.appendChild(tr);
+Services 
+
                 });
                 table.appendChild(tbody);
             }
@@ -845,7 +847,6 @@
          * @param {string[][]} data - The parsed CSV data.
          */
         function renderHitRates(container, data) {
-            // ... (existing code, no changes) ...
             // Clear container
             container.innerHTML = '';
 
@@ -1018,7 +1019,6 @@
          *_ **@param {string} allText - The text for the "All" option.
          */
         function populateSelect(selectId, optionsSet, allText) {
-            // ... (existing code, no changes) ...
             const select = document.getElementById(selectId);
             // Clear existing options (except the "All" option)
             select.innerHTML = `<option value="All">${allText}</option>`;
