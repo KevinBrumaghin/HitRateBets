@@ -4,6 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hit Rate Bets</title>
+    <!-- New Favicon (Tab Image) -->
+    <!-- Using an emoji as a Data URI for simplicity. Replace href with your .ico or .png file -->
+    <link rel="icon" href="logo.png">
+    
     <!-- Load Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Load Chart.js -->
@@ -50,9 +54,17 @@
     <div class="container mx-auto p-4 md:p-8">
         <header class="mb-8">
             <!-- Site header: bolded and themed -->
-            <h1 class="text-3xl md:text-5xl font-bold text-center text-orange-500 uppercase tracking-wider">
-                Hit Rate Bets
-            </h1>
+            <!-- New: Added flex layout for logo and title -->
+            <div class="flex items-center justify-center space-x-4">
+                <!-- New Logo Placeholder: Replace src with your logo file -->
+                <img src="logo.png" 
+                     alt="Hit Rate Bets Logo" 
+                     class="h-12 w-12 md:h-16 md:w-16 rounded-full border-2 border-orange-500">
+                
+                <h1 class="text-3xl md:text-5xl font-bold text-center text-orange-500 uppercase tracking-wider">
+                    Hit Rate Bets
+                </h1>
+            </div>
         </header>
 
         <main>
@@ -305,12 +317,15 @@
 
             // Find the index for each target column
             const foundIndices = {};
+            const foundHeaderNames = new Set();
+
             for (const key in columnDefinitions) {
                 foundIndices[key] = -1;
                 for (const alias of columnDefinitions[key]) {
                     const index = lowerHeader.indexOf(alias);
                     if (index !== -1) {
                         foundIndices[key] = index;
+                        foundHeaderNames.add(header[index]); // Store the original header name
                         break;
                     }
                 }
@@ -325,22 +340,34 @@
                 foundIndices.propHitRate,
                 foundIndices.statType
             ].filter(index => index !== -1); // Filter out any not found
+            
+            // Get header names for these columns
+            const targetHeaderNames = targetIndicesInOrder.map(i => header[i]);
 
-            // Get indices of all *other* columns
+            // Get indices and header names of all *other* columns
             const otherIndices = [];
+            const otherHeaderNames = [];
             for (let i = 0; i < header.length; i++) {
-                if (!targetIndicesInOrder.includes(i)) {
-                    otherIndices.push(i);
+                // If the original header name is NOT in our set of found target names
+                if (!targetHeaderNames.includes(header[i]) && !foundHeaderNames.has(header[i])) {
+                     otherIndices.push(i);
+                     otherHeaderNames.push(header[i]);
                 }
             }
-
-            // Combine indices for the final order
-            const newIndexOrder = [...targetIndicesInOrder, ...otherIndices];
+            
+            // Re-build header and rows
+            const newHeader = [...targetHeaderNames, ...otherHeaderNames];
+            
+            const newRows = rows.map(row => {
+                const targetRowData = targetIndicesInOrder.map(i => row[i]);
+                const otherRowData = otherIndices.map(i => row[i]);
+                return [...targetRowData, ...otherRowData];
+            });
 
             // Create the new re-ordered data array
             const reorderedData = [
-                newIndexOrder.map(i => header[i]), // New header
-                ...rows.map(row => newIndexOrder.map(i => row[i])) // New rows
+                newHeader,
+                ...newRows
             ];
             
             return reorderedData;
@@ -1069,4 +1096,5 @@
     </script>
 </body>
 </html>
+
 
