@@ -161,10 +161,9 @@
 
                         <!-- NEW: Paywall Wrapper -->
                         <div class="relative">
-                            <!-- 1. Blurred Content -->
-                            <div id="best-bets-table-wrapper" class="blur-md pointer-events-none select-none">
+                            <!-- 1. Obfuscated (not blurred) Content -->
+                            <div id="best-bets-table-wrapper">
                                 <div class="overflow-x-auto">
-                                    <!-- Structural update: Moved loading <p> inside container -->
                                     <div id="best-bets-container">
                                         <p id="loading-best-bets" class="text-gray-400 text-lg animate-pulse">Loading BestBets.csv data...</p>
                                     </div>
@@ -172,7 +171,7 @@
                             </div>
                             
                             <!-- 2. Overlay with CTA -->
-                            <div id="best-bets-overlay" class="absolute inset-0 flex flex-col items-center justify-center bg-gray-900 bg-opacity-75 rounded-lg p-8 z-20">
+                            <div id="best-bets-overlay" class="absolute inset-0 flex flex-col items-center justify-center bg-gray-900 bg-opacity-85 rounded-lg p-8 z-20">
                                 <h3 class="text-3xl font-bold text-orange-400 mb-4 text-center">Unlock Our Best Bets!</h3>
                                 <p class="text-lg text-gray-200 mb-6 text-center">Get exclusive access to our top, data-driven picks for the week.</p>
                                 <a href="https://www.patreon.com/HitRateBets" 
@@ -313,7 +312,7 @@
                             loadHitRatesCSV('overallhitrates.csv', 'game-lines-hit-rates-container', 'loading-game-lines-hit-rates');
                             button.dataset.loaded = 'true';
                         } else if (targetPanelId === 'best-bets-panel') {
-                            // Load the data (it will be blurred, but it needs to exist)
+                            // Load the data (it will be obfuscated, but it needs to exist)
                             loadCSV('BestBets.csv', 'best-bets-container', 'loading-best-bets');
                             loadHitRatesCSV('overallhitrates.csv', 'best-bets-hit-rates-container', 'loading-best-bets-hit-rates');
                             button.dataset.loaded = 'true';
@@ -404,6 +403,43 @@
         }
 
         /**
+         * NEW: Replaces all row data in a 2D array with random strings, keeping headers.
+         * @param {string[][]} data - The parsed CSV data (header + rows).
+         * @returns {string[][]} - The obfuscated data.
+         */
+        function obfuscateBestBetsData(data) {
+            if (data.length <= 1) return data; // No data to obfuscate
+
+            const header = data[0];
+            const rows = data.slice(1);
+            
+            const newRows = rows.map(row => {
+                // Create a new row with the same number of columns
+                return row.map((cell, index) => {
+                    // This creates plausible-looking fake data based on simple rules
+                    // You can make this as simple or complex as you want
+                    const headerName = header[index] ? header[index].toLowerCase() : '';
+
+                    if (headerName.includes('player') || headerName.includes('team')) {
+                        return "Xxxxx Xxxxxx"; // Fake name
+                    } else if (headerName.includes('rate') || headerName.includes('%')) {
+                        return (Math.random() * 80 + 10).toFixed(1) + "%"; // Fake percentage
+                    } else if (headerName.includes('projection') || headerName.includes('prop')) {
+                        return (Math.random() * 100).toFixed(1); // Fake number
+                    } else if (headerName.includes('stat type')) {
+                        return "Xxxxxxx Xxxxx"; // Fake stat
+                    } else if (headerName.includes('game day')) {
+                        return "Xxx 0:00 XX"; // Fake time
+                    }
+                    return "Xxxxx"; // Default fake string
+                });
+            });
+
+            return [header, ...newRows];
+        }
+
+
+        /**
          * Fetches and displays a CSV file as an HTML table.
          * @param {string} filePath - The path to the CSV file.
          * @param {string} containerId - The ID of the div to insert the table into.
@@ -442,7 +478,6 @@
                     }
 
                     // Display the friendly message
-                    // We need to target the *container* now, not the loadingEl
                     container.innerHTML = `<p class="text-yellow-300 italic text-lg text-center py-8">${emptyMessage}</p>`;
                     
                     return; // Stop further execution for this function
@@ -452,19 +487,21 @@
                 if (filePath === 'GameLines.csv') {
                     gameLinesData = data;
                 } else if (filePath === 'BestBets.csv') {
-                    // NEW: Re-order columns to standardized format
-                    const reorderedData = reorderPlayerTableData(data);
-                    bestBetsData = reorderedData;
-                    data = reorderedData; // Use reordered data for rendering
+                    // Re-order columns first
+                    let reorderedData = reorderPlayerTableData(data);
+                    // NEW: Obfuscate the data *after* reordering
+                    const obfuscatedData = obfuscateBestBetsData(reorderedData);
+                    bestBetsData = obfuscatedData; // Store obfuscated data
+                    data = obfuscatedData; // Use obfuscated data for rendering
                 } else if (filePath === 'all_player_lines.csv') {
-                    // NEW: Re-order columns to standardized format
+                    // Re-order columns to standardized format
                     const reorderedData = reorderPlayerTableData(data);
                     allPlayerLinesData = reorderedData;
                     data = reorderedData; // Use reordered data for rendering
                 }
 
                 // Render the data as a table
-                renderTable(container, data, filePath); // MODIFIED: Pass filePath
+                renderTable(container, data, filePath);
                 
                 // Hide loading message (no longer needed, as container is cleared)
 
@@ -678,6 +715,10 @@
          * @returns {string} - The inner HTML for the <th>.
          */
         function getSortableHeaderHtml(headerText, index, state) {
+            // No sort indicator for the (obfuscated) Best Bets table
+            if (state && state.filePath === 'BestBets.csv') {
+                return headerText;
+            }
             let indicator = '';
             if (state && state.colIndex === index) {
                 indicator = state.direction === 'asc' ? ' &uarr;' : ' &darr;'; // Up/Down arrow
@@ -695,12 +736,13 @@
                 const th = document.createElement('th');
                 th.scope = 'col';
                 
-                if (state) { // This table is sortable
+                // Disable sorting for Best Bets
+                if (state && filePath !== 'BestBets.csv') { // This table is sortable
                     th.className = 'px-6 py-3 text-left text-xs font-bold text-orange-400 uppercase tracking-wider cursor-pointer hover:text-orange-300';
                     th.dataset.colIndex = index;
-                    th.innerHTML = getSortableHeaderHtml(headerText, index, state);
+                    th.innerHTML = getSortableHeaderHtml(headerText, index, { ...state, filePath });
                     th.addEventListener('click', () => handleSort(filePath, containerId, index));
-                } else { // Not sortable
+                } else { // Not sortable (or is Best Bets)
                     th.className = 'px-6 py-3 text-left text-xs font-bold text-orange-400 uppercase tracking-wider';
                     th.textContent = headerText;
                 }
@@ -743,15 +785,28 @@
                         // Get all columns *after* the first 6
                         const otherHeaders = headerRow.slice(6);
 
+                        // Helper to create sortable <th> for grouped header
+                        const createGroupedTh = (text, index, rowSpan = 1, colSpan = 1, extraClasses = '') => {
+                            const th = document.createElement('th');
+                            th.scope = 'col';
+                            th.rowSpan = rowSpan;
+                            th.colSpan = colSpan;
+                            let baseClasses = 'px-6 py-3 text-left text-xs font-bold text-orange-400 uppercase tracking-wider';
+                            
+                            if (filePath !== 'BestBets.csv' && state) { // Is sortable
+                                baseClasses += ' cursor-pointer hover:text-orange-300';
+                                th.dataset.colIndex = index;
+                                th.innerHTML = getSortableHeaderHtml(text, index, { ...state, filePath });
+                                th.addEventListener('click', () => handleSort(filePath, container.id, index));
+                            } else { // Not sortable
+                                th.textContent = text;
+                            }
+                            th.className = `${baseClasses} ${extraClasses}`;
+                            return th;
+                        };
+
                         // 1. Player (spans 2 rows)
-                        const thPlayer = document.createElement('th');
-                        thPlayer.scope = 'col';
-                        thPlayer.rowSpan = 2;
-                        thPlayer.className = 'px-6 py-3 text-left text-xs font-bold text-orange-400 uppercase tracking-wider cursor-pointer hover:text-orange-300 border-b border-gray-600 align-bottom';
-                        thPlayer.dataset.colIndex = 0;
-                        thPlayer.innerHTML = getSortableHeaderHtml(headerRow[0], 0, state);
-                        thPlayer.addEventListener('click', () => handleSort(filePath, container.id, 0));
-                        tr1.appendChild(thPlayer);
+                        tr1.appendChild(createGroupedTh(headerRow[0], 0, 2, 1, 'border-b border-gray-600 align-bottom'));
 
                         // 2. Our Projections (group, spans 2 cols)
                         const thOurGroup = document.createElement('th');
@@ -770,64 +825,23 @@
                         tr1.appendChild(thSpGroup);
                         
                         // 4. Stat Type (spans 2 rows)
-                        const thStatType = document.createElement('th');
-                        thStatType.scope = 'col';
-                        thStatType.rowSpan = 2;
-                        thStatType.className = 'px-6 py-3 text-left text-xs font-bold text-orange-400 uppercase tracking-wider cursor-pointer hover:text-orange-300 border-b border-gray-600 align-bottom';
-                        thStatType.dataset.colIndex = 5;
-                        thStatType.innerHTML = getSortableHeaderHtml(headerRow[5], 5, state);
-                        thStatType.addEventListener('click', () => handleSort(filePath, container.id, 5));
-                        tr1.appendChild(thStatType);
+                        tr1.appendChild(createGroupedTh(headerRow[5], 5, 2, 1, 'border-b border-gray-600 align-bottom'));
 
                         // 5. Other Headers (span 2 rows)
                         otherHeaders.forEach((headerText, i) => {
                             const colIndex = 6 + i;
-                            const thOther = document.createElement('th');
-                            thOther.scope = 'col';
-                            thOther.rowSpan = 2;
-                            thOther.className = 'px-6 py-3 text-left text-xs font-bold text-orange-400 uppercase tracking-wider cursor-pointer hover:text-orange-300 border-b border-gray-600 align-bottom';
-                            thOther.dataset.colIndex = colIndex;
-                            thOther.innerHTML = getSortableHeaderHtml(headerText, colIndex, state);
-                            thOther.addEventListener('click', () => handleSort(filePath, container.id, colIndex));
-                            tr1.appendChild(thOther);
+                            tr1.appendChild(createGroupedTh(headerText, colIndex, 2, 1, 'border-b border-gray-600 align-bottom'));
                         });
                         
                         // --- Now create Row 2 ---
                         // Our Projection (colIndex 1)
-                        const thOurProj = document.createElement('th');
-                        thOurProj.scope = 'col';
-                        thOurProj.className = 'px-6 py-3 text-left text-xs font-bold text-orange-400 uppercase tracking-wider cursor-pointer hover:text-orange-300 bg-blue-950 border-r border-gray-600';
-                        thOurProj.dataset.colIndex = 1;
-                        thOurProj.innerHTML = getSortableHeaderHtml(headerRow[1], 1, state);
-                        thOurProj.addEventListener('click', () => handleSort(filePath, container.id, 1));
-                        tr2.appendChild(thOurProj);
-
+                        tr2.appendChild(createGroupedTh(headerRow[1], 1, 1, 1, 'bg-blue-950 border-r border-gray-600'));
                         // Projected Hit Rate (colIndex 2)
-                        const thOurHit = document.createElement('th');
-                        thOurHit.scope = 'col';
-                        thOurHit.className = 'px-6 py-3 text-left text-xs font-bold text-orange-400 uppercase tracking-wider cursor-pointer hover:text-orange-300 bg-blue-950';
-                        thOurHit.dataset.colIndex = 2;
-                        thOurHit.innerHTML = getSortableHeaderHtml(headerRow[2], 2, state);
-                        thOurHit.addEventListener('click', () => handleSort(filePath, container.id, 2));
-                        tr2.appendChild(thOurHit);
-
+                        tr2.appendChild(createGroupedTh(headerRow[2], 2, 1, 1, 'bg-blue-950'));
                         // Sportsbook Prop (colIndex 3)
-                        const thSpProp = document.createElement('th');
-                        thSpProp.scope = 'col';
-                        thSpProp.className = 'px-6 py-3 text-left text-xs font-bold text-orange-400 uppercase tracking-wider cursor-pointer hover:text-orange-300 bg-gray-600 border-r border-gray-500';
-                        thSpProp.dataset.colIndex = 3;
-                        thSpProp.innerHTML = getSortableHeaderHtml(headerRow[3], 3, state);
-                        thSpProp.addEventListener('click', () => handleSort(filePath, container.id, 3));
-                        tr2.appendChild(thSpProp);
-                        
+                        tr2.appendChild(createGroupedTh(headerRow[3], 3, 1, 1, 'bg-gray-600 border-r border-gray-500'));
                         // Prop Hit Rate (colIndex 4)
-                        const thSpHit = document.createElement('th');
-                        thSpHit.scope = 'col';
-                        thSpHit.className = 'px-6 py-3 text-left text-xs font-bold text-orange-400 uppercase tracking-wider cursor-pointer hover:text-orange-300 bg-gray-600';
-                        thSpHit.dataset.colIndex = 4;
-                        thSpHit.innerHTML = getSortableHeaderHtml(headerRow[4], 4, state);
-                        thSpHit.addEventListener('click', () => handleSort(filePath, container.id, 4));
-                        tr2.appendChild(thSpHit);
+                        tr2.appendChild(createGroupedTh(headerRow[4], 4, 1, 1, 'bg-gray-600'));
 
                         thead.appendChild(tr1);
                         thead.appendChild(tr2);
@@ -1001,9 +1015,13 @@
          * @param {number} colIndex - The column index that was clicked.
          */
         function handleSort(filePath, containerId, colIndex) {
+            // NEW: Disable sorting on the Best Bets table
+            if (filePath === 'BestBets.csv') {
+                return;
+            }
+
             let data;
             if (filePath === 'GameLines.csv') data = gameLinesData;
-            else if (filePath === 'BestBets.csv') data = bestBetsData;
             else if (filePath === 'all_player_lines.csv') data = allPlayerLinesData;
             else return; // Should not happen
 
