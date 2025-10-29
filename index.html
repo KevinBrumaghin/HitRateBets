@@ -10,34 +10,34 @@
     <!-- SEO Meta Tags -->
     <meta name="description" content="Hit Rate Bets provides data-driven sports predictions and player prop insights. We analyze stats and matchups to give you an edge.">
     <meta name="keywords" content="sports betting, player props, NFL projections, NBA projections, sports predictions, data-driven, hit rate, betting advice">
-    
+
     <!-- Open Graph (for social media sharing) -->
     <meta property="og:title" content="Hit Rate Bets - Data-Driven Sports Predictions">
     <meta property="og:description" content="Get an edge with our data-driven sports predictions, game lines, and player prop analysis.">
     <meta property="og:image" content="logo.png"> <!-- Assumes logo.png is the image you want to show -->
     <meta property="og:url" content="https://hitratebets.com"> <!-- Change this to your actual domain -->
-    
+
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Hit Rate Bets - Data-Driven Sports Predictions">
     <meta name="twitter:description" content="Get an edge with our data-driven sports predictions, game lines, and player prop analysis.">
     <meta name="twitter:image" content="logo.png"> <!-- Assumes logo.png is the image you want to show -->
 
-    
+
     <!-- Load Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Load Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    
+
     <style>
         /* Import Russo One for headers and Roboto for body */
         @import url('https://fonts.googleapis.com/css2?family=Russo+One&family=Roboto:wght@400;500;700&display=swap');
-        
+
         /* Apply fonts */
         body {
             font-family: 'Roboto', sans-serif;
         }
-        
+
         h1, h2, h3, th {
             font-family: 'Russo One', sans-serif;
             /* Tailwind's font-bold might be overridden by the font, so add weight */
@@ -49,7 +49,7 @@
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
         }
-        
+
         [role="tabpanel"]:not(.hidden) {
             animation: fadeIn 0.4s ease-out;
         }
@@ -70,16 +70,26 @@
 
     <div class="container mx-auto p-4 md:p-8">
         <header class="mb-8">
-            <!-- Site header: bolded and themed -->
-            <div class="flex items-center justify-center space-x-4">
-                <!-- Use logo.png for the header logo -->
-                <img src="logo.png" 
-                     alt="Hit Rate Bets Logo" 
-                     class="h-12 w-12 md:h-16 md:w-16 rounded-full border-2 border-orange-500">
-                
-                <h1 class="text-3xl md:text-5xl font-bold text-center text-orange-500 uppercase tracking-wider">
-                    Hit Rate Bets
-                </h1>
+            <!-- Site header: Updated with flex for layout -->
+            <div class="flex flex-col md:flex-row items-center justify-between space-y-4 md:space-y-0 md:space-x-4">
+                <!-- Logo and Title Group -->
+                <div class="flex items-center space-x-4">
+                    <img src="logo.png"
+                         alt="Hit Rate Bets Logo"
+                         class="h-12 w-12 md:h-16 md:w-16 rounded-full border-2 border-orange-500">
+
+                    <h1 class="text-3xl md:text-5xl font-bold text-center text-orange-500 uppercase tracking-wider">
+                        Hit Rate Bets
+                    </h1>
+                </div>
+
+                <!-- NEW: Patreon Link Button -->
+                <a href="https://www.patreon.com/HitRateBets"
+                   target="_blank"
+                   rel="noopener noreferrer"
+                   class="bg-orange-500 text-gray-900 font-bold py-2 px-5 rounded-lg text-base uppercase tracking-wider hover:bg-orange-400 transition-colors duration-300 ease-in-out whitespace-nowrap">
+                    Support on Patreon
+                </a>
             </div>
         </header>
 
@@ -93,7 +103,8 @@
                         </button>
                     </li>
                     <li role="presentation">
-                        <button class="inline-block p-4 border-b-2 rounded-t-lg transition-colors duration-300 ease-in-out" id="game-lines-tab" data-target="game-lines-panel" type="button" role="tab" data-loaded="false">
+                        <!-- Updated: data-loaded="true" because it's pre-loaded -->
+                        <button class="inline-block p-4 border-b-2 rounded-t-lg transition-colors duration-300 ease-in-out" id="game-lines-tab" data-target="game-lines-panel" type="button" role="tab" data-loaded="true">
                             Game Lines
                         </button>
                     </li>
@@ -103,7 +114,8 @@
                         </button>
                     </li>
                     <li role="presentation">
-                        <button class="inline-block p-4 border-b-2 rounded-t-lg transition-colors duration-300 ease-in-out" id="all-player-lines-tab" data-target="all-player-lines-panel" type="button" role="tab" data-loaded="false">
+                        <!-- Updated: data-loaded="true" because it's pre-loaded -->
+                        <button class="inline-block p-4 border-b-2 rounded-t-lg transition-colors duration-300 ease-in-out" id="all-player-lines-tab" data-target="all-player-lines-panel" type="button" role="tab" data-loaded="true">
                             All Player Lines
                         </button>
                     </li>
@@ -156,7 +168,7 @@
 
                 <!-- Game Lines Panel -->
                 <div class="hidden p-6 rounded-lg bg-gray-800 border border-gray-700" id="game-lines-panel" role="tabpanel" aria-labelledby="game-lines-tab">
-                    
+
                     <!-- NEW: SEO Description Text -->
                     <div class="space-y-2 text-gray-300 mb-6 text-sm">
                         <p>Our Game Lines are generated by a custom model that takes real data from each team to formulate an accurate prediction. We compare our projected scores and spreads against live sportsbook odds to find data-driven value.</p>
@@ -177,14 +189,14 @@
 
                 <!-- Best Bets Panel -->
                 <div class="hidden p-6 rounded-lg bg-gray-800 border border-gray-700" id="best-bets-panel" role="tabpanel" aria-labelledby="best-bets-tab">
-                    
+
                     <!-- Content Container -->
                     <div id="best-bets-content">
                         <!-- Hit Rates Container -->
                         <div id="best-bets-hit-rates-container" class="mb-6">
                             <p id="loading-best-bets-hit-rates" class="text-gray-400 text-lg animate-pulse">Loading Overall Hit Rates...</p>
                         </div>
-                        
+
                         <!-- Recommendation Note -->
                         <p class="text-sm text-yellow-300 italic mb-4"><strong>Recommendation:</strong> From our research, the best picks to make are usually to take the over on our projections!</p>
 
@@ -202,14 +214,14 @@
                                     </div>
                                 </div>
                             </div>
-                            
+
                             <!-- 2. Overlay with CTA -->
                             <div id="best-bets-overlay" class="absolute inset-0 flex flex-col items-center justify-center bg-gray-900 bg-opacity-85 rounded-lg p-8 z-20">
                                 <h3 class="text-3xl font-bold text-orange-400 mb-4 text-center">Unlock Our Best Bets!</h3>
                                 <p class="text-lg text-gray-200 mb-6 text-center">Get exclusive access to our top, data-driven picks for the week.</p>
-                                <a href="https://www.patreon.com/HitRateBets" 
-                                   target="_blank" 
-                                   rel="noopener noreferrer" 
+                                <a href="https://www.patreon.com/HitRateBets"
+                                   target="_blank"
+                                   rel="noopener noreferrer"
                                    class="bg-orange-500 text-gray-900 font-bold py-3 px-8 rounded-lg text-lg uppercase tracking-wider hover:bg-orange-400 transition-colors duration-300 ease-in-out">
                                     Subscribe on Patreon
                                 </a>
@@ -222,7 +234,7 @@
 
                 <!-- All Player Lines Panel -->
                 <div class="hidden p-6 rounded-lg bg-gray-800 border border-gray-700" id="all-player-lines-panel" role="tabpanel" aria-labelledby="all-player-lines-tab">
-                    
+
                     <!-- NEW: SEO Description Text -->
                     <div class="space-y-2 text-gray-300 mb-6 text-sm">
                         <p>This table shows our complete, data-driven projections for every player prop. We analyze matchups, historical performance, and team stats to create a realistic projection for every stat line.</p>
@@ -319,25 +331,42 @@
 
         document.addEventListener('DOMContentLoaded', () => {
             initTabs();
-            
+
             // Manually load charts for home page
             loadDataForHomeCharts('overallhitrates.csv', 'loading-player-props-chart', 'loading-game-lines-chart');
-            
-            // NEW: Render insights on home page
+
+            // Render insights on home page
             renderInsights();
+
+            // --- MODIFIED: Pre-load data for Game Lines and All Player Lines ---
+            console.log("Pre-loading Game Lines and All Player Lines data...");
+
+            // Pre-load Game Lines
+            loadCSV('GameLines.csv', 'game-lines-container', 'loading-game-lines');
+            loadHitRatesCSV('overallhitrates.csv', 'game-lines-hit-rates-container', 'loading-game-lines-hit-rates');
+            // No need to update data-loaded here, it's already set in HTML
+
+            // Pre-load All Player Lines
+            loadCSV('all_player_lines.csv', 'all-player-lines-container', 'loading-all-player-lines', processPlayerLines);
+            loadHitRatesCSV('overallhitrates.csv', 'all-player-lines-hit-rates-container', 'loading-all-player-lines-hit-rates');
+             // No need to update data-loaded here, it's already set in HTML
         });
 
         function initTabs() {
             const tabButtons = document.querySelectorAll('[role="tab"]');
             const tabPanels = document.querySelectorAll('[role="tabpanel"]');
-            
+
             const activeClasses = ['text-orange-500', 'border-orange-500'];
             const inactiveClasses = ['border-transparent', 'text-gray-400', 'hover:text-orange-400', 'hover:border-orange-400'];
 
             // Set default active tab (Home)
             const defaultTab = document.getElementById('home-tab');
             const defaultPanel = document.getElementById('home-panel');
-            
+
+            // Apply inactive styles to all initially, then activate default
+            tabButtons.forEach(btn => btn.classList.add(...inactiveClasses));
+            tabPanels.forEach(panel => panel.classList.add('hidden'));
+
             defaultTab.classList.add(...activeClasses);
             defaultTab.classList.remove(...inactiveClasses);
             defaultPanel.classList.remove('hidden');
@@ -361,24 +390,17 @@
                     const targetPanel = document.getElementById(targetPanelId);
                     targetPanel.classList.remove('hidden');
 
-                    // Lazy load data only if it hasn't been loaded
+                    // --- MODIFIED: Only lazy load Best Bets ---
                     const isLoaded = button.dataset.loaded === 'true';
-                    
+
                     if (!isLoaded) {
-                        if (targetPanelId === 'game-lines-panel') {
-                            loadCSV('GameLines.csv', 'game-lines-container', 'loading-game-lines');
-                            loadHitRatesCSV('overallhitrates.csv', 'game-lines-hit-rates-container', 'loading-game-lines-hit-rates');
-                            button.dataset.loaded = 'true';
-                        } else if (targetPanelId === 'best-bets-panel') {
-                            // Load the data (it will be obfuscated, but it needs to exist)
+                        // Only Best Bets needs lazy loading now
+                        if (targetPanelId === 'best-bets-panel') {
                             loadCSV('BestBets.csv', 'best-bets-container', 'loading-best-bets');
                             loadHitRatesCSV('overallhitrates.csv', 'best-bets-hit-rates-container', 'loading-best-bets-hit-rates');
-                            button.dataset.loaded = 'true';
-                        } else if (targetPanelId === 'all-player-lines-panel') {
-                            loadCSV('all_player_lines.csv', 'all-player-lines-container', 'loading-all-player-lines', processPlayerLines);
-                            loadHitRatesCSV('overallhitrates.csv', 'all-player-lines-hit-rates-container', 'loading-all-player-lines-hit-rates');
-                            button.dataset.loaded = 'true';
+                            button.dataset.loaded = 'true'; // Mark Best Bets as loaded after click
                         }
+                        // Game Lines and All Player Lines are pre-loaded, no action needed here
                     }
                 });
             });
@@ -414,7 +436,7 @@
             const header = data[0];
             const rows = data.slice(1);
             if (!header) return data; // Return original if no header
-            
+
             const lowerHeader = header.map(h => h.toLowerCase());
 
             // Define target columns and their aliases
@@ -441,10 +463,10 @@
                     }
                 }
             }
-            
+
             // Get columns in the desired order
             const targetOrder = ['player', 'ourProjection', 'projectedHitRate', 'sportsbookProp', 'propHitRate', 'statType'];
-            
+
             const newHeaderOrder = [];
             const newIndexOrder = [];
 
@@ -463,10 +485,10 @@
                     newIndexOrder.push(i);
                 }
             }
-            
+
             // Re-build header and rows
             const newHeader = newHeaderOrder;
-            
+
             const newRows = rows.map(row => {
                 // Map the original row to the new order using newIndexOrder
                 return newIndexOrder.map(i => (row[i] !== undefined ? row[i] : ""));
@@ -477,7 +499,7 @@
                 newHeader,
                 ...newRows
             ];
-            
+
             return reorderedData;
         }
 
@@ -491,7 +513,7 @@
 
             const header = data[0];
             const rows = data.slice(1);
-            
+
             const newRows = rows.map(row => {
                 // Create a new row with the same number of columns
                 return row.map((cell, index) => {
@@ -527,23 +549,30 @@
          */
         async function loadCSV(filePath, containerId, loadingId, onSuccessCallback = null) {
             const container = document.getElementById(containerId);
+            // Hide loading message initially if it exists, as table render clears container anyway
             const loadingEl = document.getElementById(loadingId);
+            if(loadingEl) loadingEl.style.display = 'none'; // Hide loading message
+
 
             try {
-                // Artificial delay to show loading animation
-                await new Promise(resolve => setTimeout(resolve, 500));
+                // Artificial delay only for tabs loaded on demand (Best Bets)
+                if (filePath === 'BestBets.csv') {
+                    if(loadingEl) loadingEl.style.display = 'block'; // Show loading for Best Bets
+                     await new Promise(resolve => setTimeout(resolve, 500));
+                }
+
 
                 const response = await fetch(filePath);
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status} - Could not find ${filePath}. Make sure it's in the same directory as index.html.`);
                 }
                 const csvText = await response.text();
-                
+
                 // Parse the CSV data
                 let data = parseCSV(csvText);
 
                 // Check if data is empty or only has a header
-                if (data.length <= 1) { 
+                if (data.length <= 1) {
                     // File is empty or has only a header
                     let emptyMessage = "Data is being prepped! Check back soon.";
                     const updateMessage = "New data is updated every Tuesday.";
@@ -558,7 +587,7 @@
 
                     // Display the friendly message
                     container.innerHTML = `<p class="text-yellow-300 italic text-lg text-center py-8">${emptyMessage}</p>`;
-                    
+
                     return; // Stop further execution for this function
                 }
 
@@ -581,8 +610,9 @@
 
                 // Render the data as a table
                 renderTable(container, data, filePath);
-                
-                // Hide loading message (no longer needed, as container is cleared)
+
+                // Hide loading message just in case it was shown (for Best Bets)
+                if(loadingEl) loadingEl.style.display = 'none';
 
                 // Run the success callback if provided
                 if (onSuccessCallback) {
@@ -592,7 +622,8 @@
             } catch (error) {
                 console.error('Error loading CSV:', error);
                 // Display error inside the container
-                container.innerHTML = `<p class="text-red-400 font-semibold">Error: ${error.message}</p>`;
+                 container.innerHTML = `<p class="text-red-400 font-semibold text-center py-8">Error: ${error.message}</p>`;
+                 if(loadingEl) loadingEl.style.display = 'none'; // Hide loading on error
             }
         }
 
@@ -605,6 +636,7 @@
         async function loadHitRatesCSV(filePath, containerId, loadingId) {
             const container = document.getElementById(containerId);
             const loadingEl = document.getElementById(loadingId);
+            if(loadingEl) loadingEl.style.display = 'block'; // Show loading message
 
             try {
                 // No artificial delay needed, loads alongside main data
@@ -616,17 +648,18 @@
                 const data = parseCSV(csvText);
 
                 if (data.length === 0) {
-                    throw new Error('Hit rates CSV file is empty or invalid.');
+                     container.innerHTML = `<p class="text-yellow-300 italic text-center py-4">Hit rate data for the week is being calculated. Check back Tuesday!</p>`;
+                     if(loadingEl) loadingEl.style.display = 'none';
+                     return;
                 }
 
                 renderHitRates(container, data);
-                loadingEl.style.display = 'none';
+                 if(loadingEl) loadingEl.style.display = 'none';
 
             } catch (error) {
                 console.error('Error loading Hit Rates CSV:', error);
-                loadingEl.textContent = `Error: ${error.message}`;
-                loadingEl.classList.remove('animate-pulse');
-                loadingEl.classList.add('text-red-400', 'font-semibold');
+                 container.innerHTML = `<p class="text-red-400 font-semibold text-center py-4">Error loading hit rates: ${error.message}</p>`;
+                 if(loadingEl) loadingEl.style.display = 'none';
             }
         }
 
@@ -651,16 +684,16 @@
                 if (data.length === 0) {
                     throw new Error('Hit rates CSV file is empty or invalid.');
                 }
-                
+
                 const gameLineKeywords = ['moneyline hit rate', 'spread hit rate']; // Lowercase for comparison
-            
+
                 const playerPropData = data.filter(row => row.length >= 2 && !gameLineKeywords.includes(row[0].toLowerCase()));
                 const gameLineData = data.filter(row => row.length >= 2 && gameLineKeywords.includes(row[0].toLowerCase()));
 
                 // Render both charts
                 renderAccuracyChart(playerPropData, 'playerPropsAccuracyChart', 'Player Prop Hit Rate %');
                 renderAccuracyChart(gameLineData, 'gameLinesAccuracyChart', 'Game Line Hit Rate %');
-                
+
                 playerLoadingEl.style.display = 'none';
                 gameLoadingEl.style.display = 'none';
 
@@ -686,16 +719,16 @@
             const canvas = document.getElementById(canvasId);
             if (!canvas) {
                 console.error(`Canvas with ID ${canvasId} not found.`);
-                return; 
+                return;
             }
             const ctx = canvas.getContext('2d');
 
             const labels = chartData.map(row => row[0]);
             const values = chartData.map(row => parseFloat(row[1].replace('%', '')));
-            
+
             const playerPropColor = 'rgba(246, 173, 85, 0.7)'; // Lighter orange
             const gameLineColor = 'rgba(235, 137, 23, 0.7)'; // Bolder orange
-            
+
             // Determine color based on canvas ID
             const isPlayerChart = canvasId === 'playerPropsAccuracyChart';
             const backgroundColor = isPlayerChart ? playerPropColor : gameLineColor;
@@ -704,6 +737,12 @@
             // Set global font styles for Chart.js
             Chart.defaults.color = '#e5e7eb'; // text-gray-200
             Chart.defaults.font.family = "'Roboto', sans-serif";
+
+            // Destroy existing chart instance if it exists
+            const existingChart = Chart.getChart(canvasId);
+             if (existingChart) {
+                 existingChart.destroy();
+             }
 
             new Chart(ctx, {
                 type: 'bar',
@@ -781,8 +820,24 @@
             // Trim whitespace and filter out empty lines
             const lines = text.trim().split('\n').filter(line => line.trim() !== '');
             return lines.map(line => {
-                // This is a basic parser. It won't handle commas inside quotes.
-                return line.split(',').map(cell => cell.trim());
+                // This is a basic parser. It won't handle commas inside quotes properly.
+                 // Need a more robust parser for quotes containing commas.
+                 const values = [];
+                 let currentVal = '';
+                 let inQuotes = false;
+                 for (let i = 0; i < line.length; i++) {
+                     const char = line[i];
+                     if (char === '"') {
+                         inQuotes = !inQuotes;
+                     } else if (char === ',' && !inQuotes) {
+                         values.push(currentVal.trim());
+                         currentVal = '';
+                     } else {
+                         currentVal += char;
+                     }
+                 }
+                 values.push(currentVal.trim()); // Add the last value
+                 return values;
             });
         }
 
@@ -814,7 +869,7 @@
             headerRow.forEach((headerText, index) => {
                 const th = document.createElement('th');
                 th.scope = 'col';
-                
+
                 // Disable sorting for Best Bets
                 if (state && filePath !== 'BestBets.csv') { // This table is sortable
                     th.className = 'px-6 py-3 text-left text-xs font-bold text-orange-400 uppercase tracking-wider cursor-pointer hover:text-orange-300';
@@ -852,7 +907,7 @@
                 // NEW: Check if this is a player table that needs grouped headers
                 const isPlayerTable = (filePath === 'BestBets.csv' || filePath === 'all_player_lines.csv');
                 // Check if reordering was successful (at least 6 key columns)
-                const hasGroupableHeaders = isPlayerTable && headerRow.length >= 6; 
+                const hasGroupableHeaders = isPlayerTable && headerRow.length >= 6;
 
                 if (hasGroupableHeaders) {
                     // --- Create Grouped Header ---
@@ -860,7 +915,7 @@
                     try {
                         const tr1 = document.createElement('tr'); // Row 1 for grouping
                         const tr2 = document.createElement('tr'); // Row 2 for specific headers
-                        
+
                         // Get all columns *after* the first 6
                         const otherHeaders = headerRow.slice(6);
 
@@ -871,7 +926,7 @@
                             th.rowSpan = rowSpan;
                             th.colSpan = colSpan;
                             let baseClasses = 'px-6 py-3 text-left text-xs font-bold text-orange-400 uppercase tracking-wider';
-                            
+
                             if (filePath !== 'BestBets.csv' && state) { // Is sortable
                                 baseClasses += ' cursor-pointer hover:text-orange-300';
                                 th.dataset.colIndex = index;
@@ -902,7 +957,7 @@
                         thSpGroup.className = 'px-6 py-3 text-center text-xs font-bold text-orange-400 uppercase tracking-wider border-b border-gray-600 bg-gray-600'; // Gray tint
                         thSpGroup.textContent = 'Sportsbook Line';
                         tr1.appendChild(thSpGroup);
-                        
+
                         // 4. Stat Type (spans 2 rows)
                         tr1.appendChild(createGroupedTh(headerRow[5], 5, 2, 1, 'border-b border-gray-600 align-bottom'));
 
@@ -911,7 +966,7 @@
                             const colIndex = 6 + i;
                             tr1.appendChild(createGroupedTh(headerText, colIndex, 2, 1, 'border-b border-gray-600 align-bottom'));
                         });
-                        
+
                         // --- Now create Row 2 ---
                         // Our Projection (colIndex 1)
                         tr2.appendChild(createGroupedTh(headerRow[1], 1, 1, 1, 'bg-blue-950 border-r border-gray-600'));
@@ -947,31 +1002,31 @@
                 bodyRows.forEach(rowData => {
                     const tr = document.createElement('tr');
                     tr.className = 'hover:bg-gray-700';
-                    
+
                     const isPlayerTable = (filePath === 'BestBets.csv' || filePath === 'all_player_lines.csv');
-                    
+
                     rowData.forEach((cellData, index) => {
                         const td = document.createElement('td');
                         td.className = 'px-6 py-4 whitespace-nowrap text-sm text-gray-300';
-                        
+
                         // Apply grouping styles
                         if (isPlayerTable && data[0].length >= 6) { // Check if we have the grouped columns
                             // Add blue highlight for "Our Projection" group
-                            if (index === 1 || index === 2) { 
+                            if (index === 1 || index === 2) {
                                 td.classList.add('bg-blue-950'); // Dark blue tint
                             }
                             // Add gray highlight for "Sportsbook" group
-                            if (index === 3 || index === 4) { 
+                            if (index === 3 || index === 4) {
                                 td.classList.add('bg-gray-700'); // Slightly different bg
                             }
-                            
+
                             // Add borders for visual separation
                             if (index === 1) td.classList.add('border-l', 'border-gray-600'); // Our Proj
                             if (index === 2) td.classList.add('border-r', 'border-gray-600'); // Our Hit Rate
                             if (index === 3) td.classList.add('border-l', 'border-gray-600'); // SP Prop
                             if (index === 4) td.classList.add('border-r', 'border-gray-600'); // SP Hit Rate
                         }
-                        
+
                         td.textContent = cellData;
                         tr.appendChild(td);
                     });
@@ -1034,18 +1089,18 @@
                 // We already filtered for rowData.length >= 2
                 const statType = rowData[0];
                 const hitRate = rowData[1];
-                
+
                 const card = document.createElement('div');
                 card.className = 'bg-gray-700 p-3 rounded-lg shadow-md text-center border border-gray-600';
-                
+
                 const statEl = document.createElement('div');
                 statEl.className = 'text-xs font-medium text-gray-300 uppercase truncate';
                 statEl.textContent = statType;
-                
+
                 const rateEl = document.createElement('div');
                 rateEl.className = 'text-xl font-bold text-orange-400 mt-1';
                 rateEl.textContent = hitRate;
-                
+
                 card.appendChild(statEl);
                 card.appendChild(rateEl);
                 grid.appendChild(card);
@@ -1064,7 +1119,9 @@
          */
         function parseValueForSort(val) {
             if (val === null || val === undefined) return 0;
-            const num = parseFloat(String(val).replace('%', ''));
+            // Handle potential commas in numbers (e.g., "1,234.5")
+             const cleanedVal = String(val).replace(/,/g, '').replace('%', '');
+            const num = parseFloat(cleanedVal);
             return isNaN(num) ? String(val).toLowerCase() : num;
         }
 
@@ -1079,11 +1136,11 @@
         function sortComparer(a, b, colIndex, direction) {
             const parsedA = parseValueForSort(a[colIndex]);
             const parsedB = parseValueForSort(b[colIndex]);
-            
+
             let comparison = 0;
             if (parsedA > parsedB) comparison = 1;
             else if (parsedA < parsedB) comparison = -1;
-            
+
             return direction === 'asc' ? comparison : -comparison;
         }
 
@@ -1104,9 +1161,12 @@
             else if (filePath === 'all_player_lines.csv') data = allPlayerLinesData;
             else return; // Should not happen
 
+             if (!data || data.length <= 1) return; // Don't sort if no data
+
+
             const state = sortState[filePath];
             const newDirection = (state.colIndex === colIndex && state.direction === 'asc') ? 'desc' : 'asc';
-            
+
             // Update the global sort state
             sortState[filePath] = { colIndex, direction: newDirection };
 
@@ -1117,9 +1177,9 @@
                 // For other tables, just sort and re-render
                 const header = data.slice(0, 1);
                 let body = data.slice(1);
-                
+
                 body.sort((a, b) => sortComparer(a, b, colIndex, newDirection));
-                
+
                 renderTable(document.getElementById(containerId), [...header, ...body], filePath);
             }
         }
@@ -1132,6 +1192,9 @@
          * @param {string[][]} data - The parsed CSV data for player lines (already reordered).
          */
         function processPlayerLines(data) {
+             if (!data || data.length <= 1) return; // Exit if no data
+
+
             positionFilterOptions.clear();
             statTypeFilterOptions.clear();
 
@@ -1147,7 +1210,7 @@
             // Loop data rows (skip header)
             for (let i = 1; i < data.length; i++) {
                 const row = data[i];
-                
+
                 if (filterColumnIndices.position !== -1 && row[filterColumnIndices.position]) {
                     positionFilterOptions.add(row[filterColumnIndices.position]);
                 }
@@ -1160,9 +1223,16 @@
             populateSelect('position-filter', positionFilterOptions, 'All Positions');
             populateSelect('stat-type-filter', statTypeFilterOptions, 'All Stats');
 
-            // Add event listeners
-            document.getElementById('position-filter').addEventListener('change', filterAndRenderPlayerLines);
-            document.getElementById('stat-type-filter').addEventListener('change', filterAndRenderPlayerLines);
+            // Add event listeners (ensure they are only added once)
+             const posFilterEl = document.getElementById('position-filter');
+             const statFilterEl = document.getElementById('stat-type-filter');
+
+             // Remove old listeners before adding new ones
+             posFilterEl.removeEventListener('change', filterAndRenderPlayerLines);
+             statFilterEl.removeEventListener('change', filterAndRenderPlayerLines);
+
+             posFilterEl.addEventListener('change', filterAndRenderPlayerLines);
+             statFilterEl.addEventListener('change', filterAndRenderPlayerLines);
         }
 
         /**
@@ -1173,9 +1243,11 @@
          */
         function populateSelect(selectId, optionsSet, allText) {
             const select = document.getElementById(selectId);
+            if (!select) return; // Exit if select element not found
+
             // Clear existing options (except the "All" option)
             select.innerHTML = `<option value="All">${allText}</option>`;
-            
+
             // Sort options alphabetically
             const sortedOptions = [...optionsSet].sort();
 
@@ -1191,6 +1263,13 @@
          * Filters the allPlayerLinesData and re-renders the table.
          */
         function filterAndRenderPlayerLines() {
+             // Ensure data is loaded before trying to filter
+             if (!allPlayerLinesData || allPlayerLinesData.length <= 1) {
+                 console.log("Player lines data not ready for filtering.");
+                 return;
+             }
+
+
             const posFilter = document.getElementById('position-filter').value;
             const statFilter = document.getElementById('stat-type-filter').value;
             const filePath = 'all_player_lines.csv'; // Define filePath for this table
@@ -1221,6 +1300,4 @@
     </script>
 </body>
 </html>
-
-
 
