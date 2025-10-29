@@ -6,6 +6,23 @@
     <title>Hit Rate Bets</title>
     <!-- Use logo.png as the favicon -->
     <link rel="icon" href="logo.png">
+
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="Hit Rate Bets provides data-driven sports predictions and player prop insights. We analyze stats and matchups to give you an edge.">
+    <meta name="keywords" content="sports betting, player props, NFL projections, NBA projections, sports predictions, data-driven, hit rate, betting advice">
+    
+    <!-- Open Graph (for social media sharing) -->
+    <meta property="og:title" content="Hit Rate Bets - Data-Driven Sports Predictions">
+    <meta property="og:description" content="Get an edge with our data-driven sports predictions, game lines, and player prop analysis.">
+    <meta property="og:image" content="logo.png"> <!-- Assumes logo.png is the image you want to show -->
+    <meta property="og:url" content="https://hitratebets.com"> <!-- Change this to your actual domain -->
+    
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Hit Rate Bets - Data-Driven Sports Predictions">
+    <meta name="twitter:description" content="Get an edge with our data-driven sports predictions, game lines, and player prop analysis.">
+    <meta name="twitter:image" content="logo.png"> <!-- Assumes logo.png is the image you want to show -->
+
     
     <!-- Load Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -162,8 +179,9 @@
                         <!-- NEW: Paywall Wrapper -->
                         <div class="relative">
                             <!-- 1. Obfuscated (not blurred) Content -->
-                            <div id="best-bets-table-wrapper">
-                                <div class="blur-md overflow-x-auto">
+                            <!-- UPDATED: Added blur-md class -->
+                            <div id="best-bets-table-wrapper" class="blur-md">
+                                <div class="overflow-x-auto">
                                     <div id="best-bets-container">
                                         <p id="loading-best-bets" class="text-gray-400 text-lg animate-pulse">Loading BestBets.csv data...</p>
                                     </div>
@@ -1142,4 +1160,5 @@
     </script>
 </body>
 </html>
+
 
