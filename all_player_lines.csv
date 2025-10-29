@@ -1,24 +1,60 @@
-Position,Player,Sportsbook Prop,Sportsbook Prop Hit Rate,Our Projection,Projected Stat Hit Rate,Stat Type
-WR,Rashee Rice (KC),6.5,100.00%,4.5,100.00%,Receptions
-TE,Travis Kelce (KC),4.5,50.00%,2,100.00%,Receptions
-RB,De'Von Achane (MIA),5.5,37.50%,3,87.50%,Rushing Yards
-TE,Travis Kelce (KC),47.5,75.00%,43.5,87.50%,Receiving Yards
-WR,Zay Flowers (BAL),5.5,71.43%,3.5,85.71%,Receptions
-QB,Lamar Jackson (BAL),237.5,25.00%,206,75.00%,Passing Yards
-RB,Isiah Pacheco (KC),52.5,25.00%,28.5,75.00%,Rushing Yards
-RB,De'Von Achane (MIA),60.5,62.50%,39.5,75.00%,Rushing Yards
-WR,Jaylen Waddle (MIA),4.5,62.50%,4,75.00%,Receptions
-WR,Marquise Brown (KC),2.5,75.00%,3,75.00%,Receptions
+QB,Tua Tagovailoa (MIA),217.5,25.00%,212.5,25.00%,Passing Yards
+QB,J.J. McCarthy (MIN),212.5,0.00%,179.5,0.00%,Passing Yards
+QB,Lamar Jackson (BAL),234.5,25.00%,206,0.75,Passing Yards
+QB,Josh Allen (BUF),232.5,28.57%,199.5,0.5714,Passing Yards
+QB,Jared Goff (DET),235.5,42.86%,208.5,57.14%,Passing Yards
+RB,Jahmyr Gibbs (DET),72.5,42.86%,49,85.71%,Rushing Yards
+RB,De'Von Achane (MIA),56.5,62.50%,39.5,75.00%,Rushing Yards
+RB,Keaton Mitchell (BAL),14.5,33.33%,7.5,66.67%,Rushing Yards
+RB,Derrick Henry (BAL),89.5,28.57%,55.5,42.86%,Rushing Yards
+RB,Ollie Gordon II (MIA),17.5,25.00%,11.5,25.00%,Rushing Yards
+RB,David Montgomery (DET),49.5,42.86%,44.5,42.86%,Rushing Yards
+RB,Jahmyr Gibbs (DET),3.5,28.57%,2.5,57.14%,Receptions
+RB,De'Von Achane (MIA),5.5,37.50%,3,87.50%,Receptions
+RB,Justice Hill (BAL),2.5,57.14%,2,57.14%,Receptions
+WR,Jalen Nailor (MIN),18.5,71.43%,23,71.43%,Receiving Yards
 WR,Khalil Shakir (BUF),50.5,42.86%,44.5,71.43%,Receiving Yards
 WR,Zay Flowers (BAL),68.5,57.14%,59.5,71.43%,Receiving Yards
-WR,Khalil Shakir (BUF),4.5,57.14%,3.5,71.43%,Receptions
-WR,Xavier Worthy (KC),3.5,50.00%,3,66.67%,Receptions
-TE,Dalton Kincaid (BUF),3.5,66.67%,2,66.67%,Receptions
-WR,JuJu Smith-Schuster (KC),11.5,87.50%,33,62.50%,Receiving Yards
-WR,JuJu Smith-Schuster (KC),1.5,87.50%,2.5,62.50%,Receptions
-QB,Josh Allen (BUF),235.5,28.57%,199.5,57.14%,Passing Yards
-RB,Justice Hill (BAL),2.5,57.14%,2,57.14%,Receptions
+WR,JuJu Smith-Schuster (KC),12.5,87.50%,33,62.50%,Receiving Yards
+WR,Jameson Williams (DET),44.5,28.57%,39.5,57.14%,Receiving Yards
 WR,DeAndre Hopkins (BAL),17.5,57.14%,19.5,57.14%,Receiving Yards
+WR,Jaylen Waddle (MIA),63.5,50.00%,52,50.00%,Receiving Yards
+WR,Jordan Addison (MIN),45.5,50.00%,69.5,50.00%,Receiving Yards
+WR,Xavier Worthy (KC),46.5,33.33%,38,50.00%,Receiving Yards
+WR,Marquise Brown (KC),16.5,75.00%,41,50.00%,Receiving Yards
+WR,Rashee Rice (KC),68.5,50.00%,74.5,50.00%,Receiving Yards
+WR,Amon-Ra St. Brown (DET),73.5,57.14%,84,42.86%,Receiving Yards
+WR,Justin Jefferson (MIN),73.5,85.71%,79.5,42.86%,Receiving Yards
+WR,Rashod Bateman (BAL),31.5,28.57%,21,42.86%,Receiving Yards
+WR,Nick Westbrook-Ikhine (MIA),17.5,25.00%,9,37.50%,Receiving Yards
+WR,Keon Coleman (BUF),40.5,28.57%,34,28.57%,Receiving Yards
+WR,Malik Washington (MIA),27.5,25.00%,24.5,25.00%,Receiving Yards
+WR,Jalen Nailor (MIN),1.5,57.14%,2.5,42.86%,Receptions
+WR,Khalil Shakir (BUF),4.5,57.14%,3.5,71.43%,Receptions
+WR,Zay Flowers (BAL),5.5,71.43%,3.5,85.71%,Receptions
+WR,JuJu Smith-Schuster (KC),1.5,87.50%,2.5,62.50%,Receptions
+WR,Jameson Williams (DET),2.5,28.57%,2,71.43%,Receptions
 WR,DeAndre Hopkins (BAL),1.5,57.14%,2,57.14%,Receptions
+WR,Jaylen Waddle (MIA),4.5,62.50%,4,75.00%,Receptions
+WR,Jordan Addison (MIN),3.5,75.00%,3.5,75.00%,Receptions
+WR,Xavier Worthy (KC),3.5,50.00%,3,66.67%,Receptions
+WR,Marquise Brown (KC),2.5,75.00%,3,75.00%,Receptions
+WR,Rashee Rice (KC),6.5,100.00%,4.5,100.00%,Receptions
+WR,Amon-Ra St. Brown (DET),6.5,71.43%,3.5,100.00%,Receptions
+WR,Justin Jefferson (MIN),5.5,42.86%,4,85.71%,Receptions
+WR,Rashod Bateman (BAL),2.5,14.29%,2.5,14.29%,Receptions
+WR,Nick Westbrook-Ikhine (MIA),1.5,25.00%,2.5,12.50%,Receptions
+WR,Keon Coleman (BUF),3.5,28.57%,3.5,28.57%,Receptions
+WR,Malik Washington (MIA),3.5,50.00%,3.5,50.00%,Receptions
+TE,Travis Kelce (KC),46.5,87.50%,43.5,87.50%,Receiving Yards
+TE,Sam LaPorta (DET),44.5,42.86%,33,71.43%,Receiving Yards
+TE,T.J. Hockenson (MIN),29.5,57.14%,29.5,57.14%,Receiving Yards
+TE,Dalton Kincaid (BUF),36.5,66.67%,40,50.00%,Receiving Yards
+TE,Isaiah Likely (BAL),21.5,0.00%,7.5,50.00%,Receiving Yards
 TE,Mark Andrews (BAL),27.5,42.86%,23.5,57.14%,Receiving Yards
+TE,Travis Kelce (KC),4.5,50.00%,2,100.00%,Receptions
+TE,Sam LaPorta (DET),4.5,42.86%,2.5,100.00%,Receptions
+TE,T.J. Hockenson (MIN),3.5,57.14%,2.5,71.43%,Receptions
+TE,Dalton Kincaid (BUF),3.5,66.67%,2,66.67%,Receptions
+TE,Isaiah Likely (BAL),2.5,0.00%,2,50.00%,Receptions
 TE,Mark Andrews (BAL),2.5,57.14%,3,57.14%,Receptions
