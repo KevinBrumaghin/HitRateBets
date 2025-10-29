@@ -77,6 +77,23 @@
              border-color: #f97316; /* focus:border-orange-500 */
              box-shadow: 0 0 0 1px #f97316; /* focus:ring-orange-500 */
          }
+
+         /* Sticky header styles */
+         thead.sticky th {
+            position: sticky;
+            top: 0;
+            z-index: 10; /* Ensure header is above body content */
+         }
+         /* Add a background to the sticky header cells for better visibility */
+         thead.sticky tr th {
+             background-color: #374151; /* bg-gray-700 */
+         }
+         /* Add top border to second row of grouped header */
+         thead.sticky tr:nth-child(2) th {
+             border-top: 1px solid #4b5563; /* border-gray-600 */
+         }
+
+
     </style>
 </head>
 <body class="bg-gray-900 text-gray-200">
@@ -195,8 +212,8 @@
                     <div id="game-lines-hit-rates-container" class="mb-6">
                         <p id="loading-game-lines-hit-rates" class="text-gray-400 text-lg animate-pulse">Loading Overall Hit Rates...</p>
                     </div>
+                    <!-- UPDATED: Added wrapper for responsive table -->
                     <div class="overflow-x-auto">
-                        <!-- Structural update: Moved loading <p> inside container -->
                         <div id="game-lines-container">
                             <p id="loading-game-lines" class="text-gray-400 text-lg animate-pulse">Loading GameLines.csv data...</p>
                         </div>
@@ -224,6 +241,7 @@
                             <!-- 1. Obfuscated (not blurred) Content -->
                             <!-- UPDATED: Added blur-md class -->
                             <div id="best-bets-table-wrapper" class="blur-md">
+                                <!-- UPDATED: Added wrapper for responsive table -->
                                 <div class="overflow-x-auto">
                                     <div id="best-bets-container">
                                         <p id="loading-best-bets" class="text-gray-400 text-lg animate-pulse">Loading BestBets.csv data...</p>
@@ -293,8 +311,8 @@
 
 
                     <!-- Table Container -->
+                    <!-- UPDATED: Added wrapper for responsive table -->
                     <div class="overflow-x-auto">
-                        <!-- Structural update: Moved loading <p> inside container -->
                         <div id="all-player-lines-container">
                             <p id="loading-all-player-lines" class="text-gray-400 text-lg animate-pulse">Loading all_player_lines.csv data...</p>
                         </div>
@@ -850,34 +868,44 @@
         }
 
         /**
-         * A simple CSV parser.
+         * A simple CSV parser. Handles basic quotes but not escaped quotes within quotes.
          * @param {string} text - The raw CSV text.
          * @returns {string[][]} - An array of arrays representing rows and cells.
          */
         function parseCSV(text) {
-            // Trim whitespace and filter out empty lines
             const lines = text.trim().split('\n').filter(line => line.trim() !== '');
-            return lines.map(line => {
-                // This is a basic parser. It won't handle commas inside quotes properly.
-                 // Need a more robust parser for quotes containing commas.
-                 const values = [];
-                 let currentVal = '';
-                 let inQuotes = false;
-                 for (let i = 0; i < line.length; i++) {
-                     const char = line[i];
-                     if (char === '"') {
-                         inQuotes = !inQuotes;
-                     } else if (char === ',' && !inQuotes) {
-                         values.push(currentVal.trim());
-                         currentVal = '';
-                     } else {
-                         currentVal += char;
+            const result = [];
+            const regex = /(?:\"([^\"]*(?:\"\"[^\"]*)*)\"|([^,]*))(?:,|$)/g; // Handle quoted fields including double quotes inside
+
+            lines.forEach(line => {
+                const row = [];
+                let match;
+                regex.lastIndex = 0; // Reset regex state for each line
+
+                while ((match = regex.exec(line)) !== null) {
+                    if (match[1] !== undefined) {
+                        // Value was quoted, remove surrounding quotes and unescape double quotes
+                        row.push(match[1].replace(/\"\"/g, '\"').trim());
+                    } else {
+                        // Value was not quoted
+                        row.push(match[2].trim());
+                    }
+                     // Stop if we've processed the whole line
+                     if (regex.lastIndex === line.length) break;
+                     // Handle cases where the line might end with a comma, creating an empty last field
+                     if (match[0].endsWith(',') && regex.lastIndex === line.length) {
+                         row.push("");
+                         break;
                      }
+                }
+                 // Only add non-empty rows (useful if there are blank lines in CSV)
+                 if (row.some(cell => cell !== "")) {
+                     result.push(row);
                  }
-                 values.push(currentVal.trim()); // Add the last value
-                 return values;
             });
+            return result;
         }
+
 
         /**
          * Helper to get HTML for a sortable header cell.
@@ -907,15 +935,17 @@
             headerRow.forEach((headerText, index) => {
                 const th = document.createElement('th');
                 th.scope = 'col';
+                 // UPDATED: Added responsive padding
+                let baseClasses = 'px-2 py-2 sm:px-6 sm:py-3 text-left text-xs font-bold text-orange-400 uppercase tracking-wider';
 
                 // Disable sorting for Best Bets
                 if (state && filePath !== 'BestBets.csv') { // This table is sortable
-                    th.className = 'px-6 py-3 text-left text-xs font-bold text-orange-400 uppercase tracking-wider cursor-pointer hover:text-orange-300';
+                    th.className = baseClasses + ' cursor-pointer hover:text-orange-300';
                     th.dataset.colIndex = index;
                     th.innerHTML = getSortableHeaderHtml(headerText, index, { ...state, filePath });
                     th.addEventListener('click', () => handleSort(filePath, containerId, index));
                 } else { // Not sortable (or is Best Bets)
-                    th.className = 'px-6 py-3 text-left text-xs font-bold text-orange-400 uppercase tracking-wider';
+                    th.className = baseClasses;
                     th.textContent = headerText;
                 }
                 tr.appendChild(th);
@@ -940,7 +970,8 @@
             if (data.length > 0) {
                 const headerRow = data[0];
                 const thead = document.createElement('thead');
-                thead.className = 'bg-gray-700 sticky top-0 z-10';
+                // UPDATED: Added sticky class from CSS
+                thead.className = 'bg-gray-700 sticky';
 
                 const isPlayerTable = (filePath === 'BestBets.csv' || filePath === 'all_player_lines.csv');
                 // UPDATED: Check for 7 key columns now
@@ -956,64 +987,75 @@
                         // Get all columns *after* the first 7
                         const otherHeaders = headerRow.slice(7);
 
-                        // Helper remains the same
+                        // UPDATED Helper to include responsive padding and abbreviation
                         const createGroupedTh = (text, index, rowSpan = 1, colSpan = 1, extraClasses = '') => {
                             const th = document.createElement('th');
                             th.scope = 'col';
                             th.rowSpan = rowSpan;
                             th.colSpan = colSpan;
-                            let baseClasses = 'px-6 py-3 text-left text-xs font-bold text-orange-400 uppercase tracking-wider';
+                             // UPDATED: Base classes with responsive padding
+                             let baseClasses = 'px-2 py-2 sm:px-6 sm:py-3 text-left text-xs font-bold text-orange-400 uppercase tracking-wider';
+
+                             // Abbreviate specific headers
+                             let displayText = text;
+                             if (text.toLowerCase() === 'projected stat hit rate') displayText = 'Proj. Hit Rate';
+                             if (text.toLowerCase() === 'sportsbook prop') displayText = 'SB Prop';
+                             if (text.toLowerCase() === 'sportsbook hit rate' || text.toLowerCase() === 'prop hit rate') displayText = 'SB Hit Rate'; // Standardize prop hit rate header
+                              if (text.toLowerCase() === 'our projection') displayText = 'Our Proj.';
+
 
                             if (filePath !== 'BestBets.csv' && state) { // Is sortable
                                 baseClasses += ' cursor-pointer hover:text-orange-300';
                                 th.dataset.colIndex = index;
-                                th.innerHTML = getSortableHeaderHtml(text, index, { ...state, filePath });
+                                th.innerHTML = getSortableHeaderHtml(displayText, index, { ...state, filePath });
                                 th.addEventListener('click', () => handleSort(filePath, container.id, index));
                             } else { // Not sortable
-                                th.textContent = text;
+                                th.textContent = displayText;
                             }
                             th.className = `${baseClasses} ${extraClasses}`;
                             return th;
                         };
 
-                        // 1. Position (spans 2 rows) - NEW
+                        // 1. Position (spans 2 rows)
                         tr1.appendChild(createGroupedTh(headerRow[0], 0, 2, 1, 'border-b border-gray-600 align-bottom'));
                         // 2. Player (spans 2 rows)
                         tr1.appendChild(createGroupedTh(headerRow[1], 1, 2, 1, 'border-b border-gray-600 align-bottom'));
-                        // 3. Stat Type (spans 2 rows) - NEW
+                        // 3. Stat Type (spans 2 rows)
                         tr1.appendChild(createGroupedTh(headerRow[2], 2, 2, 1, 'border-b border-gray-600 align-bottom'));
 
 
-                        // 4. Our Projections (group, spans 2 cols) - Indices Shifted
+                        // 4. Our Projections (group, spans 2 cols)
                         const thOurGroup = document.createElement('th');
                         thOurGroup.scope = 'colgroup';
                         thOurGroup.colSpan = 2;
-                        thOurGroup.className = 'px-6 py-3 text-center text-xs font-bold text-orange-400 uppercase tracking-wider border-b border-gray-600 bg-blue-950'; // Blue tint
+                         // UPDATED: Added responsive padding
+                        thOurGroup.className = 'px-2 py-2 sm:px-6 sm:py-3 text-center text-xs font-bold text-orange-400 uppercase tracking-wider border-b border-gray-600 bg-blue-950'; // Blue tint
                         thOurGroup.textContent = 'Our Projection';
                         tr1.appendChild(thOurGroup);
 
-                        // 5. Sportsbook Lines (group, spans 2 cols) - Indices Shifted
+                        // 5. Sportsbook Lines (group, spans 2 cols)
                         const thSpGroup = document.createElement('th');
                         thSpGroup.scope = 'colgroup';
                         thSpGroup.colSpan = 2;
-                        thSpGroup.className = 'px-6 py-3 text-center text-xs font-bold text-orange-400 uppercase tracking-wider border-b border-gray-600 bg-gray-600'; // Gray tint
+                         // UPDATED: Added responsive padding
+                        thSpGroup.className = 'px-2 py-2 sm:px-6 sm:py-3 text-center text-xs font-bold text-orange-400 uppercase tracking-wider border-b border-gray-600 bg-gray-600'; // Gray tint
                         thSpGroup.textContent = 'Sportsbook Line';
                         tr1.appendChild(thSpGroup);
 
-                        // 6. Other Headers (span 2 rows) - Index Shifted
+                        // 6. Other Headers (span 2 rows)
                         otherHeaders.forEach((headerText, i) => {
                             const colIndex = 7 + i; // Start from index 7 now
                             tr1.appendChild(createGroupedTh(headerText, colIndex, 2, 1, 'border-b border-gray-600 align-bottom'));
                         });
 
                         // --- Now create Row 2 --- (Indices shifted)
-                        // Our Projection (colIndex 3)
+                        // Our Projection (colIndex 3) - Abbreviated
                         tr2.appendChild(createGroupedTh(headerRow[3], 3, 1, 1, 'bg-blue-950 border-r border-gray-600'));
-                        // Projected Hit Rate (colIndex 4)
+                        // Projected Hit Rate (colIndex 4) - Abbreviated
                         tr2.appendChild(createGroupedTh(headerRow[4], 4, 1, 1, 'bg-blue-950'));
-                        // Sportsbook Prop (colIndex 5)
+                        // Sportsbook Prop (colIndex 5) - Abbreviated
                         tr2.appendChild(createGroupedTh(headerRow[5], 5, 1, 1, 'bg-gray-600 border-r border-gray-500'));
-                        // Prop Hit Rate (colIndex 6)
+                        // Prop Hit Rate (colIndex 6) - Abbreviated
                         tr2.appendChild(createGroupedTh(headerRow[6], 6, 1, 1, 'bg-gray-600'));
 
                         thead.appendChild(tr1);
@@ -1047,9 +1089,10 @@
 
                     rowData.forEach((cellData, index) => {
                         const td = document.createElement('td');
-                        td.className = 'px-6 py-4 whitespace-nowrap text-sm text-gray-300';
+                        // UPDATED: Added responsive padding
+                        td.className = 'px-2 py-2 sm:px-6 sm:py-4 whitespace-nowrap text-sm text-gray-300';
 
-                        // UPDATED: Apply grouping styles based on new indices
+                        // Apply grouping styles based on new indices
                         if (isPlayerTable && data[0].length >= 7) { // Check if we have the grouped columns
                             // Add blue highlight for "Our Projection" group (indices 3, 4)
                             if (index === 3 || index === 4) {
