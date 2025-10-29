@@ -311,9 +311,11 @@
 
 
                     <!-- Table Container -->
-                    <!-- UPDATED: Removed overflow-x-auto wrapper here, table itself handles width -->
-                    <div id="all-player-lines-container">
-                        <p id="loading-all-player-lines" class="text-gray-400 text-lg animate-pulse">Loading all_player_lines.csv data...</p>
+                    <!-- UPDATED: Added wrapper for responsive table -->
+                    <div class="overflow-x-auto">
+                        <div id="all-player-lines-container">
+                            <p id="loading-all-player-lines" class="text-gray-400 text-lg animate-pulse">Loading all_player_lines.csv data...</p>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -959,8 +961,7 @@
          */
         function renderTable(container, data, filePath = null) {
             const table = document.createElement('table');
-            // UPDATED: Added table-fixed w-full
-            table.className = 'min-w-full divide-y divide-gray-700 border border-gray-700 table-fixed w-full';
+            table.className = 'min-w-full divide-y divide-gray-700 border border-gray-700';
 
             // Get sort state if filePath is provided and valid
             const state = (filePath && sortState[filePath]) ? sortState[filePath] : null;
@@ -1088,8 +1089,8 @@
 
                     rowData.forEach((cellData, index) => {
                         const td = document.createElement('td');
-                        // UPDATED: Added responsive padding, normal whitespace, break-words
-                        td.className = 'px-2 py-2 sm:px-6 sm:py-4 whitespace-normal text-sm text-gray-300 break-words';
+                        // UPDATED: Added responsive padding
+                        td.className = 'px-2 py-2 sm:px-6 sm:py-4 whitespace-nowrap text-sm text-gray-300';
 
                         // Apply grouping styles based on new indices
                         if (isPlayerTable && data[0].length >= 7) { // Check if we have the grouped columns
@@ -1404,4 +1405,3 @@
     </script>
 </body>
 </html>
-
