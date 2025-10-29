@@ -441,12 +441,14 @@
 
             // Define target columns and their aliases
             const columnDefinitions = {
+                 // UPDATED: Added position
+                position: ['position', 'pos'],
                 player: ['player', 'playerstat name'],
+                statType: ['stat type'], // UPDATED: Moved stat type earlier
                 ourProjection: ['our projection'],
                 projectedHitRate: ['projected stat hit rate'],
                 sportsbookProp: ['sportsbook prop'],
                 propHitRate: ['prop hit rate', 'sportsbook hit rate', 'sportsbook prop hit rate'],
-                statType: ['stat type']
             };
 
             // Find the index and original header name for each target column
@@ -464,17 +466,19 @@
                 }
             }
 
-            // Get columns in the desired order
-            const targetOrder = ['player', 'ourProjection', 'projectedHitRate', 'sportsbookProp', 'propHitRate', 'statType'];
+            // UPDATED: Get columns in the new desired order
+            const targetOrder = ['position', 'player', 'statType', 'ourProjection', 'projectedHitRate', 'sportsbookProp', 'propHitRate'];
 
             const newHeaderOrder = [];
             const newIndexOrder = [];
 
-            // Add the 6 key columns in the correct order
+            // Add the key columns in the correct order
             targetOrder.forEach(key => {
                 if (foundColumns[key]) {
                     newHeaderOrder.push(foundColumns[key].originalHeader);
                     newIndexOrder.push(foundColumns[key].index);
+                } else {
+                     console.warn(`Column key "${key}" not found in header:`, header);
                 }
             });
 
@@ -521,8 +525,8 @@
                     // You can make this as simple or complex as you want
                     const headerName = header[index] ? header[index].toLowerCase() : '';
 
-                    if (headerName.includes('player') || headerName.includes('team')) {
-                        return "Xxxxx Xxxxxx"; // Fake name
+                    if (headerName.includes('player') || headerName.includes('team') || headerName.includes('pos')) { // Added POS
+                        return "Xxxxx Xxxxxx"; // Fake name/pos
                     } else if (headerName.includes('rate') || headerName.includes('%')) {
                         return (Math.random() * 80 + 10).toFixed(1) + "%"; // Fake percentage
                     } else if (headerName.includes('projection') || headerName.includes('prop')) {
@@ -591,7 +595,7 @@
                     return; // Stop further execution for this function
                 }
 
-                // Store data globally
+                // Store data globally OR reorder and store
                 if (filePath === 'GameLines.csv') {
                     gameLinesData = data;
                 } else if (filePath === 'BestBets.csv') {
@@ -599,14 +603,15 @@
                     let reorderedData = reorderPlayerTableData(data);
                     // NEW: Obfuscate the data *after* reordering
                     const obfuscatedData = obfuscateBestBetsData(reorderedData);
-                    bestBetsData = obfuscatedData; // Store obfuscated data
-                    data = obfuscatedData; // Use obfuscated data for rendering
+                    bestBetsData = obfuscatedData; // Store obfuscated data globally
+                    data = obfuscatedData; // Use obfuscated data for rendering this time
                 } else if (filePath === 'all_player_lines.csv') {
                     // Re-order columns to standardized format
                     const reorderedData = reorderPlayerTableData(data);
-                    allPlayerLinesData = reorderedData;
-                    data = reorderedData; // Use reordered data for rendering
+                    allPlayerLinesData = reorderedData; // Store reordered data globally
+                    data = reorderedData; // Use reordered data for rendering this time
                 }
+
 
                 // Render the data as a table
                 renderTable(container, data, filePath);
@@ -616,7 +621,7 @@
 
                 // Run the success callback if provided
                 if (onSuccessCallback) {
-                    onSuccessCallback(data); // Pass the re-ordered data
+                    onSuccessCallback(data); // Pass the potentially re-ordered/obfuscated data
                 }
 
             } catch (error) {
@@ -904,22 +909,21 @@
                 const thead = document.createElement('thead');
                 thead.className = 'bg-gray-700 sticky top-0 z-10';
 
-                // NEW: Check if this is a player table that needs grouped headers
                 const isPlayerTable = (filePath === 'BestBets.csv' || filePath === 'all_player_lines.csv');
-                // Check if reordering was successful (at least 6 key columns)
-                const hasGroupableHeaders = isPlayerTable && headerRow.length >= 6;
+                // UPDATED: Check for 7 key columns now
+                const hasGroupableHeaders = isPlayerTable && headerRow.length >= 7;
 
                 if (hasGroupableHeaders) {
                     // --- Create Grouped Header ---
-                    // Assumes order: 0:Player, 1:OurProj, 2:OurHit, 3:SpProp, 4:SpHit, 5:StatType, 6+:Others
+                    // UPDATED Assumed order: 0:Pos, 1:Player, 2:StatType, 3:OurProj, 4:OurHit, 5:SpProp, 6:SpHit, 7+:Others
                     try {
                         const tr1 = document.createElement('tr'); // Row 1 for grouping
                         const tr2 = document.createElement('tr'); // Row 2 for specific headers
 
-                        // Get all columns *after* the first 6
-                        const otherHeaders = headerRow.slice(6);
+                        // Get all columns *after* the first 7
+                        const otherHeaders = headerRow.slice(7);
 
-                        // Helper to create sortable <th> for grouped header
+                        // Helper remains the same
                         const createGroupedTh = (text, index, rowSpan = 1, colSpan = 1, extraClasses = '') => {
                             const th = document.createElement('th');
                             th.scope = 'col';
@@ -939,10 +943,15 @@
                             return th;
                         };
 
-                        // 1. Player (spans 2 rows)
+                        // 1. Position (spans 2 rows) - NEW
                         tr1.appendChild(createGroupedTh(headerRow[0], 0, 2, 1, 'border-b border-gray-600 align-bottom'));
+                        // 2. Player (spans 2 rows)
+                        tr1.appendChild(createGroupedTh(headerRow[1], 1, 2, 1, 'border-b border-gray-600 align-bottom'));
+                        // 3. Stat Type (spans 2 rows) - NEW
+                        tr1.appendChild(createGroupedTh(headerRow[2], 2, 2, 1, 'border-b border-gray-600 align-bottom'));
 
-                        // 2. Our Projections (group, spans 2 cols)
+
+                        // 4. Our Projections (group, spans 2 cols) - Indices Shifted
                         const thOurGroup = document.createElement('th');
                         thOurGroup.scope = 'colgroup';
                         thOurGroup.colSpan = 2;
@@ -950,7 +959,7 @@
                         thOurGroup.textContent = 'Our Projection';
                         tr1.appendChild(thOurGroup);
 
-                        // 3. Sportsbook Lines (group, spans 2 cols)
+                        // 5. Sportsbook Lines (group, spans 2 cols) - Indices Shifted
                         const thSpGroup = document.createElement('th');
                         thSpGroup.scope = 'colgroup';
                         thSpGroup.colSpan = 2;
@@ -958,24 +967,21 @@
                         thSpGroup.textContent = 'Sportsbook Line';
                         tr1.appendChild(thSpGroup);
 
-                        // 4. Stat Type (spans 2 rows)
-                        tr1.appendChild(createGroupedTh(headerRow[5], 5, 2, 1, 'border-b border-gray-600 align-bottom'));
-
-                        // 5. Other Headers (span 2 rows)
+                        // 6. Other Headers (span 2 rows) - Index Shifted
                         otherHeaders.forEach((headerText, i) => {
-                            const colIndex = 6 + i;
+                            const colIndex = 7 + i; // Start from index 7 now
                             tr1.appendChild(createGroupedTh(headerText, colIndex, 2, 1, 'border-b border-gray-600 align-bottom'));
                         });
 
-                        // --- Now create Row 2 ---
-                        // Our Projection (colIndex 1)
-                        tr2.appendChild(createGroupedTh(headerRow[1], 1, 1, 1, 'bg-blue-950 border-r border-gray-600'));
-                        // Projected Hit Rate (colIndex 2)
-                        tr2.appendChild(createGroupedTh(headerRow[2], 2, 1, 1, 'bg-blue-950'));
-                        // Sportsbook Prop (colIndex 3)
-                        tr2.appendChild(createGroupedTh(headerRow[3], 3, 1, 1, 'bg-gray-600 border-r border-gray-500'));
-                        // Prop Hit Rate (colIndex 4)
-                        tr2.appendChild(createGroupedTh(headerRow[4], 4, 1, 1, 'bg-gray-600'));
+                        // --- Now create Row 2 --- (Indices shifted)
+                        // Our Projection (colIndex 3)
+                        tr2.appendChild(createGroupedTh(headerRow[3], 3, 1, 1, 'bg-blue-950 border-r border-gray-600'));
+                        // Projected Hit Rate (colIndex 4)
+                        tr2.appendChild(createGroupedTh(headerRow[4], 4, 1, 1, 'bg-blue-950'));
+                        // Sportsbook Prop (colIndex 5)
+                        tr2.appendChild(createGroupedTh(headerRow[5], 5, 1, 1, 'bg-gray-600 border-r border-gray-500'));
+                        // Prop Hit Rate (colIndex 6)
+                        tr2.appendChild(createGroupedTh(headerRow[6], 6, 1, 1, 'bg-gray-600'));
 
                         thead.appendChild(tr1);
                         thead.appendChild(tr2);
@@ -983,6 +989,7 @@
                     } catch (e) {
                         console.error("Error creating grouped header, falling back to standard header.", e);
                         // Fallback in case of error
+                        thead.innerHTML = ''; // Clear potentially broken header
                         thead.appendChild(createStandardHeader(headerRow, state, filePath, container.id));
                     }
                 } else {
@@ -1009,22 +1016,22 @@
                         const td = document.createElement('td');
                         td.className = 'px-6 py-4 whitespace-nowrap text-sm text-gray-300';
 
-                        // Apply grouping styles
-                        if (isPlayerTable && data[0].length >= 6) { // Check if we have the grouped columns
-                            // Add blue highlight for "Our Projection" group
-                            if (index === 1 || index === 2) {
+                        // UPDATED: Apply grouping styles based on new indices
+                        if (isPlayerTable && data[0].length >= 7) { // Check if we have the grouped columns
+                            // Add blue highlight for "Our Projection" group (indices 3, 4)
+                            if (index === 3 || index === 4) {
                                 td.classList.add('bg-blue-950'); // Dark blue tint
                             }
-                            // Add gray highlight for "Sportsbook" group
-                            if (index === 3 || index === 4) {
+                            // Add gray highlight for "Sportsbook" group (indices 5, 6)
+                            if (index === 5 || index === 6) {
                                 td.classList.add('bg-gray-700'); // Slightly different bg
                             }
 
-                            // Add borders for visual separation
-                            if (index === 1) td.classList.add('border-l', 'border-gray-600'); // Our Proj
-                            if (index === 2) td.classList.add('border-r', 'border-gray-600'); // Our Hit Rate
-                            if (index === 3) td.classList.add('border-l', 'border-gray-600'); // SP Prop
-                            if (index === 4) td.classList.add('border-r', 'border-gray-600'); // SP Hit Rate
+                            // Add borders for visual separation (indices shifted)
+                            if (index === 3) td.classList.add('border-l', 'border-gray-600'); // Our Proj
+                            if (index === 4) td.classList.add('border-r', 'border-gray-600'); // Our Hit Rate
+                            if (index === 5) td.classList.add('border-l', 'border-gray-600'); // SP Prop
+                            if (index === 6) td.classList.add('border-r', 'border-gray-600'); // SP Hit Rate
                         }
 
                         td.textContent = cellData;
@@ -1198,13 +1205,10 @@
             positionFilterOptions.clear();
             statTypeFilterOptions.clear();
 
-            // Find the indices for Position and Stat Type in the new reordered header
-            const header = data[0].map(h => h.toLowerCase());
-            // These indices are based on the *original* header, before reordering.
-            // Let's re-find them in the *new* header (data[0]).
+            // UPDATED: Find the indices based on the *new* reordered header
             const newHeaderLower = data[0].map(h => h.toLowerCase());
-            filterColumnIndices.position = newHeaderLower.indexOf('position');
-            filterColumnIndices.statType = newHeaderLower.indexOf('stat type');
+            filterColumnIndices.position = newHeaderLower.indexOf('position'); // Should be 0
+            filterColumnIndices.statType = newHeaderLower.indexOf('stat type'); // Should be 2
 
 
             // Loop data rows (skip header)
@@ -1226,6 +1230,8 @@
             // Add event listeners (ensure they are only added once)
              const posFilterEl = document.getElementById('position-filter');
              const statFilterEl = document.getElementById('stat-type-filter');
+             if (!posFilterEl || !statFilterEl) return; // Exit if elements not found
+
 
              // Remove old listeners before adding new ones
              posFilterEl.removeEventListener('change', filterAndRenderPlayerLines);
@@ -1277,24 +1283,34 @@
             const headerRow = allPlayerLinesData.slice(0, 1);
             let filteredData = allPlayerLinesData.slice(1);
 
+             // Ensure filter indices are valid before filtering
+             const posIndex = filterColumnIndices.position;
+             const statIndex = filterColumnIndices.statType;
+
             // Apply position filter
-            if (posFilter !== 'All' && filterColumnIndices.position !== -1) {
-                filteredData = filteredData.filter(row => row[filterColumnIndices.position] === posFilter);
+            if (posFilter !== 'All' && posIndex !== -1) {
+                 filteredData = filteredData.filter(row => row[posIndex] === posFilter);
             }
+
 
             // Apply stat type filter
-            if (statFilter !== 'All' && filterColumnIndices.statType !== -1) {
-                filteredData = filteredData.filter(row => row[filterColumnIndices.statType] === statFilter);
+            if (statFilter !== 'All' && statIndex !== -1) {
+                 filteredData = filteredData.filter(row => row[statIndex] === statFilter);
             }
 
-            // MODIFIED: Apply sorting *after* filtering
+
+            // Apply sorting *after* filtering
             const state = sortState[filePath];
             if (state.colIndex !== -1) {
-                filteredData.sort((a, b) => sortComparer(a, b, state.colIndex, state.direction));
+                // Ensure the sort index is within bounds of the potentially shorter filtered rows
+                 if (state.colIndex < headerRow[0].length) {
+                    filteredData.sort((a, b) => sortComparer(a, b, state.colIndex, state.direction));
+                 }
             }
 
+
             // Re-render the table, passing the filePath
-            renderTable(document.getElementById('all-player-lines-container'), [...headerRow, ...filteredData], filePath);
+             renderTable(document.getElementById('all-player-lines-container'), [...headerRow, ...filteredData], filePath);
         }
 
     </script>
