@@ -4,14 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hit Rate Bets</title>
-    <!-- New Favicon (Tab Image) -->
-    <!-- Using an emoji as a Data URI for simplicity. Replace href with your .ico or .png file -->
+    <!-- Use logo.png as the favicon -->
     <link rel="icon" href="logo.png">
     
     <!-- Load Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Load Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
     <style>
         /* Import Russo One for headers and Roboto for body */
         @import url('https://fonts.googleapis.com/css2?family=Russo+One&family=Roboto:wght@400;500;700&display=swap');
@@ -54,9 +54,8 @@
     <div class="container mx-auto p-4 md:p-8">
         <header class="mb-8">
             <!-- Site header: bolded and themed -->
-            <!-- New: Added flex layout for logo and title -->
             <div class="flex items-center justify-center space-x-4">
-                <!-- New Logo Placeholder: Replace src with your logo file -->
+                <!-- Use logo.png for the header logo -->
                 <img src="logo.png" 
                      alt="Hit Rate Bets Logo" 
                      class="h-12 w-12 md:h-16 md:w-16 rounded-full border-2 border-orange-500">
@@ -86,7 +85,6 @@
                             Best Bets
                         </button>
                     </li>
-                    <!-- New "All Player Lines" Tab -->
                     <li role="presentation">
                         <button class="inline-block p-4 border-b-2 rounded-t-lg transition-colors duration-300 ease-in-out" id="all-player-lines-tab" data-target="all-player-lines-panel" type="button" role="tab" data-loaded="false">
                             All Player Lines
@@ -108,7 +106,7 @@
                             No fluff, no hot takes—just pure, analytical insights. Our goal is to analyze the data so you can make more informed decisions.
                         </p>
                         <p>
-                            Click on the <strong class="text-orange-400">Game Lines</strong> tab to see all upcoming matchups, check out the <strong class="text-orange-400">All Player Lines</strong> tab to filter every prop, or jump straight to our <strong class="text-orange-400">Best Bets</strong> to see our top picks!
+                            Click on the <strong class="text-orange-400">Game Lines</strong> tab to see all upcoming matchups, check out the <strong class="text-orange-400">All Player Lines</strong> tab to filter every prop, or check out our <strong class="text-orange-400">Best Bets</strong> to see our top picks!
                         </p>
                     </div>
 
@@ -124,6 +122,7 @@
                         <!-- Game Lines Chart -->
                         <h2 class="text-2xl font-bold text-orange-400 mb-4">Season-Long Game Line Accuracy</h2>
                         <p id="loading-game-lines-chart" class="text-gray-400 text-lg animate-pulse">Loading game line accuracy data...</p>
+
                         <div id="game-lines-chart-container" class="relative" style="height: 300px;">
                             <canvas id="gameLinesAccuracyChart"></canvas>
                         </div>
@@ -137,28 +136,56 @@
                         <p id="loading-game-lines-hit-rates" class="text-gray-400 text-lg animate-pulse">Loading Overall Hit Rates...</p>
                     </div>
                     <div class="overflow-x-auto">
-                        <p id="loading-game-lines" class="text-gray-400 text-lg animate-pulse">Loading GameLines.csv data...</p>
-                        <div id="game-lines-container"></div>
+                        <!-- Structural update: Moved loading <p> inside container -->
+                        <div id="game-lines-container">
+                            <p id="loading-game-lines" class="text-gray-400 text-lg animate-pulse">Loading GameLines.csv data...</p>
+                        </div>
                     </div>
                 </div>
 
                 <!-- Best Bets Panel -->
                 <div class="hidden p-6 rounded-lg bg-gray-800 border border-gray-700" id="best-bets-panel" role="tabpanel" aria-labelledby="best-bets-tab">
-                    <!-- Hit Rates Container -->
-                    <div id="best-bets-hit-rates-container" class="mb-6">
-                        <p id="loading-best-bets-hit-rates" class="text-gray-400 text-lg animate-pulse">Loading Overall Hit Rates...</p>
-                    </div>
                     
-                    <!-- Recommendation Note -->
-                    <p class="text-sm text-yellow-300 italic mb-4"><strong>Recommendation:</strong> From our research, the best picks to make are usually to take the over on our projections!</p>
+                    <!-- Content Container -->
+                    <div id="best-bets-content">
+                        <!-- Hit Rates Container -->
+                        <div id="best-bets-hit-rates-container" class="mb-6">
+                            <p id="loading-best-bets-hit-rates" class="text-gray-400 text-lg animate-pulse">Loading Overall Hit Rates...</p>
+                        </div>
+                        
+                        <!-- Recommendation Note -->
+                        <p class="text-sm text-yellow-300 italic mb-4"><strong>Recommendation:</strong> From our research, the best picks to make are usually to take the over on our projections!</p>
 
-                    <!-- Title for the table -->
-                    <h3 class="text-lg font-bold text-orange-400 mb-3">Best Bets</h3>
+                        <!-- Title for the table -->
+                        <h3 class="text-lg font-bold text-orange-400 mb-3">Best Bets</h3>
 
-                    <div class="overflow-x-auto">
-                        <p id="loading-best-bets" class="text-gray-400 text-lg animate-pulse">Loading BestBets.csv data...</p>
-                        <div id="best-bets-container"></div>
+                        <!-- NEW: Paywall Wrapper -->
+                        <div class="relative">
+                            <!-- 1. Blurred Content -->
+                            <div id="best-bets-table-wrapper" class="blur-md pointer-events-none select-none">
+                                <div class="overflow-x-auto">
+                                    <!-- Structural update: Moved loading <p> inside container -->
+                                    <div id="best-bets-container">
+                                        <p id="loading-best-bets" class="text-gray-400 text-lg animate-pulse">Loading BestBets.csv data...</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- 2. Overlay with CTA -->
+                            <div id="best-bets-overlay" class="absolute inset-0 flex flex-col items-center justify-center bg-gray-900 bg-opacity-75 rounded-lg p-8 z-20">
+                                <h3 class="text-3xl font-bold text-orange-400 mb-4 text-center">Unlock Our Best Bets!</h3>
+                                <p class="text-lg text-gray-200 mb-6 text-center">Get exclusive access to our top, data-driven picks for the week.</p>
+                                <a href="https://www.patreon.com/HitRateBets" 
+                                   target="_blank" 
+                                   rel="noopener noreferrer" 
+                                   class="bg-orange-500 text-gray-900 font-bold py-3 px-8 rounded-lg text-lg uppercase tracking-wider hover:bg-orange-400 transition-colors duration-300 ease-in-out">
+                                    Subscribe on Patreon
+                                </a>
+                            </div>
+                        </div>
+
                     </div>
+
                 </div>
 
                 <!-- All Player Lines Panel -->
@@ -176,7 +203,6 @@
                     <div class="flex flex-col sm:flex-row gap-4 mb-6">
                         <!-- Position Filter -->
                         <div>
-                            <!-- Updated Label: Removed "(Inferred)" -->
                             <label for="position-filter" class="block text-sm font-medium text-orange-400 mb-1">Position</label>
                             <select id="position-filter" class="bg-gray-700 border border-gray-600 text-gray-200 text-sm rounded-lg focus:ring-orange-500 focus:border-orange-500 block w-full p-2.5 pr-8">
                                 <option value="All">All Positions</option>
@@ -193,8 +219,10 @@
 
                     <!-- Table Container -->
                     <div class="overflow-x-auto">
-                        <p id="loading-all-player-lines" class="text-gray-400 text-lg animate-pulse">Loading all_player_lines.csv data...</p>
-                        <div id="all-player-lines-container"></div>
+                        <!-- Structural update: Moved loading <p> inside container -->
+                        <div id="all-player-lines-container">
+                            <p id="loading-all-player-lines" class="text-gray-400 text-lg animate-pulse">Loading all_player_lines.csv data...</p>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -237,6 +265,7 @@
 
         document.addEventListener('DOMContentLoaded', () => {
             initTabs();
+            
             // Manually load charts for home page
             loadDataForHomeCharts('overallhitrates.csv', 'loading-player-props-chart', 'loading-game-lines-chart');
         });
@@ -279,16 +308,19 @@
                     const isLoaded = button.dataset.loaded === 'true';
                     
                     if (!isLoaded) {
-                        button.dataset.loaded = 'true'; // Set loaded true immediately
                         if (targetPanelId === 'game-lines-panel') {
                             loadCSV('GameLines.csv', 'game-lines-container', 'loading-game-lines');
                             loadHitRatesCSV('overallhitrates.csv', 'game-lines-hit-rates-container', 'loading-game-lines-hit-rates');
+                            button.dataset.loaded = 'true';
                         } else if (targetPanelId === 'best-bets-panel') {
+                            // Load the data (it will be blurred, but it needs to exist)
                             loadCSV('BestBets.csv', 'best-bets-container', 'loading-best-bets');
                             loadHitRatesCSV('overallhitrates.csv', 'best-bets-hit-rates-container', 'loading-best-bets-hit-rates');
+                            button.dataset.loaded = 'true';
                         } else if (targetPanelId === 'all-player-lines-panel') {
                             loadCSV('all_player_lines.csv', 'all-player-lines-container', 'loading-all-player-lines', processPlayerLines);
                             loadHitRatesCSV('overallhitrates.csv', 'all-player-lines-hit-rates-container', 'loading-all-player-lines-hit-rates');
+                            button.dataset.loaded = 'true';
                         }
                     }
                 });
@@ -303,6 +335,8 @@
         function reorderPlayerTableData(data) {
             const header = data[0];
             const rows = data.slice(1);
+            if (!header) return data; // Return original if no header
+            
             const lowerHeader = header.map(h => h.toLowerCase());
 
             // Define target columns and their aliases
@@ -315,53 +349,49 @@
                 statType: ['stat type']
             };
 
-            // Find the index for each target column
-            const foundIndices = {};
-            const foundHeaderNames = new Set();
+            // Find the index and original header name for each target column
+            const foundColumns = {}; // Stores { key: { index, originalHeader } }
+            const foundIndices = new Set();
 
             for (const key in columnDefinitions) {
-                foundIndices[key] = -1;
                 for (const alias of columnDefinitions[key]) {
                     const index = lowerHeader.indexOf(alias);
                     if (index !== -1) {
-                        foundIndices[key] = index;
-                        foundHeaderNames.add(header[index]); // Store the original header name
-                        break;
+                        foundColumns[key] = { index, originalHeader: header[index] };
+                        foundIndices.add(index);
+                        break; // Found this key, move to next key
                     }
                 }
             }
             
-            // Get indices of the 6 target columns in the desired order
-            const targetIndicesInOrder = [
-                foundIndices.player,
-                foundIndices.ourProjection,
-                foundIndices.projectedHitRate,
-                foundIndices.sportsbookProp,
-                foundIndices.propHitRate,
-                foundIndices.statType
-            ].filter(index => index !== -1); // Filter out any not found
+            // Get columns in the desired order
+            const targetOrder = ['player', 'ourProjection', 'projectedHitRate', 'sportsbookProp', 'propHitRate', 'statType'];
             
-            // Get header names for these columns
-            const targetHeaderNames = targetIndicesInOrder.map(i => header[i]);
+            const newHeaderOrder = [];
+            const newIndexOrder = [];
 
-            // Get indices and header names of all *other* columns
-            const otherIndices = [];
-            const otherHeaderNames = [];
+            // Add the 6 key columns in the correct order
+            targetOrder.forEach(key => {
+                if (foundColumns[key]) {
+                    newHeaderOrder.push(foundColumns[key].originalHeader);
+                    newIndexOrder.push(foundColumns[key].index);
+                }
+            });
+
+            // Get header names and indices of all *other* columns
             for (let i = 0; i < header.length; i++) {
-                // If the original header name is NOT in our set of found target names
-                if (!targetHeaderNames.includes(header[i]) && !foundHeaderNames.has(header[i])) {
-                     otherIndices.push(i);
-                     otherHeaderNames.push(header[i]);
+                if (!foundIndices.has(i)) {
+                    newHeaderOrder.push(header[i]);
+                    newIndexOrder.push(i);
                 }
             }
             
             // Re-build header and rows
-            const newHeader = [...targetHeaderNames, ...otherHeaderNames];
+            const newHeader = newHeaderOrder;
             
             const newRows = rows.map(row => {
-                const targetRowData = targetIndicesInOrder.map(i => row[i]);
-                const otherRowData = otherIndices.map(i => row[i]);
-                return [...targetRowData, ...otherRowData];
+                // Map the original row to the new order using newIndexOrder
+                return newIndexOrder.map(i => (row[i] !== undefined ? row[i] : ""));
             });
 
             // Create the new re-ordered data array
@@ -397,7 +427,7 @@
                 // Parse the CSV data
                 let data = parseCSV(csvText);
 
-                // MODIFIED: Check if data is empty or only has a header
+                // Check if data is empty or only has a header
                 if (data.length <= 1) { 
                     // File is empty or has only a header
                     let emptyMessage = "Data is being prepped! Check back soon.";
@@ -412,12 +442,8 @@
                     }
 
                     // Display the friendly message
-                    loadingEl.textContent = emptyMessage;
-                    loadingEl.classList.remove('animate-pulse', 'text-gray-400'); // Stop pulsing, remove default color
-                    loadingEl.classList.add('text-yellow-300', 'italic', 'text-lg', 'text-center', 'py-8'); // Style it as a notice
-                    
-                    // Clear the table container
-                    container.innerHTML = ''; 
+                    // We need to target the *container* now, not the loadingEl
+                    container.innerHTML = `<p class="text-yellow-300 italic text-lg text-center py-8">${emptyMessage}</p>`;
                     
                     return; // Stop further execution for this function
                 }
@@ -440,8 +466,7 @@
                 // Render the data as a table
                 renderTable(container, data, filePath); // MODIFIED: Pass filePath
                 
-                // Hide loading message
-                loadingEl.style.display = 'none';
+                // Hide loading message (no longer needed, as container is cleared)
 
                 // Run the success callback if provided
                 if (onSuccessCallback) {
@@ -450,9 +475,8 @@
 
             } catch (error) {
                 console.error('Error loading CSV:', error);
-                loadingEl.textContent = `Error: ${error.message}`;
-                loadingEl.classList.remove('animate-pulse'); // Stop pulsing on error
-                loadingEl.classList.add('text-red-400', 'font-semibold');
+                // Display error inside the container
+                container.innerHTML = `<p class="text-red-400 font-semibold">Error: ${error.message}</p>`;
             }
         }
 
@@ -524,7 +548,8 @@
                 playerLoadingEl.style.display = 'none';
                 gameLoadingEl.style.display = 'none';
 
-            } catch (error) {
+            } catch (error)
+{
                 console.error('Error loading Hit Rates for Charts:', error);
                 playerLoadingEl.textContent = `Error: ${error.message}`;
                 gameLoadingEl.textContent = `Error: ${error.message}`;
@@ -705,14 +730,17 @@
 
                 // NEW: Check if this is a player table that needs grouped headers
                 const isPlayerTable = (filePath === 'BestBets.csv' || filePath === 'all_player_lines.csv');
+                // Check if reordering was successful (at least 6 key columns)
+                const hasGroupableHeaders = isPlayerTable && headerRow.length >= 6; 
 
-                if (isPlayerTable && headerRow.length >= 6) { // Check for enough columns
+                if (hasGroupableHeaders) {
                     // --- Create Grouped Header ---
                     // Assumes order: 0:Player, 1:OurProj, 2:OurHit, 3:SpProp, 4:SpHit, 5:StatType, 6+:Others
                     try {
                         const tr1 = document.createElement('tr'); // Row 1 for grouping
                         const tr2 = document.createElement('tr'); // Row 2 for specific headers
                         
+                        // Get all columns *after* the first 6
                         const otherHeaders = headerRow.slice(6);
 
                         // 1. Player (spans 2 rows)
@@ -729,7 +757,7 @@
                         const thOurGroup = document.createElement('th');
                         thOurGroup.scope = 'colgroup';
                         thOurGroup.colSpan = 2;
-                        thOurGroup.className = 'px-6 py-3 text-center text-xs font-bold text-orange-400 uppercase tracking-wider border-b border-gray-600';
+                        thOurGroup.className = 'px-6 py-3 text-center text-xs font-bold text-orange-400 uppercase tracking-wider border-b border-gray-600 bg-blue-950'; // Blue tint
                         thOurGroup.textContent = 'Our Projection';
                         tr1.appendChild(thOurGroup);
 
@@ -737,7 +765,7 @@
                         const thSpGroup = document.createElement('th');
                         thSpGroup.scope = 'colgroup';
                         thSpGroup.colSpan = 2;
-                        thSpGroup.className = 'px-6 py-3 text-center text-xs font-bold text-orange-400 uppercase tracking-wider border-b border-gray-600';
+                        thSpGroup.className = 'px-6 py-3 text-center text-xs font-bold text-orange-400 uppercase tracking-wider border-b border-gray-600 bg-gray-600'; // Gray tint
                         thSpGroup.textContent = 'Sportsbook Line';
                         tr1.appendChild(thSpGroup);
                         
@@ -768,7 +796,7 @@
                         // Our Projection (colIndex 1)
                         const thOurProj = document.createElement('th');
                         thOurProj.scope = 'col';
-                        thOurProj.className = 'px-6 py-3 text-left text-xs font-bold text-orange-400 uppercase tracking-wider cursor-pointer hover:text-orange-300';
+                        thOurProj.className = 'px-6 py-3 text-left text-xs font-bold text-orange-400 uppercase tracking-wider cursor-pointer hover:text-orange-300 bg-blue-950 border-r border-gray-600';
                         thOurProj.dataset.colIndex = 1;
                         thOurProj.innerHTML = getSortableHeaderHtml(headerRow[1], 1, state);
                         thOurProj.addEventListener('click', () => handleSort(filePath, container.id, 1));
@@ -777,7 +805,7 @@
                         // Projected Hit Rate (colIndex 2)
                         const thOurHit = document.createElement('th');
                         thOurHit.scope = 'col';
-                        thOurHit.className = 'px-6 py-3 text-left text-xs font-bold text-orange-400 uppercase tracking-wider cursor-pointer hover:text-orange-300';
+                        thOurHit.className = 'px-6 py-3 text-left text-xs font-bold text-orange-400 uppercase tracking-wider cursor-pointer hover:text-orange-300 bg-blue-950';
                         thOurHit.dataset.colIndex = 2;
                         thOurHit.innerHTML = getSortableHeaderHtml(headerRow[2], 2, state);
                         thOurHit.addEventListener('click', () => handleSort(filePath, container.id, 2));
@@ -786,7 +814,7 @@
                         // Sportsbook Prop (colIndex 3)
                         const thSpProp = document.createElement('th');
                         thSpProp.scope = 'col';
-                        thSpProp.className = 'px-6 py-3 text-left text-xs font-bold text-orange-400 uppercase tracking-wider cursor-pointer hover:text-orange-300';
+                        thSpProp.className = 'px-6 py-3 text-left text-xs font-bold text-orange-400 uppercase tracking-wider cursor-pointer hover:text-orange-300 bg-gray-600 border-r border-gray-500';
                         thSpProp.dataset.colIndex = 3;
                         thSpProp.innerHTML = getSortableHeaderHtml(headerRow[3], 3, state);
                         thSpProp.addEventListener('click', () => handleSort(filePath, container.id, 3));
@@ -795,7 +823,7 @@
                         // Prop Hit Rate (colIndex 4)
                         const thSpHit = document.createElement('th');
                         thSpHit.scope = 'col';
-                        thSpHit.className = 'px-6 py-3 text-left text-xs font-bold text-orange-400 uppercase tracking-wider cursor-pointer hover:text-orange-300';
+                        thSpHit.className = 'px-6 py-3 text-left text-xs font-bold text-orange-400 uppercase tracking-wider cursor-pointer hover:text-orange-300 bg-gray-600';
                         thSpHit.dataset.colIndex = 4;
                         thSpHit.innerHTML = getSortableHeaderHtml(headerRow[4], 4, state);
                         thSpHit.addEventListener('click', () => handleSort(filePath, container.id, 4));
@@ -806,7 +834,7 @@
 
                     } catch (e) {
                         console.error("Error creating grouped header, falling back to standard header.", e);
-                        // Fallback in case of error (e.g., fewer columns than expected)
+                        // Fallback in case of error
                         thead.appendChild(createStandardHeader(headerRow, state, filePath, container.id));
                     }
                 } else {
@@ -827,30 +855,28 @@
                     const tr = document.createElement('tr');
                     tr.className = 'hover:bg-gray-700';
                     
-                    // NEW: Check if this is a player table
                     const isPlayerTable = (filePath === 'BestBets.csv' || filePath === 'all_player_lines.csv');
                     
                     rowData.forEach((cellData, index) => {
                         const td = document.createElement('td');
                         td.className = 'px-6 py-4 whitespace-nowrap text-sm text-gray-300';
                         
-                        // NEW: Apply grouping styles
-                        if (isPlayerTable) {
-                            // NEW: Add blue highlight for "Our Projection" group
+                        // Apply grouping styles
+                        if (isPlayerTable && data[0].length >= 6) { // Check if we have the grouped columns
+                            // Add blue highlight for "Our Projection" group
                             if (index === 1 || index === 2) { 
                                 td.classList.add('bg-blue-950'); // Dark blue tint
                             }
-                            if (index === 3 || index === 4) { // Sportsbook group
+                            // Add gray highlight for "Sportsbook" group
+                            if (index === 3 || index === 4) { 
                                 td.classList.add('bg-gray-700'); // Slightly different bg
                             }
                             
                             // Add borders for visual separation
-                            // (index === 0) is Player
                             if (index === 1) td.classList.add('border-l', 'border-gray-600'); // Our Proj
                             if (index === 2) td.classList.add('border-r', 'border-gray-600'); // Our Hit Rate
                             if (index === 3) td.classList.add('border-l', 'border-gray-600'); // SP Prop
                             if (index === 4) td.classList.add('border-r', 'border-gray-600'); // SP Hit Rate
-                            // (index === 5) is Stat Type
                         }
                         
                         td.textContent = cellData;
@@ -1014,8 +1040,12 @@
 
             // Find the indices for Position and Stat Type in the new reordered header
             const header = data[0].map(h => h.toLowerCase());
-            filterColumnIndices.position = header.indexOf('position');
-            filterColumnIndices.statType = header.indexOf('stat type');
+            // These indices are based on the *original* header, before reordering.
+            // Let's re-find them in the *new* header (data[0]).
+            const newHeaderLower = data[0].map(h => h.toLowerCase());
+            filterColumnIndices.position = newHeaderLower.indexOf('position');
+            filterColumnIndices.statType = newHeaderLower.indexOf('stat type');
+
 
             // Loop data rows (skip header)
             for (let i = 1; i < data.length; i++) {
@@ -1073,13 +1103,11 @@
 
             // Apply position filter
             if (posFilter !== 'All' && filterColumnIndices.position !== -1) {
-                // UPDATED column index
                 filteredData = filteredData.filter(row => row[filterColumnIndices.position] === posFilter);
             }
 
             // Apply stat type filter
             if (statFilter !== 'All' && filterColumnIndices.statType !== -1) {
-                // UPDATED column index
                 filteredData = filteredData.filter(row => row[filterColumnIndices.statType] === statFilter);
             }
 
@@ -1096,5 +1124,4 @@
     </script>
 </body>
 </html>
-
 
