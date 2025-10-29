@@ -64,6 +64,19 @@
             -moz-appearance: none;
             appearance: none;
         }
+        /* Style for text input */
+         input[type="text"] {
+             background-color: #374151; /* bg-gray-700 */
+             border: 1px solid #4b5563; /* border-gray-600 */
+             color: #e5e7eb; /* text-gray-200 */
+             border-radius: 0.5rem; /* rounded-lg */
+             padding: 0.625rem; /* p-2.5 */
+         }
+         input[type="text"]:focus {
+             outline: none;
+             border-color: #f97316; /* focus:border-orange-500 */
+             box-shadow: 0 0 0 1px #f97316; /* focus:ring-orange-500 */
+         }
     </style>
 </head>
 <body class="bg-gray-900 text-gray-200">
@@ -255,7 +268,8 @@
                     <p class="text-sm text-yellow-300 italic mb-4"><strong>Recommendation:</strong> From our research, the best picks to make are usually to take the over on our projections!</p>
 
                     <!-- Filters -->
-                    <div class="flex flex-col sm:flex-row gap-4 mb-6">
+                    <!-- UPDATED: Added grid layout and search bar -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mb-6">
                         <!-- Position Filter -->
                         <div>
                             <label for="position-filter" class="block text-sm font-medium text-orange-400 mb-1">Position</label>
@@ -270,7 +284,13 @@
                                 <option value="All">All Stats</option>
                             </select>
                         </div>
+                        <!-- Player Search Filter -->
+                        <div>
+                            <label for="player-search" class="block text-sm font-medium text-orange-400 mb-1">Search Player</label>
+                            <input type="text" id="player-search" placeholder="Enter player name..." class="w-full text-sm">
+                        </div>
                     </div>
+
 
                     <!-- Table Container -->
                     <div class="overflow-x-auto">
@@ -330,7 +350,9 @@
 
         // Indices for filterable columns, to be found after reordering
         let filterColumnIndices = {
+             // UPDATED: Added Player index
             position: -1,
+            player: -1,
             statType: -1
         };
 
@@ -1219,6 +1241,7 @@
             // UPDATED: Find the indices based on the *new* reordered header
             const newHeaderLower = data[0].map(h => h.toLowerCase());
             filterColumnIndices.position = newHeaderLower.indexOf('position'); // Should be 0
+             filterColumnIndices.player = newHeaderLower.indexOf('player'); // Should be 1 - For Search
             filterColumnIndices.statType = newHeaderLower.indexOf('stat type'); // Should be 2
 
 
@@ -1241,15 +1264,20 @@
             // Add event listeners (ensure they are only added once)
              const posFilterEl = document.getElementById('position-filter');
              const statFilterEl = document.getElementById('stat-type-filter');
-             if (!posFilterEl || !statFilterEl) return; // Exit if elements not found
+             const searchInputEl = document.getElementById('player-search'); // NEW: Search input
+
+             if (!posFilterEl || !statFilterEl || !searchInputEl) return; // Exit if elements not found
 
 
              // Remove old listeners before adding new ones
              posFilterEl.removeEventListener('change', filterAndRenderPlayerLines);
              statFilterEl.removeEventListener('change', filterAndRenderPlayerLines);
+             searchInputEl.removeEventListener('input', filterAndRenderPlayerLines); // Use 'input' for live search
+
 
              posFilterEl.addEventListener('change', filterAndRenderPlayerLines);
              statFilterEl.addEventListener('change', filterAndRenderPlayerLines);
+             searchInputEl.addEventListener('input', filterAndRenderPlayerLines); // Add listener for search
         }
 
         /**
@@ -1289,6 +1317,7 @@
 
             const posFilter = document.getElementById('position-filter').value;
             const statFilter = document.getElementById('stat-type-filter').value;
+             const searchTerm = document.getElementById('player-search').value.toLowerCase(); // NEW: Get search term
             const filePath = 'all_player_lines.csv'; // Define filePath for this table
 
             const headerRow = allPlayerLinesData.slice(0, 1);
@@ -1296,6 +1325,7 @@
 
              // Ensure filter indices are valid before filtering
              const posIndex = filterColumnIndices.position;
+             const playerIndex = filterColumnIndices.player; // NEW: Player index for search
              const statIndex = filterColumnIndices.statType;
 
             // Apply position filter
@@ -1308,6 +1338,11 @@
             if (statFilter !== 'All' && statIndex !== -1) {
                  filteredData = filteredData.filter(row => row[statIndex] === statFilter);
             }
+
+             // NEW: Apply player search filter
+             if (searchTerm && playerIndex !== -1) {
+                 filteredData = filteredData.filter(row => row[playerIndex].toLowerCase().includes(searchTerm));
+             }
 
 
             // Apply sorting *after* filtering
