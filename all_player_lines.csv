@@ -1,41 +1,23 @@
 Position,Player,Stat Type,Our Projection,Projected Stat Hit Rate,Sportsbook Prop,Sportsbook Hit Rate
-QB,Lamar Jackson (BAL),Passing Yds,206,75.00%,234.5,25.00%
 QB,Jared Goff (DET),Passing Yds,208.5,57.10%,235.5,42.90%
 QB,Josh Allen (BUF),Passing Yds,199.5,57.10%,232.5,28.60%
 QB,Tua Tagovailoa (MIA),Passing Yds,212.5,25.00%,217.5,25.00%
-RB,De'Von Achane (MIA),RB Rush Yds Prop,39.5,75.00%,56.5,62.50%
-RB,Jahmyr Gibbs (DET),RB Rush Yds Prop,49,85.70%,72.5,42.90%
+QB,J.J. McCarthy (MIN),Passing Yds,179.5,0.00%,212.5,0.00%
 RB,Derrick Henry (BAL),RB Rush Yds Prop,55.5,42.90%,89.5,28.60%
 RB,David Montgomery (DET),RB Rush Yds Prop,44.5,42.90%,49.5,42.90%
-RB,De'Von Achane (MIA),RB Rec Prop,3,87.50%,5.5,37.50%
 RB,Jahmyr Gibbs (DET),RB Rec Prop,2.5,57.10%,3.5,28.60%
-TE,Travis Kelce (KC),TE Rec Yards Prop,43.5,87.50%,46.5,87.50%
-TE,Sam LaPorta (DET),TE Rec Yards Prop,33,71.40%,44.5,42.90%
 TE,T.J. Hockenson (MIN),TE Rec Yards Prop,29.5,57.10%,29.5,57.10%
 TE,Mark Andrews (BAL),TE Rec Yards Prop,23.5,57.10%,27.5,42.90%
 TE,Dalton Kincaid (BUF),TE Rec Yards Prop,40,50.00%,36.5,66.70%
-TE,Isaiah Likely (BAL),TE Rec Yards Prop,7.5,50.00%,21.5,0.00%
-TE,Travis Kelce (KC),TE Receptions Prop,2,100.00%,4.5,50.00%
-TE,Sam LaPorta (DET),TE Receptions Prop,2.5,100.00%,4.5,42.90%
-TE,T.J. Hockenson (MIN),TE Receptions Prop,2.5,71.40%,3.5,57.10%
-TE,Mark Andrews (BAL),TE Receptions Prop,3,57.10%,2.5,57.10%
 TE,Dalton Kincaid (BUF),TE Receptions Prop,2,66.70%,3.5,66.70%
-WR,Justin Jefferson (MIN),WR Rec Yds Prop,68,71.40%,73.5,71.40%
-WR,Khalil Shakir (BUF),WR Rec Yds Prop,35,57.10%,50.5,28.60%
-WR,Zay Flowers (BAL),WR Rec Yds Prop,50.5,57.10%,68.5,57.10%
-WR,DeAndre Hopkins (BAL),WR Rec Yds Prop,18,57.10%,17.5,57.10%
+WR,Justin Jefferson (MIN),WR Rec Yds Prop,79.5,42.90%,73.5,85.70%
+WR,DeAndre Hopkins (BAL),WR Rec Yds Prop,19.5,57.10%,17.5,57.10%
 WR,Amon-Ra St. Brown (DET),WR Rec Yds Prop,84,42.90%,73.5,57.10%
-WR,Jaylen Waddle (MIA),WR Rec Yds Prop,43,50.00%,63.5,37.50%
-WR,Xavier Worthy (KC),WR Rec Yds Prop,29,50.00%,46.5,16.70%
+WR,Jaylen Waddle (MIA),WR Rec Yds Prop,52,50.00%,63.5,50.00%
+WR,Xavier Worthy (KC),WR Rec Yds Prop,38,50.00%,46.5,33.30%
 WR,Marquise Brown (KC),WR Rec Yds Prop,41,50.00%,16.5,75.00%
-WR,Rashee Rice (KC),WR Rec Yds Prop,29,50.00%,68.5,0.00%
+WR,Rashee Rice (KC),WR Rec Yds Prop,74.5,50.00%,68.5,50.00%
 WR,Jameson Williams (DET),WR Rec Yds Prop,39.5,57.10%,44.5,28.60%
-WR,Jordan Addison (MIN),WR Rec Yds Prop,64,50.00%,45.5,50.00%
-WR,Justin Jefferson (MIN),WR Receptions Prop,3.5,71.40%,5.5,28.60%
-WR,Khalil Shakir (BUF),WR Receptions Prop,3,71.40%,4.5,42.90%
-WR,Zay Flowers (BAL),WR Receptions Prop,3.5,71.40%,5.5,57.10%
+WR,Jordan Addison (MIN),WR Rec Yds Prop,69.5,50.00%,45.5,50.00%
 WR,DeAndre Hopkins (BAL),WR Receptions Prop,2,57.10%,1.5,57.10%
-WR,Amon-Ra St. Brown (DET),WR Receptions Prop,3.5,100.00%,6.5,71.40%
-WR,Jaylen Waddle (MIA),WR Receptions Prop,3.5,62.50%,4.5,50.00%
-WR,Xavier Worthy (KC),WR Receptions Prop,2.5,50.00%,3.5,33.30%
-WR,Marquise Brown (KC),WR Receptions Prop,3,75.00%,2.5,75.00%
+WR,Xavier Worthy (KC),WR Receptions Prop,3,66.70%,3.5,50.00%
