@@ -130,7 +130,6 @@
                     <a href="https://www.patreon.com/HitRateBets"
                        target="_blank"
                        rel="noopener noreferrer"
-                       id="patreon-header-link" <!-- NEW: Added ID for tracking -->
                        class="bg-orange-500 text-gray-900 font-bold py-2 px-5 rounded-lg text-base uppercase tracking-wider hover:bg-orange-400 transition-colors duration-300 ease-in-out whitespace-nowrap">
                         Support on Patreon
                     </a>
@@ -271,7 +270,6 @@
                                 <a href="https://www.patreon.com/HitRateBets"
                                    target="_blank"
                                    rel="noopener noreferrer"
-                                   id="patreon-overlay-link" <!-- NEW: Added ID for tracking -->
                                    class="bg-orange-500 text-gray-900 font-bold py-3 px-8 rounded-lg text-lg uppercase tracking-wider hover:bg-orange-400 transition-colors duration-300 ease-in-out">
                                     Subscribe on Patreon
                                 </a>
@@ -399,49 +397,6 @@
 
             // Render insights on home page
             renderInsights();
-
-            // --- NEW: Add click trackers for Patreon ---
-            const patreonHeaderLink = document.getElementById('patreon-header-link');
-            if (patreonHeaderLink) {
-                patreonHeaderLink.addEventListener('click', () => {
-                    gtag('event', 'click', {
-                        'event_category': 'Patreon',
-                        'event_label': 'Header - Support Button'
-                    });
-                    console.log('GA Event: Click (Patreon) - Header Button');
-                });
-            }
-
-            const patreonOverlayLink = document.getElementById('patreon-overlay-link');
-            if (patreonOverlayLink) {
-                patreonOverlayLink.addEventListener('click', () => {
-                    gtag('event', 'click', {
-                        'event_category': 'Patreon',
-                        'event_label': 'Best Bets Overlay - Subscribe Button'
-                    });
-                    console.log('GA Event: Click (Patreon) - Overlay Button');
-                });
-            }
-
-            // --- NEW: Add click tracker for Insights (using event delegation) ---
-            const insightsContainer = document.getElementById('insights-container');
-            if (insightsContainer) {
-                insightsContainer.addEventListener('click', (e) => {
-                    // Find the card that was clicked
-                    const card = e.target.closest('.bg-gray-700.rounded-lg');
-                    if (card) {
-                        const titleEl = card.querySelector('h3');
-                        const insightTitle = titleEl ? titleEl.textContent : 'Unknown Insight';
-                        gtag('event', 'click', {
-                            'event_category': 'Insights',
-                            'event_label': insightTitle
-                        });
-                        console.log(`GA Event: Click (Insights) - ${insightTitle}`);
-                    }
-                });
-            }
-            // --- END NEW ---
-
 
             // --- MODIFIED: Pre-load data for Game Lines and All Player Lines ---
             console.log("Pre-loading Game Lines and All Player Lines data...");
@@ -1257,26 +1212,6 @@
             // Responsive grid - now dynamic
             grid.className = `grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 ${gridCols} gap-3`;
 
-            // --- NEW: Add click tracker for Hit Rate Cards (using event delegation) ---
-            grid.addEventListener('click', (e) => {
-                const card = e.target.closest('.bg-gray-700.p-3');
-                if (card) {
-                    const statEl = card.querySelector('.text-xs');
-                    const statType = statEl ? statEl.textContent : 'Unknown Hit Rate Card';
-                    // Determine if it's a game or player hit rate
-                    const category = (statType.toLowerCase().includes('moneyline') || statType.toLowerCase().includes('spread'))
-                        ? 'Game Hit Rate Card'
-                        : 'Player Hit Rate Card';
-
-                    gtag('event', 'click', {
-                        'event_category': category,
-                        'event_label': statType
-                    });
-                    console.log(`GA Event: Click (${category}) - ${statType}`);
-                }
-            });
-            // --- END NEW ---
-
             filteredData.forEach(rowData => {
                 // We already filtered for rowData.length >= 2
                 const statType = rowData[0];
@@ -1514,7 +1449,3 @@
     </script>
 </body>
 </html>
-
-
-
-
