@@ -23,6 +23,18 @@
     <meta name="twitter:description" content="Get an edge with our data-driven sports predictions, game lines, and player prop analysis.">
     <meta name="twitter:image" content="logo.png"> <!-- Assumes logo.png is the image you want to show -->
 
+    <!-- NEW: Google Analytics Tracking Script -->
+    <!-- 1. Add the Global Site Tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-50XLM6GKZ7"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      // 2. REPLACE 'G-YOUR_MEASUREMENT_ID' with your actual Measurement ID
+      gtag('config', 'G-50XLM6GKZ7');
+    </script>
+    <!-- END Google Analytics -->
 
     <!-- Load Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -437,6 +449,34 @@
                     const targetPanelId = button.dataset.target;
                     const targetPanel = document.getElementById(targetPanelId);
                     targetPanel.classList.remove('hidden');
+
+                    // --- NEW: Google Analytics Event Tracking for Tab Clicks ---
+                    try {
+                        let pageTitle = 'Home';
+                        let pagePath = '/home';
+                        if (targetPanelId === 'game-lines-panel') {
+                            pageTitle = 'Game Lines';
+                            pagePath = '/game-lines';
+                        } else if (targetPanelId === 'best-bets-panel') {
+                            pageTitle = 'Best Bets';
+                            pagePath = '/best-bets';
+                        } else if (targetPanelId === 'all-player-lines-panel') {
+                            pageTitle = 'All Player Lines';
+                            pagePath = '/all-player-lines';
+                        }
+                        
+                        // Send a virtual pageview event to GA
+                        gtag('event', 'page_view', {
+                            page_title: pageTitle,
+                            page_path: pagePath,
+                            page_location: window.location.href + pagePath // Use a virtual location
+                        });
+                        console.log(`GA Event: page_view (${pageTitle})`);
+                    } catch (e) {
+                        console.error("Error sending GA event:", e);
+                    }
+                    // --- END GA Event Tracking ---
+
 
                     // --- MODIFIED: Only lazy load Best Bets ---
                     const isLoaded = button.dataset.loaded === 'true';
@@ -1409,4 +1449,6 @@
     </script>
 </body>
 </html>
+
+
 
