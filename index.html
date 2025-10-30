@@ -181,20 +181,24 @@
                     </div>
 
                     <!-- New Chart Section -->
-                    <div>
+                    <!-- UPDATED: Added responsive grid for charts -->
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
                         <!-- Player Props Chart -->
-                        <h2 class="text-2xl font-bold text-orange-400 mb-4">Last Week's Player Prop Accuracy</h2>
-                        <p id="loading-player-props-chart" class="text-gray-400 text-lg animate-pulse">Loading player prop accuracy data...</p>
-                        <div id="player-props-chart-container" class="relative mb-8" style="height: 400px;">
-                            <canvas id="playerPropsAccuracyChart"></canvas>
+                        <div>
+                            <h2 class="text-2xl font-bold text-orange-400 mb-4">Last Week's Player Prop Accuracy</h2>
+                            <p id="loading-player-props-chart" class="text-gray-400 text-lg animate-pulse">Loading player prop accuracy data...</p>
+                            <div id="player-props-chart-container" class="relative mb-8" style="height: 400px;">
+                                <canvas id="playerPropsAccuracyChart"></canvas>
+                            </div>
                         </div>
 
                         <!-- Game Lines Chart -->
-                        <h2 class="text-2xl font-bold text-orange-400 mb-4">Season-Long Game Line Accuracy</h2>
-                        <p id="loading-game-lines-chart" class="text-gray-400 text-lg animate-pulse">Loading game line accuracy data...</p>
-
-                        <div id="game-lines-chart-container" class="relative" style="height: 300px;">
-                            <canvas id="gameLinesAccuracyChart"></canvas>
+                        <div>
+                            <h2 class="text-2xl font-bold text-orange-400 mb-4">Season-Long Game Line Accuracy</h2>
+                            <p id="loading-game-lines-chart" class="text-gray-400 text-lg animate-pulse">Loading game line accuracy data...</p>
+                            <div id="game-lines-chart-container" class="relative" style="height: 300px;">
+                                <canvas id="gameLinesAccuracyChart"></canvas>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -212,11 +216,9 @@
                     <div id="game-lines-hit-rates-container" class="mb-6">
                         <p id="loading-game-lines-hit-rates" class="text-gray-400 text-lg animate-pulse">Loading Overall Hit Rates...</p>
                     </div>
-                    <!-- UPDATED: Added wrapper for responsive table -->
-                    <div class="overflow-x-auto">
-                        <div id="game-lines-container">
-                            <p id="loading-game-lines" class="text-gray-400 text-lg animate-pulse">Loading GameLines.csv data...</p>
-                        </div>
+                    <!-- UPDATED: Removed overflow-x-auto, table will be forced width -->
+                    <div id="game-lines-container">
+                        <p id="loading-game-lines" class="text-gray-400 text-lg animate-pulse">Loading GameLines.csv data...</p>
                     </div>
                 </div>
 
@@ -241,11 +243,9 @@
                             <!-- 1. Obfuscated (not blurred) Content -->
                             <!-- UPDATED: Added blur-md class -->
                             <div id="best-bets-table-wrapper" class="blur-md">
-                                <!-- UPDATED: Added wrapper for responsive table -->
-                                <div class="overflow-x-auto">
-                                    <div id="best-bets-container">
-                                        <p id="loading-best-bets" class="text-gray-400 text-lg animate-pulse">Loading BestBets.csv data...</p>
-                                    </div>
+                                <!-- UPDATED: Removed overflow-x-auto -->
+                                <div id="best-bets-container">
+                                    <p id="loading-best-bets" class="text-gray-400 text-lg animate-pulse">Loading BestBets.csv data...</p>
                                 </div>
                             </div>
 
@@ -311,11 +311,9 @@
 
 
                     <!-- Table Container -->
-                    <!-- UPDATED: Added wrapper for responsive table -->
-                    <div class="overflow-x-auto">
-                        <div id="all-player-lines-container">
-                            <p id="loading-all-player-lines" class="text-gray-400 text-lg animate-pulse">Loading all_player_lines.csv data...</p>
-                        </div>
+                    <!-- UPDATED: Removed overflow-x-auto wrapper here, table itself handles width -->
+                    <div id="all-player-lines-container">
+                        <p id="loading-all-player-lines" class="text-gray-400 text-lg animate-pulse">Loading all_player_lines.csv data...</p>
                     </div>
                 </div>
             </div>
@@ -966,7 +964,8 @@
          */
         function renderTable(container, data, filePath = null) {
             const table = document.createElement('table');
-            table.className = 'min-w-full divide-y divide-gray-700 border border-gray-700';
+            // UPDATED: Added table-fixed w-full
+            table.className = 'min-w-full divide-y divide-gray-700 border border-gray-700 table-fixed w-full';
 
             // Get sort state if filePath is provided and valid
             const state = (filePath && sortState[filePath]) ? sortState[filePath] : null;
@@ -1094,8 +1093,8 @@
 
                     rowData.forEach((cellData, index) => {
                         const td = document.createElement('td');
-                        // UPDATED: Added responsive padding
-                        td.className = 'px-2 py-2 sm:px-6 sm:py-4 whitespace-nowrap text-sm text-gray-300';
+                        // UPDATED: Added responsive padding, normal whitespace, break-words
+                        td.className = 'px-2 py-2 sm:px-6 sm:py-4 whitespace-normal text-sm text-gray-300 break-words';
 
                         // Apply grouping styles based on new indices
                         if (isPlayerTable && data[0].length >= 7) { // Check if we have the grouped columns
@@ -1410,3 +1409,4 @@
     </script>
 </body>
 </html>
+
