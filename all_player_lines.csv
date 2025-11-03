@@ -1,198 +1,52 @@
 Position,Player,Stat Type,Our Projection,Projected Stat Hit Rate,Sportsbook Prop,Sportsbook Hit Rate
-QB,Drake Maye (NE),Passing Yds,201,100.00%,230.5,62.50%
-QB,Michael Penix Jr. (ATL),Passing Yds,224.5,66.70%,225.5,66.70%
-QB,Cam Ward (TEN),Passing Yds,192.5,62.50%,205.5,62.50%
-QB,Daniel Jones (IND),Passing Yds,253,62.50%,251.5,62.50%
-QB,Dak Prescott (DAL),Passing Yds,239.5,62.50%,266.5,25.00%
-QB,Justin Herbert (LAC),Passing Yds,236.5,62.50%,242.5,50.00%
-QB,Bo Nix (DEN),Passing Yds,201,62.50%,205.5,62.50%
-QB,Matthew Stafford (LAR),Passing Yds,228,57.10%,255.5,42.90%
-QB,Jordan Love (GB),Passing Yds,224.5,57.10%,233.5,57.10%
-QB,Jared Goff (DET),Passing Yds,208.5,57.10%,236.5,42.90%
-QB,C.J. Stroud (HOU),Passing Yds,207.5,57.10%,225.5,57.10%
-QB,Jaxson Dart (NYG),Passing Yds,181.5,57.10%,210.5,14.30%
-QB,Sam Darnold (SEA),Passing Yds,239,57.10%,240.5,57.10%
-QB,Josh Allen (BUF),Passing Yds,199.5,57.10%,232.5,28.60%
-QB,Caleb Williams (CHI),Passing Yds,235.5,42.90%,237.5,42.90%
-QB,Aaron Rodgers (PIT),Passing Yds,224,42.90%,222.5,42.90%
-QB,Trevor Lawrence (JAC),Passing Yds,223,42.90%,229.5,42.90%
-QB,Geno Smith (LV),Passing Yds,217,42.90%,227.5,42.90%
-QB,Bryce Young (CAR),Passing Yds,194.5,42.90%,189.5,42.90%
-QB,Jayden Daniels (WAS),Passing Yds,213,40.00%,228.5,40.00%
-QB,Kyler Murray (ARI),Passing Yds,216.5,40.00%,248.5,0.00%
-QB,J.J. McCarthy (MIN),Passing Yds,179.5,0.00%,214.5,0.00%
-QB,Tyler Shough (NO),Passing Yds,136.5,0.00%,189.5,0.00%
-RB,Jaylen Warren (PIT),RB Rush Yds Prop,37,100.00%,56.5,33.30%
-RB,Tyjae Spears (TEN),RB Rush Yds Prop,10,100.00%,24.5,50.00%
-RB,Jonathan Taylor (IND),RB Rush Yds Prop,64.5,100.00%,93.5,62.50%
-RB,Kyren Williams (LAR),RB Rush Yds Prop,54,85.70%,72.5,28.60%
-RB,Kenneth Gainwell (PIT),RB Rush Yds Prop,27,28.60%,19.5,57.10%
-RB,Kimani Vidal (LAC),RB Rush Yds Prop,10,80.00%,77.5,40.00%
-RB,Jahmyr Gibbs (DET),RB Rush Yds Prop,49,85.70%,74.5,42.90%
-RB,Tyrone Tracy Jr. (NYG),RB Rush Yds Prop,18,66.70%,52.5,0.00%
-RB,Javonte Williams (DAL),RB Rush Yds Prop,56,62.50%,64.5,62.50%
-RB,Chase Brown (CIN),RB Rush Yds Prop,39.5,75.00%,52.5,25.00%
-RB,Samaje Perine (CIN),RB Rush Yds Prop,10,62.50%,26.5,37.50%
-RB,Josh Jacobs (GB),RB Rush Yds Prop,58,57.10%,63.5,57.10%
-RB,Jordan Mason (MIN),RB Rush Yds Prop,46.5,71.40%,37.5,71.40%
-RB,Blake Corum (LAR),RB Rush Yds Prop,17.5,71.40%,30.5,42.90%
-RB,Travis Etienne Jr. (JAC),RB Rush Yds Prop,58,42.90%,57.5,42.90%
-RB,Ashton Jeanty (LV),RB Rush Yds Prop,52,57.10%,62.5,57.10%
-RB,Emanuel Wilson (GB),RB Rush Yds Prop,15,57.10%,30.5,28.60%
-RB,Rico Dowdle (CAR),RB Rush Yds Prop,34,50.00%,47.5,50.00%
-RB,Jacory Croskey-Merritt (WAS),RB Rush Yds Prop,29.5,62.50%,44.5,50.00%
-RB,Zach Charbonnet (SEA),RB Rush Yds Prop,33.5,66.70%,40.5,33.30%
-RB,Bijan Robinson (ATL),RB Rush Yds Prop,46,57.10%,63.5,57.10%
-RB,Bhayshul Tuten (JAC),RB Rush Yds Prop,15,42.90%,20.5,42.90%
-RB,Kenneth Walker III (SEA),RB Rush Yds Prop,49,57.10%,53.5,57.10%
-RB,David Montgomery (DET),RB Rush Yds Prop,44.5,42.90%,49.5,42.90%
-RB,Tony Pollard (TEN),RB Rush Yds Prop,54.5,50.00%,39.5,75.00%
-RB,Alvin Kamara (NO),RB Rush Yds Prop,42,50.00%,39.5,50.00%
-RB,Christian McCaffrey (SF),RB Rush Yds Prop,61.5,25.00%,66.5,25.00%
-RB,RJ Harvey (DEN),RB Rush Yds Prop,19.5,37.50%,18.5,37.50%
-RB,Jaylen Warren (PIT),RB Rec Prop,2.5,50.00%,3.5,50.00%
-RB,Tyjae Spears (TEN),RB Rec Prop,2,75.00%,2.5,75.00%
-RB,Jonathan Taylor (IND),RB Rec Prop,2.5,75.00%,2.5,75.00%
-RB,Kyren Williams (LAR),RB Rec Prop,2,85.70%,2.5,28.60%
-RB,Jahmyr Gibbs (DET),RB Rec Prop,2.5,57.10%,3.5,28.60%
-RB,Javonte Williams (DAL),RB Rec Prop,2,62.50%,2.5,50.00%
-RB,Josh Jacobs (GB),RB Rec Prop,2.5,57.10%,1.5,57.10%
-RB,Rico Dowdle (CAR),RB Rec Prop,2,37.50%,2.5,25.00%
-RB,Bijan Robinson (ATL),RB Rec Prop,3.5,71.40%,4.5,57.10%
-RB,Tony Pollard (TEN),RB Rec Prop,2,62.50%,2.5,37.50%
-RB,Alvin Kamara (NO),RB Rec Prop,2.5,62.50%,2.5,62.50%
-RB,Jeremy McNichols (WAS),RB Rec Prop,2,37.50%,2.5,25.00%
-TE,Trey McBride (ARI),TE Rec Yards Prop,48,71.40%,67.5,42.90%
-TE,Tyler Warren (IND),TE Rec Yards Prop,48.5,75.00%,56.5,62.50%
-TE,Evan Engram (DEN),TE Rec Yards Prop,25,71.40%,27.5,71.40%
-TE,Hunter Henry (NE),TE Rec Yards Prop,28.5,62.50%,34.5,50.00%
-TE,Juwan Johnson (NO),TE Rec Yards Prop,33.5,62.50%,31.5,62.50%
-TE,Zach Ertz (WAS),TE Rec Yards Prop,25.5,62.50%,34.5,50.00%
-TE,Ja'Tavion Sanders (CAR),TE Rec Yards Prop,18,60.00%,19.5,40.00%
-TE,Sam LaPorta (DET),TE Rec Yards Prop,33,71.40%,43.5,42.90%
-TE,Tucker Kraft (GB),TE Rec Yards Prop,46.5,57.10%,59.5,28.60%
-TE,T.J. Hockenson (MIN),TE Rec Yards Prop,29.5,57.10%,30.5,57.10%
-TE,AJ Barner (SEA),TE Rec Yards Prop,27,42.90%,25.5,57.10%
-TE,Oronde Gadsden II (LAC),TE Rec Yards Prop,41,66.70%,45.5,66.70%
-TE,Brock Bowers (LV),TE Rec Yards Prop,43,50.00%,51.5,25.00%
-TE,Dalton Kincaid (BUF),TE Rec Yards Prop,40,50.00%,36.5,66.70%
-TE,Jake Ferguson (DAL),TE Rec Yards Prop,40.5,37.50%,40.5,37.50%
-TE,Pat Freiermuth (PIT),TE Rec Yards Prop,19.5,42.90%,18.5,42.90%
-TE,Jonnu Smith (PIT),TE Rec Yards Prop,20.5,42.90%,24.5,28.60%
-TE,Elijah Arroyo (SEA),TE Rec Yards Prop,15,42.90%,21.5,42.90%
-TE,Noah Gray (KC),TE Rec Yards Prop,9.5,50.00%,9.5,50.00%
-TE,Trey McBride (ARI),TE Receptions Prop,3.5,100.00%,6.5,42.90%
-TE,Travis Kelce (KC),TE Receptions Prop,2,100.00%,4.5,50.00%
-TE,Tyler Warren (IND),TE Receptions Prop,3,100.00%,5.5,25.00%
-TE,Evan Engram (DEN),TE Receptions Prop,2.5,85.70%,3.5,71.40%
-TE,Hunter Henry (NE),TE Receptions Prop,1.5,75.00%,3.5,37.50%
-TE,Juwan Johnson (NO),TE Receptions Prop,2.5,75.00%,3.5,62.50%
-TE,Zach Ertz (WAS),TE Receptions Prop,2.5,75.00%,3.5,37.50%
-TE,Ja'Tavion Sanders (CAR),TE Receptions Prop,3,40.00%,2.5,40.00%
-TE,Sam LaPorta (DET),TE Receptions Prop,2.5,100.00%,4.5,42.90%
-TE,Tucker Kraft (GB),TE Receptions Prop,3,71.40%,4.5,57.10%
-TE,T.J. Hockenson (MIN),TE Receptions Prop,2.5,71.40%,3.5,57.10%
-TE,AJ Barner (SEA),TE Receptions Prop,2,57.10%,2.5,42.90%
-TE,Tyler Higbee (LAR),TE Receptions Prop,2,66.70%,1.5,66.70%
-TE,Oronde Gadsden II (LAC),TE Receptions Prop,3,66.70%,4.5,66.70%
-TE,Brock Bowers (LV),TE Receptions Prop,3,100.00%,4.5,75.00%
-TE,Dalton Kincaid (BUF),TE Receptions Prop,2,66.70%,3.5,66.70%
-TE,Jake Ferguson (DAL),TE Receptions Prop,3.5,75.00%,4.5,75.00%
-TE,Pat Freiermuth (PIT),TE Receptions Prop,2.5,57.10%,2.5,57.10%
-TE,Jonnu Smith (PIT),TE Receptions Prop,2.5,71.40%,3.5,28.60%
-TE,Elijah Arroyo (SEA),TE Receptions Prop,2,42.90%,1.5,42.90%
-WR,CeeDee Lamb (DAL),WR Rec Yds Prop,69,100.00%,79.5,60.00%
-WR,George Pickens (DAL),WR Rec Yds Prop,70,50.00%,61.5,75.00%
-WR,Jalen Nailor (MIN),WR Rec Yds Prop,23,71.40%,18.5,71.40%
-WR,Puka Nacua (LAR),WR Rec Yds Prop,102,50.00%,91.5,50.00%
-WR,Christian Kirk (HOU),WR Rec Yds Prop,32,33.30%,29.5,33.30%
-WR,Courtland Sutton (DEN),WR Rec Yds Prop,58,75.00%,56.5,75.00%
-WR,Tetairoa McMillan (CAR),WR Rec Yds Prop,53.5,62.50%,56.5,62.50%
-WR,Kayshon Boutte (NE),WR Rec Yds Prop,42,62.50%,32.5,62.50%
-WR,Keenan Allen (LAC),WR Rec Yds Prop,62.5,37.50%,47.5,62.50%
-WR,DK Metcalf (PIT),WR Rec Yds Prop,50,71.40%,58.5,42.90%
-WR,Khalil Shakir (BUF),WR Rec Yds Prop,44.5,71.40%,50.5,42.90%
-WR,Davante Adams (LAR),WR Rec Yds Prop,55,57.10%,58.5,28.60%
-WR,Quentin Johnston (LAC),WR Rec Yds Prop,52.5,57.10%,35.5,71.40%
-WR,Marvin Harrison Jr. (ARI),WR Rec Yds Prop,50.5,57.10%,54.5,57.10%
-WR,Tre Tucker (LV),WR Rec Yds Prop,48,57.10%,38.5,57.10%
-WR,Romeo Doubs (GB),WR Rec Yds Prop,48.5,57.10%,46.5,57.10%
-WR,Chris Moore (WAS),WR Rec Yds Prop,18.5,57.10%,21.5,57.10%
-WR,Josh Downs (IND),WR Rec Yds Prop,40.5,42.90%,35.5,57.10%
-WR,Amon-Ra St. Brown (DET),WR Rec Yds Prop,84,42.90%,78.5,42.90%
-WR,Nico Collins (HOU),WR Rec Yds Prop,47.5,66.70%,60.5,33.30%
-WR,Ladd McConkey (LAC),WR Rec Yds Prop,59,50.00%,60.5,50.00%
-WR,Luke McCaffrey (WAS),WR Rec Yds Prop,22.5,50.00%,27.5,37.50%
-WR,Jakobi Meyers (LV),WR Rec Yds Prop,52,50.00%,48.5,50.00%
-WR,Xavier Worthy (KC),WR Rec Yds Prop,38,50.00%,46.5,33.30%
-WR,Marquise Brown (KC),WR Rec Yds Prop,41,50.00%,16.5,75.00%
-WR,Michael Pittman Jr. (IND),WR Rec Yds Prop,54.5,50.00%,55.5,50.00%
-WR,Rashee Rice (KC),WR Rec Yds Prop,74.5,50.00%,72.5,50.00%
-WR,Tee Higgins (CIN),WR Rec Yds Prop,45,37.50%,52.5,37.50%
-WR,Jameson Williams (DET),WR Rec Yds Prop,39.5,57.10%,46.5,28.60%
-WR,Matthew Golden (GB),WR Rec Yds Prop,33.5,57.10%,28.5,57.10%
-WR,Rome Odunze (CHI),WR Rec Yds Prop,59,57.10%,62.5,42.90%
-WR,Deebo Samuel Sr. (WAS),WR Rec Yds Prop,45.5,42.90%,54.5,42.90%
-WR,Jordan Whittington (LAR),WR Rec Yds Prop,18,42.90%,19.5,42.90%
-WR,Calvin Austin III (PIT),WR Rec Yds Prop,31.5,40.00%,34.5,20.00%
-WR,Jaylin Lane (WAS),WR Rec Yds Prop,15.5,50.00%,15.5,50.00%
-WR,Troy Franklin (DEN),WR Rec Yds Prop,43,50.00%,41.5,50.00%
-WR,Stefon Diggs (NE),WR Rec Yds Prop,54,50.00%,47.5,50.00%
-WR,Ja'Marr Chase (CIN),WR Rec Yds Prop,99,37.50%,90.5,62.50%
-WR,Tre Harris (LAC),WR Rec Yds Prop,14.5,37.50%,10.5,50.00%
-WR,Rashid Shaheed (NO),WR Rec Yds Prop,53,25.00%,44.5,50.00%
-WR,KaVontae Turpin (DAL),WR Rec Yds Prop,24.5,50.00%,18.5,50.00%
-WR,Xavier Legette (CAR),WR Rec Yds Prop,26,33.30%,21.5,33.30%
-WR,Keon Coleman (BUF),WR Rec Yds Prop,34,28.60%,40.5,28.60%
-WR,Jordan Addison (MIN),WR Rec Yds Prop,69.5,50.00%,45.5,50.00%
-WR,Chris Olave (NO),WR Rec Yds Prop,65.5,25.00%,57.5,50.00%
-WR,Drake London (ATL),WR Rec Yds Prop,74,33.30%,63.5,33.30%
-WR,Jalen Coker (CAR),WR Rec Yds Prop,0,0.00%,24.5,0.00%
-WR,Christian Watson (GB),WR Rec Yds Prop,0,0.00%,35.5,0.00%
-WR,CeeDee Lamb (DAL),WR Receptions Prop,4,80.00%,6.5,60.00%
-WR,Jaxon Smith-Njigba (SEA),WR Receptions Prop,4.5,85.70%,6.5,71.40%
-WR,George Pickens (DAL),WR Receptions Prop,4,75.00%,4.5,62.50%
-WR,Jalen Nailor (MIN),WR Receptions Prop,2.5,42.90%,1.5,57.10%
-WR,Justin Jefferson (MIN),WR Receptions Prop,4,85.70%,5.5,42.90%
-WR,Alec Pierce (IND),WR Receptions Prop,3.5,50.00%,2.5,50.00%
-WR,Courtland Sutton (DEN),WR Receptions Prop,3,75.00%,4.5,62.50%
-WR,Tetairoa McMillan (CAR),WR Receptions Prop,3.5,62.50%,4.5,50.00%
-WR,Kayshon Boutte (NE),WR Receptions Prop,2.5,50.00%,2.5,50.00%
-WR,Keenan Allen (LAC),WR Receptions Prop,4.5,75.00%,4.5,75.00%
-WR,DK Metcalf (PIT),WR Receptions Prop,4.5,28.60%,4.5,28.60%
-WR,Khalil Shakir (BUF),WR Receptions Prop,3.5,71.40%,4.5,57.10%
-WR,Davante Adams (LAR),WR Receptions Prop,3.5,85.70%,4.5,42.90%
-WR,Quentin Johnston (LAC),WR Receptions Prop,4,57.10%,2.5,71.40%
-WR,Marvin Harrison Jr. (ARI),WR Receptions Prop,3.5,42.90%,3.5,42.90%
-WR,Tre Tucker (LV),WR Receptions Prop,3.5,57.10%,3.5,57.10%
-WR,Romeo Doubs (GB),WR Receptions Prop,3,71.40%,4.5,42.90%
-WR,Chris Moore (WAS),WR Receptions Prop,2.5,14.30%,2.5,14.30%
-WR,Josh Downs (IND),WR Receptions Prop,4,57.10%,3.5,57.10%
-WR,Amon-Ra St. Brown (DET),WR Receptions Prop,3.5,100.00%,6.5,71.40%
-WR,Nico Collins (HOU),WR Receptions Prop,3.5,66.70%,4.5,16.70%
-WR,Ladd McConkey (LAC),WR Receptions Prop,4.5,75.00%,5.5,50.00%
-WR,Luke McCaffrey (WAS),WR Receptions Prop,2.5,25.00%,2.5,25.00%
-WR,Jakobi Meyers (LV),WR Receptions Prop,3.5,83.30%,4.5,33.30%
-WR,Xavier Worthy (KC),WR Receptions Prop,3,66.70%,4.5,50.00%
-WR,Marquise Brown (KC),WR Receptions Prop,3,75.00%,2.5,75.00%
-WR,Michael Pittman Jr. (IND),WR Receptions Prop,4.5,75.00%,5.5,50.00%
-WR,Tee Higgins (CIN),WR Receptions Prop,2.5,75.00%,4.5,25.00%
-WR,Jameson Williams (DET),WR Receptions Prop,2,71.40%,2.5,28.60%
-WR,Matthew Golden (GB),WR Receptions Prop,2.5,71.40%,2.5,71.40%
-WR,Rome Odunze (CHI),WR Receptions Prop,3.5,57.10%,4.5,42.90%
-WR,Deebo Samuel Sr. (WAS),WR Receptions Prop,4,71.40%,5.5,57.10%
-WR,Jordan Whittington (LAR),WR Receptions Prop,2.5,14.30%,2.5,14.30%
-WR,Calvin Austin III (PIT),WR Receptions Prop,4,40.00%,3.5,40.00%
-WR,Jaylin Lane (WAS),WR Receptions Prop,2.5,12.50%,1.5,25.00%
-WR,Troy Franklin (DEN),WR Receptions Prop,3,87.50%,4.5,25.00%
-WR,Stefon Diggs (NE),WR Receptions Prop,3.5,62.50%,4.5,50.00%
-WR,Ja'Marr Chase (CIN),WR Receptions Prop,4.5,87.50%,8.5,50.00%
-WR,Rashid Shaheed (NO),WR Receptions Prop,4,100.00%,4.5,25.00%
-WR,KaVontae Turpin (DAL),WR Receptions Prop,3,33.30%,1.5,66.70%
-WR,Xavier Legette (CAR),WR Receptions Prop,3.5,16.70%,2.5,33.30%
-WR,Keon Coleman (BUF),WR Receptions Prop,3.5,28.60%,3.5,28.60%
-WR,Jordan Addison (MIN),WR Receptions Prop,3.5,75.00%,3.5,75.00%
-WR,Chris Olave (NO),WR Receptions Prop,4.5,87.50%,5.5,75.00%
-WR,Drake London (ATL),WR Receptions Prop,4,83.30%,5.5,50.00%
-WR,Jalen Coker (CAR),WR Receptions Prop,2.5,0.00%,2.5,0.00%
-WR,Christian Watson (GB),WR Receptions Prop,3,0.00%,2.5,0.00%
+QB,Dak Prescott (DAL),Passing Yds,239.5,62.50%,266.5,25.00%,Dallas
+QB,Sam Darnold (SEA),Passing Yds,239,57.10%,240.5,57.10%,Seattle
+QB,Josh Allen (BUF),Passing Yds,199.5,57.10%,262.5,14.30%,Buffalo
+QB,Jayden Daniels (WAS),Passing Yds,213,40.00%,225.5,40.00%,Washington
+QB,Jacoby Brissett (ARI),Passing Yds,0,-100.00%,245.5,-100.00%,Arizona
+RB,Javonte Williams (DAL),RB Rush Yds Prop,56,62.50%,64.5,62.50%,Dallas
+RB,Jacory Croskey-Merritt (WAS),RB Rush Yds Prop,29.5,62.50%,44.5,50.00%,Washington
+RB,Zach Charbonnet (SEA),RB Rush Yds Prop,33.5,66.70%,40.5,33.30%,Seattle
+RB,Kenneth Walker III (SEA),RB Rush Yds Prop,49,57.10%,57.5,57.10%,Seattle
+RB,Javonte Williams (DAL),RB Rec Prop,2,62.50%,2.5,50.00%,Dallas
+RB,Jacory Croskey-Merritt (WAS),RB Rec Prop,2,25.00%,1.5,25.00%,Washington
+RB,Zach Charbonnet (SEA),RB Rec Prop,1,66.70%,1.5,33.30%,Seattle
+RB,Kenneth Walker III (SEA),RB Rec Prop,1,85.70%,1.5,14.30%,Seattle
+RB,Jeremy McNichols (WAS),RB Rec Prop,2,37.50%,2.5,25.00%,Washington
+TE,Trey McBride (ARI),TE Rec Yards Prop,48,71.40%,69.5,42.90%,Arizona
+TE,Travis Kelce (KC),TE Rec Yards Prop,43.5,87.50%,66.5,25.00%,Kansas City
+TE,Zach Ertz (WAS),TE Rec Yards Prop,25.5,62.50%,36.5,50.00%,Washington
+TE,AJ Barner (SEA),TE Rec Yards Prop,27,42.90%,28.5,42.90%,Seattle
+TE,Jake Ferguson (DAL),TE Rec Yards Prop,40.5,37.50%,40.5,37.50%,Dallas
+TE,Elijah Arroyo (SEA),TE Rec Yards Prop,15,42.90%,25.5,42.90%,Seattle
+TE,Trey McBride (ARI),TE Receptions Prop,3.5,100.00%,6.5,42.90%,Arizona
+TE,Zach Ertz (WAS),TE Receptions Prop,2.5,75.00%,3.5,37.50%,Washington
+TE,AJ Barner (SEA),TE Receptions Prop,2,57.10%,2.5,42.90%,Seattle
+TE,Jake Ferguson (DAL),TE Receptions Prop,3.5,75.00%,4.5,75.00%,Dallas
+TE,Elijah Arroyo (SEA),TE Receptions Prop,2,42.90%,2.5,14.30%,Seattle
+WR,CeeDee Lamb (DAL),WR Rec Yds Prop,69,100.00%,82.5,60.00%,Dallas
+WR,Jaxon Smith-Njigba (SEA),WR Rec Yds Prop,101,71.40%,98.5,71.40%,Seattle
+WR,George Pickens (DAL),WR Rec Yds Prop,70,50.00%,63.5,75.00%,Dallas
+WR,Marvin Harrison Jr. (ARI),WR Rec Yds Prop,50.5,57.10%,59.5,42.90%,Arizona
+WR,Chris Moore (WAS),WR Rec Yds Prop,18.5,57.10%,21.5,57.10%,Washington
+WR,Luke McCaffrey (WAS),WR Rec Yds Prop,22.5,50.00%,24.5,37.50%,Washington
+WR,Rashee Rice (KC),WR Rec Yds Prop,74.5,50.00%,80.5,50.00%,Kansas City
+WR,Deebo Samuel Sr. (WAS),WR Rec Yds Prop,45.5,42.90%,54.5,42.90%,Washington
+WR,Tory Horton (SEA),WR Rec Yds Prop,15.5,42.90%,33.5,14.30%,Seattle
+WR,Jaylin Lane (WAS),WR Rec Yds Prop,15.5,50.00%,16.5,37.50%,Washington
+WR,KaVontae Turpin (DAL),WR Rec Yds Prop,24.5,50.00%,18.5,50.00%,Dallas
+WR,Zay Jones (ARI),WR Rec Yds Prop,26,33.30%,20.5,50.00%,Arizona
+WR,Michael Wilson (ARI),WR Rec Yds Prop,22,28.60%,25.5,28.60%,Arizona
+WR,CeeDee Lamb (DAL),WR Receptions Prop,4,80.00%,6.5,60.00%,Dallas
+WR,Jaxon Smith-Njigba (SEA),WR Receptions Prop,4.5,85.70%,7.5,71.40%,Seattle
+WR,George Pickens (DAL),WR Receptions Prop,4,75.00%,4.5,62.50%,Dallas
+WR,Marvin Harrison Jr. (ARI),WR Receptions Prop,3.5,42.90%,3.5,42.90%,Arizona
+WR,Chris Moore (WAS),WR Receptions Prop,2.5,14.30%,2.5,14.30%,Washington
+WR,Luke McCaffrey (WAS),WR Receptions Prop,2.5,25.00%,2.5,25.00%,Washington
+WR,Deebo Samuel Sr. (WAS),WR Receptions Prop,4,71.40%,5.5,57.10%,Washington
+WR,Tory Horton (SEA),WR Receptions Prop,3,28.60%,2.5,28.60%,Seattle
+WR,Jaylin Lane (WAS),WR Receptions Prop,2.5,12.50%,1.5,25.00%,Washington
+WR,KaVontae Turpin (DAL),WR Receptions Prop,3,33.30%,1.5,66.70%,Dallas
+WR,Zay Jones (ARI),WR Receptions Prop,3,16.70%,1.5,66.70%,Arizona
+WR,Michael Wilson (ARI),WR Receptions Prop,3,42.90%,2.5,42.90%,Arizona
+
