@@ -1,51 +1,25 @@
 Position,Player,Stat Type,Our Projection,Projected Stat Hit Rate,Sportsbook Prop,Sportsbook Hit Rate
 QB,Dak Prescott (DAL),Passing Yds,239.5,62.50%,266.5,25.00%,Dallas
-QB,Sam Darnold (SEA),Passing Yds,239,57.10%,240.5,57.10%,Seattle
-QB,Jayden Daniels (WAS),Passing Yds,213,40.00%,225.5,40.00%,Washington
 QB,Jacoby Brissett (ARI),Passing Yds,196.5,50.00%,245.5,50.00%,Arizona
 RB,Javonte Williams (DAL),RB Rush Yds Prop,56,62.50%,64.5,62.50%,Dallas
-RB,Jacory Croskey-Merritt (WAS),RB Rush Yds Prop,29.5,62.50%,44.5,50.00%,Washington
-RB,Zach Charbonnet (SEA),RB Rush Yds Prop,33.5,66.70%,40.5,33.30%,Seattle
-RB,Kenneth Walker III (SEA),RB Rush Yds Prop,49,57.10%,57.5,57.10%,Seattle
 RB,Javonte Williams (DAL),RB Rec Prop,2,62.50%,2.5,50.00%,Dallas
-RB,Jacory Croskey-Merritt (WAS),RB Rec Prop,2,25.00%,1.5,25.00%,Washington
-RB,Zach Charbonnet (SEA),RB Rec Prop,1,66.70%,1.5,33.30%,Seattle
-RB,Kenneth Walker III (SEA),RB Rec Prop,1,85.70%,1.5,14.30%,Seattle
-RB,Jeremy McNichols (WAS),RB Rec Prop,2,37.50%,2.5,25.00%,Washington
 TE,Trey McBride (ARI),TE Rec Yards Prop,48,71.40%,69.5,42.90%,Arizona
-TE,Zach Ertz (WAS),TE Rec Yards Prop,25.5,62.50%,36.5,50.00%,Washington
-TE,AJ Barner (SEA),TE Rec Yards Prop,27,42.90%,28.5,42.90%,Seattle
 TE,Jake Ferguson (DAL),TE Rec Yards Prop,40.5,37.50%,40.5,37.50%,Dallas
-TE,Elijah Arroyo (SEA),TE Rec Yards Prop,15,42.90%,25.5,42.90%,Seattle
 TE,Trey McBride (ARI),TE Receptions Prop,3.5,100.00%,6.5,42.90%,Arizona
-TE,Zach Ertz (WAS),TE Receptions Prop,2.5,75.00%,3.5,37.50%,Washington
-TE,AJ Barner (SEA),TE Receptions Prop,2,57.10%,2.5,42.90%,Seattle
 TE,Jake Ferguson (DAL),TE Receptions Prop,3.5,75.00%,4.5,75.00%,Dallas
-TE,Elijah Arroyo (SEA),TE Receptions Prop,2,42.90%,2.5,14.30%,Seattle
 WR,CeeDee Lamb (DAL),WR Rec Yds Prop,69,100.00%,82.5,60.00%,Dallas
-WR,Jaxon Smith-Njigba (SEA),WR Rec Yds Prop,101,71.40%,98.5,71.40%,Seattle
 WR,George Pickens (DAL),WR Rec Yds Prop,70,50.00%,63.5,75.00%,Dallas
 WR,Marvin Harrison Jr. (ARI),WR Rec Yds Prop,50.5,57.10%,59.5,42.90%,Arizona
-WR,Chris Moore (WAS),WR Rec Yds Prop,18.5,57.10%,21.5,57.10%,Washington
-WR,Luke McCaffrey (WAS),WR Rec Yds Prop,22.5,50.00%,24.5,37.50%,Washington
-WR,Deebo Samuel Sr. (WAS),WR Rec Yds Prop,45.5,42.90%,54.5,42.90%,Washington
-WR,Tory Horton (SEA),WR Rec Yds Prop,15.5,42.90%,33.5,14.30%,Seattle
-WR,Jaylin Lane (WAS),WR Rec Yds Prop,15.5,50.00%,16.5,37.50%,Washington
 WR,KaVontae Turpin (DAL),WR Rec Yds Prop,24.5,50.00%,18.5,50.00%,Dallas
 WR,Zay Jones (ARI),WR Rec Yds Prop,26,33.30%,20.5,50.00%,Arizona
 WR,Michael Wilson (ARI),WR Rec Yds Prop,22,28.60%,25.5,28.60%,Arizona
 WR,CeeDee Lamb (DAL),WR Receptions Prop,4,80.00%,6.5,60.00%,Dallas
-WR,Jaxon Smith-Njigba (SEA),WR Receptions Prop,4.5,85.70%,7.5,71.40%,Seattle
 WR,George Pickens (DAL),WR Receptions Prop,4,75.00%,4.5,62.50%,Dallas
 WR,Marvin Harrison Jr. (ARI),WR Receptions Prop,3.5,42.90%,3.5,42.90%,Arizona
-WR,Chris Moore (WAS),WR Receptions Prop,2.5,14.30%,2.5,14.30%,Washington
-WR,Luke McCaffrey (WAS),WR Receptions Prop,2.5,25.00%,2.5,25.00%,Washington
-WR,Deebo Samuel Sr. (WAS),WR Receptions Prop,4,71.40%,5.5,57.10%,Washington
-WR,Tory Horton (SEA),WR Receptions Prop,3,28.60%,2.5,28.60%,Seattle
-WR,Jaylin Lane (WAS),WR Receptions Prop,2.5,12.50%,1.5,25.00%,Washington
 WR,KaVontae Turpin (DAL),WR Receptions Prop,3,33.30%,1.5,66.70%,Dallas
 WR,Zay Jones (ARI),WR Receptions Prop,3,16.70%,1.5,66.70%,Arizona
 WR,Michael Wilson (ARI),WR Receptions Prop,3,42.90%,2.5,42.90%,Arizona
+
 
 
 
