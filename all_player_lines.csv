@@ -1,7 +1,6 @@
 Position,Player,Stat Type,Our Projection,Projected Stat Hit Rate,Sportsbook Prop,Sportsbook Hit Rate
 QB,Dak Prescott (DAL),Passing Yds,239.5,62.50%,266.5,25.00%,Dallas
 QB,Sam Darnold (SEA),Passing Yds,239,57.10%,240.5,57.10%,Seattle
-QB,Josh Allen (BUF),Passing Yds,199.5,57.10%,262.5,14.30%,Buffalo
 QB,Jayden Daniels (WAS),Passing Yds,213,40.00%,225.5,40.00%,Washington
 QB,Jacoby Brissett (ARI),Passing Yds,0,-100.00%,245.5,-100.00%,Arizona
 RB,Javonte Williams (DAL),RB Rush Yds Prop,56,62.50%,64.5,62.50%,Dallas
@@ -14,7 +13,6 @@ RB,Zach Charbonnet (SEA),RB Rec Prop,1,66.70%,1.5,33.30%,Seattle
 RB,Kenneth Walker III (SEA),RB Rec Prop,1,85.70%,1.5,14.30%,Seattle
 RB,Jeremy McNichols (WAS),RB Rec Prop,2,37.50%,2.5,25.00%,Washington
 TE,Trey McBride (ARI),TE Rec Yards Prop,48,71.40%,69.5,42.90%,Arizona
-TE,Travis Kelce (KC),TE Rec Yards Prop,43.5,87.50%,66.5,25.00%,Kansas City
 TE,Zach Ertz (WAS),TE Rec Yards Prop,25.5,62.50%,36.5,50.00%,Washington
 TE,AJ Barner (SEA),TE Rec Yards Prop,27,42.90%,28.5,42.90%,Seattle
 TE,Jake Ferguson (DAL),TE Rec Yards Prop,40.5,37.50%,40.5,37.50%,Dallas
@@ -30,7 +28,6 @@ WR,George Pickens (DAL),WR Rec Yds Prop,70,50.00%,63.5,75.00%,Dallas
 WR,Marvin Harrison Jr. (ARI),WR Rec Yds Prop,50.5,57.10%,59.5,42.90%,Arizona
 WR,Chris Moore (WAS),WR Rec Yds Prop,18.5,57.10%,21.5,57.10%,Washington
 WR,Luke McCaffrey (WAS),WR Rec Yds Prop,22.5,50.00%,24.5,37.50%,Washington
-WR,Rashee Rice (KC),WR Rec Yds Prop,74.5,50.00%,80.5,50.00%,Kansas City
 WR,Deebo Samuel Sr. (WAS),WR Rec Yds Prop,45.5,42.90%,54.5,42.90%,Washington
 WR,Tory Horton (SEA),WR Rec Yds Prop,15.5,42.90%,33.5,14.30%,Seattle
 WR,Jaylin Lane (WAS),WR Rec Yds Prop,15.5,50.00%,16.5,37.50%,Washington
@@ -49,4 +46,5 @@ WR,Jaylin Lane (WAS),WR Receptions Prop,2.5,12.50%,1.5,25.00%,Washington
 WR,KaVontae Turpin (DAL),WR Receptions Prop,3,33.30%,1.5,66.70%,Dallas
 WR,Zay Jones (ARI),WR Receptions Prop,3,16.70%,1.5,66.70%,Arizona
 WR,Michael Wilson (ARI),WR Receptions Prop,3,42.90%,2.5,42.90%,Arizona
+
 
