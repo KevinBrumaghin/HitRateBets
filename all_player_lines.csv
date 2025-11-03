@@ -2,7 +2,7 @@ Position,Player,Stat Type,Our Projection,Projected Stat Hit Rate,Sportsbook Prop
 QB,Dak Prescott (DAL),Passing Yds,239.5,62.50%,266.5,25.00%,Dallas
 QB,Sam Darnold (SEA),Passing Yds,239,57.10%,240.5,57.10%,Seattle
 QB,Jayden Daniels (WAS),Passing Yds,213,40.00%,225.5,40.00%,Washington
-QB,Jacoby Brissett (ARI),Passing Yds,0,-100.00%,245.5,-100.00%,Arizona
+QB,Jacoby Brissett (ARI),Passing Yds,196.5,50.00%,245.5,50.00%,Arizona
 RB,Javonte Williams (DAL),RB Rush Yds Prop,56,62.50%,64.5,62.50%,Dallas
 RB,Jacory Croskey-Merritt (WAS),RB Rush Yds Prop,29.5,62.50%,44.5,50.00%,Washington
 RB,Zach Charbonnet (SEA),RB Rush Yds Prop,33.5,66.70%,40.5,33.30%,Seattle
@@ -46,5 +46,6 @@ WR,Jaylin Lane (WAS),WR Receptions Prop,2.5,12.50%,1.5,25.00%,Washington
 WR,KaVontae Turpin (DAL),WR Receptions Prop,3,33.30%,1.5,66.70%,Dallas
 WR,Zay Jones (ARI),WR Receptions Prop,3,16.70%,1.5,66.70%,Arizona
 WR,Michael Wilson (ARI),WR Receptions Prop,3,42.90%,2.5,42.90%,Arizona
+
 
 
