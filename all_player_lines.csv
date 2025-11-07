@@ -1,5 +1,4 @@
 Position,Player,Stat Type,Our Projection,Projected Stat Hit Rate,Sportsbook Prop,Sportsbook Hit Rate
-Position,Player,Stat Type,Our Projection,Projected Stat Hit Rate,Sportsbook Prop,Sportsbook Hit Rate
 QB,Drake Maye (NE),Passing Yds,235.5,66.70%,241.5,66.70%
 QB,Daniel Jones (IND),Passing Yds,212,100.00%,243.5,66.70%
 QB,Justin Herbert (LAC),Passing Yds,259,44.40%,252.5,44.40%
@@ -247,4 +246,5 @@ WR,DeVonta Smith (PHI),WR Receptions Prop,3.5,75.00%,4.5,50.00%
 WR,Sterling Shepard (TB),WR Receptions Prop,3,62.50%,3.5,50.00%
 WR,Cedric Tillman (CLE),WR Receptions Prop,2.5,50.00%,2.5,50.00%
 WR,Tez Johnson (TB),WR Receptions Prop,2.5,42.90%,3.5,42.90%
+
 
