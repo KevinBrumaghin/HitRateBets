@@ -152,6 +152,7 @@
                     <a href="https://www.patreon.com/HitRateBets"
                        target="_blank"
                        rel="noopener noreferrer"
+                       id="patreon-header-link" <!-- Added ID for tracking -->
                        class="bg-orange-500 text-gray-900 font-bold py-2 px-5 rounded-lg text-base uppercase tracking-wider hover:bg-orange-400 transition-colors duration-300 ease-in-out whitespace-nowrap">
                         Support on Patreon
                     </a>
@@ -289,11 +290,12 @@
                                 <!-- Added Trial Text -->
                                 <p class="text-sm text-orange-300 italic mb-6">Start with a 7-day free trial!</p>
                                 <a href="https://www.patreon.com/HitRateBets"
-                       target="_blank"
-                       rel="noopener noreferrer"
-                       class="bg-orange-500 text-gray-900 font-bold py-2 px-5 rounded-lg text-base uppercase tracking-wider hover:bg-orange-400 transition-colors duration-300 ease-in-out whitespace-nowrap">
-                        Support on Patreon
-                    </a>
+                                   target="_blank"
+                                   rel="noopener noreferrer"
+                                   id="patreon-overlay-link" <!-- Added ID for tracking -->
+                                   class="bg-orange-500 text-gray-900 font-bold py-3 px-8 rounded-lg text-lg uppercase tracking-wider hover:bg-orange-400 transition-colors duration-300 ease-in-out">
+                                    Subscribe on Patreon
+                                </a>
                             </div>
                         </div>
 
@@ -380,6 +382,11 @@
                         <!-- UPDATED: Added 'name' attribute for Netlify -->
                         <input type="email" id="email-input" name="email" placeholder="your.email@example.com" class="w-full text-lg" required>
                         <p id="email-error-msg" class="text-red-400 text-sm hidden">Please enter a valid email address.</p>
+                        <!-- **** NEW: Added consent text **** -->
+                        <p class_=("text-xs text-gray-400 text-center -mt-2 mb-2")>
+                            By submitting your email, you consent to receiving emails from HitRateBets.
+                        </p>
+                        <!-- ******************************* -->
                         <button id="email-submit-btn" type="submit" class="w-full bg-orange-500 text-gray-900 font-bold py-3 px-8 rounded-lg text-lg uppercase tracking-wider hover:bg-orange-400 transition-colors duration-300 ease-in-out">
                             Unlock My Free Bet
                         </button>
