@@ -77,14 +77,17 @@
             appearance: none;
         }
         /* Style for text input */
-         input[type="text"] {
+         input[type="text"],
+         /* NEW: Style for email input */
+         input[type="email"] {
              background-color: #374151; /* bg-gray-700 */
              border: 1px solid #4b5563; /* border-gray-600 */
              color: #e5e7eb; /* text-gray-200 */
              border-radius: 0.5rem; /* rounded-lg */
              padding: 0.625rem; /* p-2.5 */
          }
-         input[type="text"]:focus {
+         input[type="text"]:focus,
+         input[type="email"]:focus {
              outline: none;
              border-color: #f97316; /* focus:border-orange-500 */
              box-shadow: 0 0 0 1px #f97316; /* focus:ring-orange-500 */
@@ -115,6 +118,15 @@
             white-space: normal; /* Allow wrapping */
             word-wrap: break-word; /* Break long words */
          }
+         
+         /* NEW: Email Popup Animation */
+        @keyframes modalFadeIn {
+            from { opacity: 0; transform: translateY(10px) scale(0.95); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+        #email-popup-modal {
+            animation: modalFadeIn 0.3s ease-out;
+        }
 
     </style>
 </head>
@@ -140,6 +152,7 @@
                     <a href="https://www.patreon.com/HitRateBets"
                        target="_blank"
                        rel="noopener noreferrer"
+                       id="patreon-header-link" <!-- Added ID for tracking -->
                        class="bg-orange-500 text-gray-900 font-bold py-2 px-5 rounded-lg text-base uppercase tracking-wider hover:bg-orange-400 transition-colors duration-300 ease-in-out whitespace-nowrap">
                         Support on Patreon
                     </a>
@@ -277,11 +290,12 @@
                                 <!-- Added Trial Text -->
                                 <p class="text-sm text-orange-300 italic mb-6">Start with a 7-day free trial!</p>
                                 <a href="https://www.patreon.com/HitRateBets"
-                       target="_blank"
-                       rel="noopener noreferrer"
-                       class="bg-orange-500 text-gray-900 font-bold py-2 px-5 rounded-lg text-base uppercase tracking-wider hover:bg-orange-400 transition-colors duration-300 ease-in-out whitespace-nowrap">
-                        Support on Patreon
-                    </a>
+                                   target="_blank"
+                                   rel="noopener noreferrer"
+                                   id="patreon-overlay-link" <!-- Added ID for tracking -->
+                                   class="bg-orange-500 text-gray-900 font-bold py-3 px-8 rounded-lg text-lg uppercase tracking-wider hover:bg-orange-400 transition-colors duration-300 ease-in-out">
+                                    Subscribe on Patreon
+                                </a>
                             </div>
                         </div>
 
@@ -339,6 +353,89 @@
                 </div>
             </div>
         </main>
+        
+        <!-- NEW: Email Signup Modal -->
+        <div id="email-popup-modal" class="hidden fixed inset-0 z-40 overflow-y-auto">
+            <!-- 1. Overlay -->
+            <div id="email-popup-overlay" class="fixed inset-0 bg-black bg-opacity-75"></div>
+
+            <!-- 2. Modal Content -->
+            <div class="relative bg-gray-800 border-2 border-orange-500 rounded-lg shadow-xl w-11/12 md:w-1/2 lg:w-1/3 p-6 md:p-8 mx-auto" style="top: 50%; transform: translateY(-50%); z-index: 50;">
+                
+                <!-- Close Button -->
+                <button id="email-popup-close" class="absolute top-3 right-3 text-gray-400 hover:text-white transition-colors">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                </button>
+
+                <!-- Content: Form -->
+                <div id="email-form-content">
+                    <h2 class="text-2xl md:text-3xl font-bold text-orange-400 mb-4 text-center">
+                        Get This Week's Best Bet!
+                    </h2>
+                    <p class="text-gray-300 text-center mb-6">
+                        Enter your email to unlock our hand-picked Best Bet of the Week, sent straight from our model.
+                    </p>
+                    <!-- UPDATED: Added Netlify attributes to the form -->
+                    <form id="email-popup-form" name="email-signup" data-netlify="true" class="space-y-4">
+                        <!-- Hidden input for Netlify form name -->
+                        <input type="hidden" name="form-name" value="email-signup" />
+                        <!-- UPDATED: Added 'name' attribute for Netlify -->
+                        <input type="email" id="email-input" name="email" placeholder="your.email@example.com" class="w-full text-lg" required>
+                        <p id="email-error-msg" class="text-red-400 text-sm hidden">Please enter a valid email address.</p>
+                        <button id="email-submit-btn" type="submit" class="w-full bg-orange-500 text-gray-900 font-bold py-3 px-8 rounded-lg text-lg uppercase tracking-wider hover:bg-orange-400 transition-colors duration-300 ease-in-out">
+                            Unlock My Free Bet
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Content: Success / The Bet -->
+                <div id="email-best-bet-content" class="hidden">
+                    <h2 class="text-2xl md:text-3xl font-bold text-green-400 mb-4 text-center">
+                        Success! Here's Your Bet:
+                    </h2>
+                    <p class="text-gray-300 text-center mb-6">
+                        This is our Best Bet for TNF, fully parlayed on FanDuel:
+                    </p>
+                    <div class="bg-gray-700 p-4 rounded-lg border border-gray-600 text-left">
+                        <ul class="space-y-3">
+                            <li class="flex items-start"> <!-- Changed to items-start for wrapping -->
+                                <span class="text-green-400 mr-2 mt-1 flex-shrink-0">&#10003;</span>
+                                <div>
+                                    <strong class="text-orange-400">Stefon Diggs (NE)</strong> 3+ Receptions
+                                    <span class="block text-xs text-gray-400">100.00% Hit Rate (-850)</span>
+                                </div>
+                            </li>
+                            <li class="flex items-start">
+                                <span class="text-green-400 mr-2 mt-1 flex-shrink-0">&#10003;</span>
+                                <div>
+                                    <strong class="text-orange-400">Drake Maye (NE)</strong> 200+ Passing Yds
+                                    <span class="block text-xs text-gray-400">90.00% Hit Rate (-350)</span>
+                                </div>
+                            </li>
+                             <li class="flex items-start">
+                                <span class="text-green-400 mr-2 mt-1 flex-shrink-0">&#10003;</span>
+                                <div>
+                                    <strong class="text-orange-400">Patriots -6.5</strong>
+                                    <span class="block text-xs text-gray-400">(-290)</span>
+                                </div>
+                            </li>
+                        </ul>
+                        <hr class="border-gray-600 my-4">
+                        <p class="text-lg text-center font-bold">
+                            Parlay Odds: <span class="text-orange-400">-107</span>
+                        </p>
+                        <p class="text-lg text-center font-bold">
+                            $50 RETURNS <span class="text-green-400">$96.93</span>
+                        </p>
+                    </div>
+                     <p class="text-xs text-gray-400 text-center mt-4">
+                        You won't see this popup again. Good luck!
+                    </p>
+                </div>
+            </div>
+        </div>
+        <!-- END Email Signup Modal -->
+
 
         <footer class="text-center text-gray-500 text-sm mt-12 space-y-4">
             <!-- Disclaimer Section -->
@@ -362,28 +459,28 @@
         let positionFilterOptions = new Set();
         let statTypeFilterOptions = new Set();
 
-        // --- NEW: EDIT YOUR INSIGHTS HERE ---
-        // Add or change objects in this array to update the home page insights.
-        // --- UPDATED: Added linkType and linkValue ---
-        const weeklyInsights = [ 
-            {
+        // --- EDIT YOUR INSIGHTS HERE ---
+        const weeklyInsights = [
+             {
                  title: "TNF Best Bets!",
                  image: "https://a.espncdn.com/photo/2024/1027/r1406541_1296x729_16-9.jpg",
                  text: "Our 3 Leg Best Bets Parlay: $50 RETURNS $96.93!",
                  linkType: "patreon",
                  linkValue: "https://www.patreon.com/posts/tnf-best-bets-143413272?utm_medium=clipboard_copy&utm_source=copyLink&utm_campaign=postshare_creator&utm_content=join_link"
              },
-            {
+             {
                  title: "Week 11 QB Projections",
                  image: "https://library.sportingnews.com/styles/crop_style_16_9_desktop_webp/s3/2022-02/Matthew-Stafford-021121-GETTY-FTR.jpg.webp?itok=qhJHkTN5",
                  text: "Our models have found consistent success in predicting QB Passing Yards, every week our model has been live we have a hit rate of 60% or more on overs for Passing Yards.",
                  linkType: "filter",
-                 linkValue: { position: "QB" }
+                 linkValue: { position: "QB", stat: "Passing Yards", search: "" } // MODIFIED
              },
             {
                  title: "How to Use Hit Rate",
                  image: "https://a.espncdn.com/photo/2025/1026/r1566407_1296x729_16-9.jpg",
                  text: "Each of our Projected Stats are a stat our model thinks a player will hit/go over. Check out the Hit Rate for that stat as well for more confidence in the stat!",
+                 linkType: "filter", // MODIFIED
+                 linkValue: { position: "All", stat: "All", search: "" } // MODIFIED
              }
         ];
         // --- END OF INSIGHTS ---
@@ -410,6 +507,9 @@
 
             // Render insights on home page
             renderInsights();
+            
+            // --- NEW: Initialize Email Popup ---
+            initEmailPopup();
             
             // --- Add click trackers for Patreon ---
             const patreonHeaderLink = document.getElementById('patreon-header-link');
@@ -460,32 +560,29 @@
             if (insight.linkType === 'patreon') {
                 window.open(insight.linkValue, '_blank');
             } 
-            else if (insight.linkType === 'tab') {
-                const tabButton = document.getElementById(insight.linkValue);
-                if (tabButton) {
-                    tabButton.click();
-                }
-            } 
             else if (insight.linkType === 'filter') {
                 const tabButton = document.getElementById('all-player-lines-tab');
                 if (tabButton) {
                     // Set filter values
                     const posFilter = document.getElementById('position-filter');
                     const statFilter = document.getElementById('stat-type-filter');
+                    const searchInput = document.getElementById('player-search'); 
                     
-                    if (posFilter && insight.linkValue.position) {
-                        posFilter.value = insight.linkValue.position;
+                    // Set values based on linkValue, default to "All" or "" if not provided
+                    if (posFilter) {
+                        posFilter.value = insight.linkValue.position || "All";
                     }
-                    if (statFilter && insight.linkValue.stat) {
-                        statFilter.value = insight.linkValue.stat;
+                    if (statFilter) {
+                        statFilter.value = insight.linkValue.stat || "All";
+                    }
+                    if (searchInput) { 
+                        searchInput.value = insight.linkValue.search || ""; 
                     }
                     
                     // Click the tab to switch to it
                     tabButton.click();
                     
                     // Apply the filters
-                    // We need a small delay for the tab switch to register if it's not pre-loaded
-                    // (Though in our case it is pre-loaded, this is safer)
                     setTimeout(() => {
                         filterAndRenderPlayerLines();
                     }, 100); 
@@ -608,6 +705,153 @@
                 }
             });
         }
+        
+        // --- NEW: EMAIL POPUP LOGIC ---
+        
+        /**
+         * Initializes the email popup logic
+         */
+        function initEmailPopup() {
+            // Get all modal elements
+            const modal = document.getElementById('email-popup-modal');
+            const overlay = document.getElementById('email-popup-overlay');
+            const closeBtn = document.getElementById('email-popup-close');
+            const form = document.getElementById('email-popup-form');
+            const emailInput = document.getElementById('email-input');
+            const errorMsg = document.getElementById('email-error-msg');
+            const formContent = document.getElementById('email-form-content');
+            const betContent = document.getElementById('email-best-bet-content');
+            const submitBtn = document.getElementById('email-submit-btn'); // Get submit button
+
+            if (!modal || !overlay || !closeBtn || !form || !emailInput || !errorMsg || !formContent || !betContent || !submitBtn) {
+                console.warn("Email popup elements not found. Popup will not run.");
+                return;
+            }
+
+            // --- 1. Check if we should show the popup ---
+
+            // Check if user has *ever* submitted
+            if (localStorage.getItem('emailSubmitted') === 'true') {
+                console.log("User has already submitted email. No popup.");
+                return;
+            }
+
+            // Check if user has already seen it *this session*
+            if (sessionStorage.getItem('popupShownThisSession') === 'true') {
+                console.log("Popup already shown this session. Skipping.");
+                return;
+            }
+            
+            // Check if it's Wednesday (3) to Saturday (6)
+            const today = new Date().getDay(); // 0 = Sunday, 1 = Mon, ..., 6 = Sat
+            const isBettingWindow = today >= 3 && today <= 6; 
+
+            if (!isBettingWindow) {
+                console.log("Not within Wed-Sat window. No popup.");
+                return;
+            }
+
+            // --- 2. If all checks pass, show the popup after a delay ---
+            console.log("Showing email popup.");
+            setTimeout(() => {
+                modal.classList.remove('hidden');
+                // Mark as shown *for this session*
+                sessionStorage.setItem('popupShownThisSession', 'true');
+            }, 3000); // 3-second delay
+
+            // --- 3. Add Event Listeners ---
+
+            // Close button
+            closeBtn.addEventListener('click', () => {
+                modal.classList.add('hidden');
+            });
+
+            // Overlay click
+            overlay.addEventListener('click', () => {
+                modal.classList.add('hidden');
+            });
+
+            // Form submission
+            form.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const email = emailInput.value;
+
+                if (validateEmail(email)) {
+                    // Valid email
+                    console.log("Email submitted:", email);
+                    
+                    // --- UPDATED: Netlify Form Submission ---
+                    
+                    // 1. Disable button to prevent multiple submissions
+                    submitBtn.disabled = true;
+                    submitBtn.textContent = 'Submitting...';
+
+                    // 2. Prepare data for Netlify
+                    const formData = new FormData(form);
+                    const encodedData = new URLSearchParams(formData).toString();
+                    
+                    // 3. Send data to Netlify
+                    fetch("/", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                        body: encodedData
+                    })
+                    .then(() => {
+                        // --- SUCCESS ---
+                        console.log("Form successfully submitted to Netlify");
+
+                        // --- GA Event for Email Signup ---
+                        gtag('event', 'sign_up', {
+                            'method': 'Email Popup'
+                        });
+                        console.log('GA Event: sign_up (Email Popup)');
+                        // ---------------------------------
+                        
+                        // Mark as submitted *permanently* (in this browser)
+                        localStorage.setItem('emailSubmitted', 'true');
+
+                        // Swap content
+                        formContent.classList.add('hidden');
+                        betContent.classList.remove('hidden');
+                    })
+                    .catch((error) => {
+                        // --- ERROR ---
+                        console.error("Error submitting form to Netlify:", error);
+                        // Show an error to the user?
+                        // For now, let's just re-enable the form.
+                        submitBtn.disabled = false;
+                        submitBtn.textContent = 'Unlock My Free Bet';
+                        errorMsg.textContent = 'Submission failed. Please try again.';
+                        errorMsg.classList.remove('hidden');
+                    });
+                    
+                } else {
+                    // Invalid email
+                    errorMsg.textContent = 'Please enter a valid email address.';
+                    errorMsg.classList.remove('hidden');
+                }
+            });
+            
+            // Hide error message when user starts typing again
+            emailInput.addEventListener('input', () => {
+                if (!errorMsg.classList.contains('hidden')) {
+                    errorMsg.classList.add('hidden');
+                }
+            });
+        }
+
+        /**
+         * Simple email validation
+         * @param {string} email - The email to validate
+         * @returns {boolean} - True if valid, false if not
+         */
+        function validateEmail(email) {
+            const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return re.test(String(email).toLowerCase());
+        }
+
+        // --- END EMAIL POPUP LOGIC ---
+
 
         /**
          * Standardizes column order for player prop tables.
