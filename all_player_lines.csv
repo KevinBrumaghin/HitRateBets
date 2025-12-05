@@ -17,10 +17,8 @@ QB,Lamar Jackson (BAL),Passing Yds,216.5,33.30%,222.5,33.30%
 QB,C.J. Stroud (HOU),Passing Yds,208.5,55.60%,232.5,44.40%
 QB,Justin Herbert (LAC),Passing Yds,221.5,58.30%,209.5,66.70%
 QB,Josh Allen (BUF),Passing Yds,234.5,50.00%,234.5,50.00%
-QB,Jared Goff (DET),Passing Yds,240.5,66.70%,252.5,58.30%
 QB,Matthew Stafford (LAR),Passing Yds,231,66.70%,258.5,50.00%
 QB,Joe Burrow (CIN),Passing Yds,158,33.30%,249.5,33.30%
-QB,Dak Prescott (DAL),Passing Yds,236,83.30%,269.5,33.30%
 QB,J.J. McCarthy (MIN),Passing Yds,195.5,16.70%,182.5,16.70%
 QB,Baker Mayfield (TB),Passing Yds,200,58.30%,216.5,50.00%
 QB,Jacoby Brissett (ARI),Passing Yds,220.5,77.80%,246.5,77.80%
@@ -28,12 +26,9 @@ QB,Marcus Mariota (WAS),Passing Yds,165,55.60%,211.5,44.40%
 QB,Bo Nix (DEN),Passing Yds,215.5,50.00%,221.5,50.00%
 RB,Isiah Pacheco (KC),RB Rush Yds Prop,22,88.90%,26.5,66.70%
 RB,Kareem Hunt (KC),RB Rush Yds Prop,36.5,50.00%,34.5,50.00%
-RB,David Montgomery (DET),RB Rush Yds Prop,38,41.70%,33.5,41.70%
 RB,Chase Brown (CIN),RB Rush Yds Prop,46.5,50.00%,51.5,41.70%
 RB,Jaylen Warren (PIT),RB Rush Yds Prop,39,72.70%,50.5,54.50%
 RB,Kenneth Walker III (SEA),RB Rush Yds Prop,45.5,66.70%,61.5,58.30%
-RB,Javonte Williams (DAL),RB Rush Yds Prop,55.5,75.00%,65.5,66.70%
-RB,Jahmyr Gibbs (DET),RB Rush Yds Prop,55,66.70%,76.5,41.70%
 RB,Bijan Robinson (ATL),RB Rush Yds Prop,50,66.70%,65.5,66.70%
 RB,Jonathan Taylor (IND),RB Rush Yds Prop,58,91.70%,93.5,50.00%
 RB,Derrick Henry (BAL),RB Rush Yds Prop,53.5,66.70%,80.5,33.30%
@@ -43,44 +38,28 @@ RB,Travis Etienne Jr. (JAC),RB Rush Yds Prop,53,66.70%,57.5,58.30%
 RB,Bhayshul Tuten (JAC),RB Rush Yds Prop,16.5,58.30%,24.5,25.00%
 RB,Tyler Allgeier (ATL),RB Rush Yds Prop,24.5,41.70%,21.5,50.00%
 RB,Kenneth Gainwell (PIT),RB Rush Yds Prop,25,25.00%,26.5,25.00%
-RB,David Montgomery (DET),RB Rec Prop,2,50.00%,1.5,50.00%
-RB,Javonte Williams (DAL),RB Rec Prop,2,58.30%,1.5,58.30%
-RB,Jahmyr Gibbs (DET),RB Rec Prop,3,75.00%,4.5,33.30%
-TE,Jake Ferguson (DAL),TE Rec Yards Prop,39.5,50.00%,37.5,50.00%
 TE,Dalton Schultz (HOU),TE Rec Yards Prop,25,83.30%,39.5,50.00%
 TE,Travis Kelce (KC),TE Rec Yards Prop,39.5,91.70%,49.5,58.30%
-TE,Ross Dwelley (DET),TE Rec Yards Prop,0.5,11.10%,12.5,0.00%
-TE,Jake Ferguson (DAL),TE Receptions Prop,3,91.70%,4.5,75.00%
 TE,Dalton Schultz (HOU),TE Receptions Prop,2.5,83.30%,4.5,66.70%
 TE,Travis Kelce (KC),TE Receptions Prop,2.5,91.70%,4.5,50.00%
-WR,Ryan Flournoy (DAL),WR Rec Yds Prop,18.5,36.40%,13.5,45.50%
 WR,JuJu Smith-Schuster (KC),WR Rec Yds Prop,23,50.00%,8.5,58.30%
-WR,KaVontae Turpin (DAL),WR Rec Yds Prop,25,50.00%,17.5,60.00%
 WR,Marquise Brown (KC),WR Rec Yds Prop,36.5,50.00%,18.5,75.00%
 WR,Jayden Higgins (HOU),WR Rec Yds Prop,25.5,58.30%,34.5,33.30%
 WR,Xavier Worthy (KC),WR Rec Yds Prop,36.5,50.00%,35.5,50.00%
-WR,Jameson Williams (DET),WR Rec Yds Prop,44.5,41.70%,83.5,33.30%
 WR,Nico Collins (HOU),WR Rec Yds Prop,52.5,54.50%,70.5,54.50%
-WR,George Pickens (DAL),WR Rec Yds Prop,73.5,58.30%,82.5,41.70%
 WR,Rashee Rice (KC),WR Rec Yds Prop,72,66.70%,68.5,66.70%
-WR,CeeDee Lamb (DAL),WR Rec Yds Prop,68.5,87.50%,82.5,55.60%
 WR,Ja'Marr Chase (CIN),WR Rec Yds Prop,84.5,63.60%,87.5,63.60%
 WR,Xavier Hutchinson (HOU),WR Rec Yds Prop,20.5,41.70%,17.5,58.30%
 WR,Christian Kirk (HOU),WR Rec Yds Prop,22.5,50.00%,16.5,62.50%
 WR,Khalil Shakir (BUF),WR Rec Yds Prop,48,41.70%,44.5,58.30%
-WR,Isaac TeSlaa (DET),WR Rec Yds Prop,7,41.70%,36.5,0.00%
-WR,Ryan Flournoy (DAL),WR Receptions Prop,2.5,27.30%,1.5,54.50%
 WR,JuJu Smith-Schuster (KC),WR Receptions Prop,2.5,41.70%,1.5,58.30%
-WR,KaVontae Turpin (DAL),WR Receptions Prop,2.5,20.00%,1.5,60.00%
 WR,Jayden Higgins (HOU),WR Receptions Prop,2.5,50.00%,3.5,50.00%
 WR,Xavier Worthy (KC),WR Receptions Prop,2.5,80.00%,3.5,50.00%
-WR,Jameson Williams (DET),WR Receptions Prop,3,50.00%,5.5,25.00%
 WR,Nico Collins (HOU),WR Receptions Prop,3,100.00%,5.5,36.40%
-WR,George Pickens (DAL),WR Receptions Prop,3.5,83.30%,5.5,58.30%
 WR,Rashee Rice (KC),WR Receptions Prop,3.5,100.00%,6.5,66.70%
-WR,CeeDee Lamb (DAL),WR Receptions Prop,3.5,88.90%,6.5,55.60%
 WR,Ja'Marr Chase (CIN),WR Receptions Prop,4,81.80%,7.5,36.40%
 WR,Xavier Hutchinson (HOU),WR Receptions Prop,2.5,41.70%,1.5,75.00%
 WR,Christian Kirk (HOU),WR Receptions Prop,2.5,62.50%,2.5,62.50%
 WR,Khalil Shakir (BUF),WR Receptions Prop,3,75.00%,4.5,58.30%
 WR,Jaxon Smith-Njigba (SEA),WR Receptions Prop,4,91.70%,6.5,66.70%
+
