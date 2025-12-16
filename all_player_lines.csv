@@ -1,1 +1,38 @@
 Position,Player,Stat Type,Our Projection,Projected Stat Hit Rate,Sportsbook Prop,Sportsbook Hit Rate
+QB,J.J. McCarthy (MIN),Passing Yds,192.5,25.00%,185.5,25.00%
+QB,Shedeur Sanders (CLE),Passing Yds,179.5,40.00%,177.5,40.00%
+QB,Caleb Williams (CHI),Passing Yds,206.5,71.40%,212.5,50.00%
+QB,Kirk Cousins (ATL),Passing Yds,194.5,42.90%,223.5,28.60%
+QB,Justin Herbert (LAC),Passing Yds,230,42.90%,247.5,35.70%
+QB,Aaron Rodgers (PIT),Passing Yds,208.5,46.20%,225.5,30.80%
+QB,Baker Mayfield (TB),Passing Yds,209.5,57.10%,228.5,42.90%
+QB,Bo Nix (DEN),Passing Yds,221,50.00%,229.5,50.00%
+QB,Jordan Love (GB),Passing Yds,221,57.10%,235.5,42.90%
+QB,Josh Allen (BUF),Passing Yds,200.5,64.30%,219.5,50.00%
+QB,Sam Darnold (SEA),Passing Yds,226,64.30%,231.5,64.30%
+QB,Lamar Jackson (BAL),Passing Yds,199.5,54.50%,212.5,36.40%
+QB,Drake Maye (NE),Passing Yds,235.5,71.40%,240.5,71.40%
+QB,Brock Purdy (SF),Passing Yds,233.5,50.00%,242.5,50.00%
+QB,Jared Goff (DET),Passing Yds,242,64.30%,264.5,42.90%
+QB,Dak Prescott (DAL),Passing Yds,225,85.70%,246.5,78.60%
+QB,Matthew Stafford (LAR),Passing Yds,225,71.40%,228.5,71.40%
+QB,Jalen Hurts (PHI),Passing Yds,218,50.00%,219.5,50.00%
+QB,Marcus Mariota (WAS),Passing Yds,169.5,54.50%,208.5,45.50%
+QB,Trevor Lawrence (JAC),Passing Yds,209.5,71.40%,226.5,50.00%
+QB,Bryce Young (CAR),Passing Yds,210.5,15.40%,204.5,23.10%
+QB,Jaxson Dart (NYG),Passing Yds,172,63.60%,197.5,36.40%
+RB,Zach Charbonnet (SEA),RB Rush Yds Prop,27.5,76.90%,35.5,61.50%
+RB,Kenneth Walker III (SEA),RB Rush Yds Prop,39,64.30%,45.5,57.10%
+RB,Kyren Williams (LAR),RB Rush Yds Prop,48,92.90%,55.5,78.60%
+RB,Blake Corum (LAR),RB Rush Yds Prop,21,78.60%,38.5,50.00%
+RB,Kenneth Walker III (SEA),RB Rec Prop,2,35.70%,1.5,35.70%
+RB,Kyren Williams (LAR),RB Rec Prop,2.5,14.30%,1.5,57.10%
+TE,AJ Barner (SEA),TE Rec Yards Prop,19,71.40%,30.5,35.70%
+TE,AJ Barner (SEA),TE Receptions Prop,2,71.40%,3.5,21.40%
+WR,Cooper Kupp (SEA),WR Rec Yds Prop,38,38.50%,33.5,46.20%
+WR,Rashid Shaheed (SEA),WR Rec Yds Prop,40.5,53.30%,33.5,60.00%
+WR,Puka Nacua (LAR),WR Rec Yds Prop,83.5,69.20%,94.5,53.80%
+WR,Jaxon Smith-Njigba (SEA),WR Receptions Prop,4.5,85.70%,6.5,71.40%
+WR,Cooper Kupp (SEA),WR Receptions Prop,3.5,30.80%,3.5,30.80%
+WR,Rashid Shaheed (SEA),WR Receptions Prop,3.5,73.30%,2.5,73.30%
+WR,Puka Nacua (LAR),WR Receptions Prop,4,92.30%,7.5,46.20%
